@@ -34,9 +34,7 @@ For more details, please check out our publication.
 
 For the environment, to use .yml file:
 `conda env create -f environment.yml`. This will create an environment named ClusterMap with required packages.
-***
 
-<br >
 
 ## Tutorial
 
