@@ -3,11 +3,15 @@
 Integrate multiple spatial transcripomics by generating universal gene, cell, and tissue embeddings.
 
 
+
 <br >
 
 <img src="./img/framework.png" alt="framework" style="zoom:10%;" />
 
+For more details, please check out our publication.
 
+
+# Directory structure
 
 
 - **Original scripts for generating data at ClusterMap paper are at: https://codeocean.com/capsule/9820099/tree/v1.**
