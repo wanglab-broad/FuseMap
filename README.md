@@ -10,6 +10,20 @@ For more details, please check out our publication.
 
 # Directory structure
 
+```
+.
+├── fusemap                 # Main Python package
+├── data                    # Data files
+├── experiments             # Experiments and case studies
+├── docs                    # Documentation files
+├── custom                  # Customized third-party packages
+├── manuscript_repro        # Manuscript reproducibility
+├── env.yaml                # Reproducible Python environment via conda
+├── pyproject.toml          # Python package metadata
+├── LICENSE
+└── README.md
+```
+
 
 - **Original scripts for generating data at ClusterMap paper are at: https://codeocean.com/capsule/9820099/tree/v1.**
 
