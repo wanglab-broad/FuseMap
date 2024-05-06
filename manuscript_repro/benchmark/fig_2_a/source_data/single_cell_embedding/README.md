@@ -1,2 +1,2 @@
-- Download the input file at https://drive.google.com/file/d/1t_tXKpNyKEuQ1dhiwdOZE5ew9rMJp4KU/view?usp=sharing.
-- Put it under the folder and decompress.
+- Download the input data at https://drive.google.com/file/d/1t_tXKpNyKEuQ1dhiwdOZE5ew9rMJp4KU/view?usp=sharing.
+- Put it in this folder and decompress.
