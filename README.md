@@ -17,7 +17,7 @@ For more details, please check out our publication.
 ├── experiments             # Experiments and case studies
 ├── docs                    # Documentation files
 ├── custom                  # Customized third-party packages
-├── manuscript_repro        # Manuscript reproducibility
+├── paper_code              # Code used in the manuscript
 ├── env.yaml                # Reproducible Python environment via conda
 ├── pyproject.toml          # Python package metadata
 ├── LICENSE
