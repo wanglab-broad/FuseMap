@@ -24,6 +24,9 @@ For more details, please check out our publication.
 └── README.md
 ```
 
+## Manuscript code
+For code and data in the manuscript 'Towards a universal spatial molecular atlas of the mouse brain', please go to [paper_code](paper_code/).
+
 ## Installation
 
 > git clone https://github.com/wanglab-broad/FuseMap.git
