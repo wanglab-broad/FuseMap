@@ -1,10 +1,9 @@
-# FuseMap
+# FuseMap 
+Integrate spatial transcripomics with universal gene, cell, and tissue embeddings.
 
-Integrate multiple spatial transcripomics by generating universal gene, cell, and tissue embeddings.
-
-
-<img src="/img/framework.png" width="400" >
-
+<p align="center">
+  <img src="/img/framework.png" width="600" >
+</p>
 
 For more details, please check out our publication.
 
