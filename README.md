@@ -24,7 +24,7 @@ For more details, please check out our publication.
 └── README.md
 ```
 
-## Manuscript code
+## Manuscript code and data
 - For code and data in the manuscript 'Towards a universal spatial molecular atlas of the mouse brain', please go to [paper_code](paper_code/).
 
 - For exploratory analysis of the molCCF, we provide an [interactive online database](http://fusemap.spatial-atlas.net/).
