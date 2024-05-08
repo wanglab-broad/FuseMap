@@ -3,7 +3,8 @@
 Integrate multiple spatial transcripomics by generating universal gene, cell, and tissue embeddings.
 
 
-<img src="./img/framework.png" alt="framework" style="zoom:1%;" />
+<img src="/img/framework.png" width="400" >
+
 
 For more details, please check out our publication.
 
