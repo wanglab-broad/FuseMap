@@ -1,8 +1,5 @@
 # Code and implementation of the paper 
 
-> ### News
-> For exploratory analysis of the molCCF, we provide an [interactive online database](http://fusemap.spatial-atlas.net/).
->
 
 ### To Do
 - [ ] Data can be downloaded here.
