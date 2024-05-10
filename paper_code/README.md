@@ -1,28 +1,25 @@
-# Code and implementation of the paper 
-
-
-### To Do
-- [ ] Data can be downloaded here.
+# Code of the paper 
 
 
 
-## The folder is organized as follows.
+- **Benchmark**
+  - Cell integration
+  - Gene imputation
+    
+- **Universal cell types**
+- **Universal tissue regions**
+- **Universal gene embedding**
+  - Imputation
+  - Targeted gene panel selection
+- **Cell-cell interaction**
+- **Reference mapping**
 
-#### 1. Benchmark
-* Fig. 2a, including Extended Data Fig.1,2
-* Fig. 2b
+We also provide [an interactive data portal of the molCCF](https://www.spatial-atlas.net/FuseMap/).
 
-#### 2. Universal cell types
-
-#### 3. Universal tissue domains
-
-#### 4. Universal gene embedding
-
-#### 5. Reference mapping
 
 <br>
 
-## Acknowledgement
+# Acknowledgement
 #### Data source
 Publicly available datasets are used in this study (summarized in Supplementary Table 1). The spatial transcriptomics atlases of mouse brain are available in https://singlecell.broadinstitute.org/single_cell/study/SCP1830 (Atlas 1) , https://doi.brainimagelibrary.org/doi/10.35077/g.610 (Atlas 2), https://doi.brainimagelibrary.org/doi/10.35077/act-bag (Atlas 3), https://info.vizgen.com/mouse-brain-map (Atlas 4), http://mousebrain.org/adult/ (Atlas 5), https://db.cngb.org/search/project/CNP0001543/ (Atlas 6), https://www.braincelldata.org/ (Atlas 7). The PANTHER classification of complete protein-coding gene families in mouse genomes is available in http://data.pantherdb.org/ftp/sequence_classifications/current_release/PANTHER_Sequence_Classification_files/PTHR18.0_mouse. The scRNA-seq dataset is available in https://mousebrain.org/. The STARmap PLUS query dataset is available in https://zenodo.org/records/8041114. The MERFISH query dataset is available in https://doi.brainimagelibrary.org/doi/10.35077/g.21. The Stereo-seq query dataset is available in https://github.com/JinmiaoChenLab/SEDR_analyses/tree/master/data. The Slide-seqV2 data can be downloaded from https://singlecell.broadinstitute.org/single_cell/study/SCP815/.
 
