@@ -13,7 +13,9 @@
   - Targeted gene panel selection
 - **Cell-cell interaction**
 - **Reference mapping**
-
+  - Benchmark
+  - Query dataset
+    
 - **We also provide a [data portal](https://www.spatial-atlas.net/FuseMap/) of the molecular common coordinate framework (molCCF).**
   - Users can interactively explore universal molecular cell types, molecular tissue regions, and imputed gene expression of 434 sections in the molCCF.
 
