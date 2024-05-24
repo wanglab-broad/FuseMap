@@ -8,22 +8,6 @@ Integrate spatial transcripomics with universal gene, cell, and tissue embedding
 For more details, please check out our publication.
 
 
-## Directory structure
-
-```
-.
-├── fusemap                 # Main Python package
-├── data                    # Data files
-├── experiments             # Experiments and case studies
-├── docs                    # Documentation files
-├── custom                  # Customized third-party packages
-├── paper_code              # Code used in the manuscript
-├── env.yaml                # Reproducible Python environment via conda
-├── pyproject.toml          # Python package metadata
-├── LICENSE
-└── README.md
-```
-
 ## Manuscript code and data
 - For code and data in the manuscript 'Towards a universal spatial molecular atlas of the mouse brain', please go to [paper_code](paper_code/).
 
@@ -52,4 +36,4 @@ For the environment, to use .yml file:
 
 If you find FuseMap useful for your work, please cite our paper: 
 
-> x
+> 
