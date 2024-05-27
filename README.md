@@ -13,22 +13,9 @@ For more details, please check out our publication.
 
 - For exploratory analysis of the molCCF, we provide an [interactive online database](http://fusemap.spatial-atlas.net/).
 
-## Installation
-
-> git clone https://github.com/wanglab-broad/FuseMap.git
-> 
-> cd FuseMap
-> 
->pip install -e.
-
-For the environment, to use .yml file:
-`conda env create -f environment.yml`. This will create an environment named ClusterMap with required packages.
-
-
-## Tutorial
+## Installation & Tutorial
 
 - We are currently uploading more files for packaging and testing and will finish update soon.
-- Read a more detailed tutorial [here](./Tutorial.md).
 
 
 
@@ -36,4 +23,4 @@ For the environment, to use .yml file:
 
 If you find FuseMap useful for your work, please cite our paper: 
 
-> 
+> to be updated
