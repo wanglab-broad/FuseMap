@@ -13,10 +13,15 @@ For more details, please check out our publication.
 
 - For exploratory analysis of the molCCF, we provide an [interactive online database](http://fusemap.spatial-atlas.net/).
 
-## Installation & Tutorial
+## Installation
 
-- We are currently uploading more files for packaging and testing and will finish update soon.
+For the environment, to use .yml file:
+`conda env create -f fusemap_environment.yml`. 
 
+
+
+## Tutorial
+- Read a tutorial on sample data [here](./tutorial_sample_data.ipynb).
 
 
 ## Citation
