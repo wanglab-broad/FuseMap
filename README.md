@@ -21,7 +21,7 @@ For the environment, to use .yml file:
 
 
 ## Tutorial
-- Read a tutorial on sample data [here](./tutorial_sample_data.ipynb).
+- Read a [tutorial](./tutorial_sample_data.ipynb) on [sample data](https://drive.google.com/drive/folders/1DKfP5awTUa5gaL0WB-csD0M8v-COiBfY?usp=sharing) .
 
 
 ## Citation
