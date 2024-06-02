@@ -52,4 +52,4 @@ conda env create -f fusemap_environment.yml
 
 If you find FuseMap useful for your work, please cite our paper: 
 
-> to be updated
+> Yichun He, Hao Sheng, Hailing Shi, Wendy Xueyi Wang, Zefang Tang, Jia Liu, Xiao Wang. Towards a universal spatial molecular atlas of the mouse brain. Preprint at bioRxiv https://www.biorxiv.org/content/10.1101/2024.05.27.594872v1 (2024).
