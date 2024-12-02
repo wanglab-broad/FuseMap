@@ -74,7 +74,7 @@ for focus_sample in ['section1']:
 
  dic={}
  for focus_gene in impt_gene:
-  save_dir= f"save_data_0319/rerun_version3_impt_{focus_sample}_{focus_gene}/"
+  save_dir= f"rerun_version3_impt_{focus_sample}_{focus_gene}/"
 
   celltype_all_o=sc.read_h5ad(f"{save_dir}/transfer_celltype.h5ad")
   gene_embed = sc.read_h5ad(f"{save_dir}/ad_gene_embedding.h5ad")
@@ -100,4 +100,4 @@ for focus_sample in ['section1']:
 
   dic[focus_gene]=res[0]
 
- pd.DataFrame(dic,index=range(len(dic))).to_csv(f'nospatial_{focus_sample}_fusemap.csv')
+ pd.DataFrame(dic,index=range(len(dic))).to_csv(f'{focus_sample}_fusemap.csv')
