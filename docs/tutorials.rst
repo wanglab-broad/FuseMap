@@ -1,4 +1,3 @@
-
 .. _Tutorials:
 
 Tutorials
@@ -9,10 +8,7 @@ Tutorials
 
 .. nbgallery::
 
-    Spatial integration across technologies <notebooks/spatial_integrate_tech>
-    Spatial integration across organs <notebooks/spatial_integrate_species>
-    Spatial imputation <notebooks/spatial_impute>
-
-
-    Spatial mapping to mouse brain atlas <notebooks/spatial_map_mousebrain>
-    Spatial mapping to mouse/human organs <notebooks/spatial_map_mousehuman>
+    (1) Integrate cells and tissues of spatial transcriptomics data across image-based technologies <notebooks/1_spatial_integration_imaging.ipynb>
+    (2) Integrate cells and tissues of spatial transcriptomics data across image-based and sequencing technologies <notebooks/2_spatial_integration_cross_tech.ipynb>
+    (3) Spatial imputation of unmeasured genes <notebooks/3_gene_spatial_imputation.ipynb>
+    (4) Map new datasets to existing pretrained FuseMap model <notebooks/4_map_to_new_dataset.ipynb>

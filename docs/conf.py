@@ -63,6 +63,21 @@ nbsphinx_thumbnails = {
     'notebooks/spatial_map_mousehuman': '_static/test.png'
 }
 
+nbsphinx_execute = 'auto'
+nbsphinx_execute_arguments = [
+    "--InlineBackend.figure_formats={'svg', 'pdf'}",
+    "--InlineBackend.rc={'figure.dpi': 96}"
+]
+
+# Skip execution of specific notebooks
+nbsphinx_allow_errors = True
+nbsphinx_execute_notebooks = {
+    # 'notebooks/2_spatial_integration_cross_tech.ipynb': 'never',
+    '*': 'auto'
+}
+
+# Exclude patterns
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 templates_path = ['_templates']
 
@@ -84,13 +99,6 @@ todo_emit_warnings = True
 
 html_theme = "sphinx_book_theme"
 # autodoc_class_signature = "separated"
-
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
-
-
-# -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_static_path = ['_static']
 

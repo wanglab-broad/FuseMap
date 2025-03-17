@@ -1,0 +1,1041 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fusemap.model &#8212; FuseMap 1.0.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=f9c1cefe"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fusemap/model';</script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">FuseMap 1.0.0 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html"> Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html"> Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials.html"> Tutorials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/1_spatial_integration_imaging.html">(1) Integrate cells and tissues of spatial transcriptomics data across image-based technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/2_spatial_integration_cross_tech.html">(2) Integrate cells and tissues of spatial transcriptomics data across image-based and sequencing technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/3_gene_spatial_imputation.html">(3) Spatial imputation of unmeasured genes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/4_map_to_new_dataset.html">(4) Map new datasets to existing pretrained FuseMap model</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html"> API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html">API Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/spatial_integrate.html">fusemap.spatial_integrate module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/spatial_map.html">fusemap.spatial_map module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/loss.html">fusemap.loss module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/model.html">fusemap.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/train.html">fusemap.train module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/train_model.html">fusemap.train_model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/dataset.html">fusemap.dataset module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/config.html">fusemap.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/logger.html">fusemap.logger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/preprocess.html">fusemap.preprocess module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/utils.html">fusemap.utils module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html"> About</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fusemap.model</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">torch.distributions</span> <span class="k">as</span> <span class="nn">D</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pickle5</span> <span class="k">as</span> <span class="nn">pickle</span>
+<span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+
+
+<div class="viewcode-block" id="reset_parameters">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.reset_parameters">[docs]</a>
+<span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="n">para</span><span class="p">):</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="n">para</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Discriminator">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.Discriminator">[docs]</a>
+<span class="k">class</span> <span class="nc">Discriminator</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Discriminator network for the FuseMap model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    latent_dim : int</span>
+<span class="sd">        The dimension of the latent space.</span>
+<span class="sd">    n_atlas : int</span>
+<span class="sd">        The number of atlases.</span>
+<span class="sd">    dropout_rate : float</span>
+<span class="sd">        The dropout rate.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; disc = Discriminator(100, 10, 0.1)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">,</span> <span class="n">n_atlas</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Discriminator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear_0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">act_0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="n">negative_slope</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout_0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">dropout_rate</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">act_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="n">negative_slope</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">dropout_rate</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pred</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_features</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="n">n_atlas</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># self.sigmoid = nn.Sigmoid()</span>
+
+<div class="viewcode-block" id="Discriminator.forward">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.Discriminator.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass for the Discriminator class.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : torch.Tensor</span>
+<span class="sd">            The input tensor.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        x : torch.Tensor</span>
+<span class="sd">            The output tensor.</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; x = torch.randn(10, 100)</span>
+<span class="sd">        &gt;&gt;&gt; disc = Discriminator(100, 10, 0.1)</span>
+<span class="sd">        &gt;&gt;&gt; y = disc(x)</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_0</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">act_0</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout_0</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">act_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pred</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Adj_model">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.Adj_model">[docs]</a>
+<span class="k">class</span> <span class="nc">Adj_model</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adjacency model for the FuseMap model.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    N : int</span>
+<span class="sd">        The number of nodes in the graph.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; adj = Adj_model(10)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Adj_model</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">N</span>
+        <span class="c1"># initialize your weight</span>
+        <span class="c1"># self.weight = nn.Parameter(torch.full((N,N), 1.0/N))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">)))</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">xavier_uniform_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Adj_model.forward">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.Adj_model.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass for the Adj_model class.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        weight_normalized : torch.Tensor</span>
+<span class="sd">            The normalized weight matrix.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; adj = Adj_model(10)</span>
+<span class="sd">        &gt;&gt;&gt; adj()</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">weight_relu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+        <span class="n">weight_relu</span> <span class="o">=</span> <span class="n">weight_relu</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">weight_relu</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="c1">### make weight matrix symmetric</span>
+        <span class="n">weight_upper</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span><span class="n">weight_relu</span><span class="p">)</span>
+        <span class="n">weight_lower</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">weight_relu</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">weight_symmetric</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">weight_upper</span><span class="p">,</span> <span class="n">weight_lower</span><span class="p">)</span>
+        <span class="n">weight_symmetric</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">weight_symmetric</span>
+            <span class="o">+</span> <span class="n">weight_symmetric</span><span class="o">.</span><span class="n">T</span>
+            <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">weight_symmetric</span><span class="o">.</span><span class="n">diagonal</span><span class="p">())</span>
+        <span class="p">)</span>
+
+        <span class="n">k</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># torch.randint(3, 50, (1,)).item()</span>
+        <span class="n">topk</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">weight_symmetric</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Create a mask with 1s for the top k values and 0s for the rest</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">weight_symmetric</span> <span class="o">&gt;=</span> <span class="n">topk</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="c1"># Apply the mask to the weights</span>
+        <span class="n">weight_topk</span> <span class="o">=</span> <span class="n">weight_symmetric</span> <span class="o">*</span> <span class="n">mask</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+        <span class="c1"># Apply normalization along the row</span>
+        <span class="n">weight_sum</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weight_topk</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-8</span>
+        <span class="p">)</span>  <span class="c1"># to prevent division by zero</span>
+        <span class="n">weight_normalized</span> <span class="o">=</span> <span class="n">weight_topk</span> <span class="o">/</span> <span class="n">weight_sum</span>
+
+        <span class="k">return</span> <span class="n">weight_normalized</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="FuseMapEncoder">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.FuseMapEncoder">[docs]</a>
+<span class="k">class</span> <span class="nc">FuseMapEncoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Encoder network for the FuseMap model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_dim : int</span>
+<span class="sd">        The dimension of the input.</span>
+<span class="sd">    hidden_dim : int</span>
+<span class="sd">        The dimension of the hidden layer.</span>
+<span class="sd">    latent_dim : int</span>
+<span class="sd">        The dimension of the latent space.</span>
+<span class="sd">    dropout_rate : float</span>
+<span class="sd">        The dropout rate.</span>
+<span class="sd">    normalization : str</span>
+<span class="sd">        The normalization type.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; enc = FuseMapEncoder(100, 50, 10, 0.1)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">normalization</span><span class="o">=</span><span class="s2">&quot;batchnorm&quot;</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FuseMapEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout_0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">dropout_rate</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear_0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation_0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="n">negative_slope</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">normalization</span> <span class="o">==</span> <span class="s2">&quot;layernorm&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bn_0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">normalization</span> <span class="o">==</span> <span class="s2">&quot;batchnorm&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bn_0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">(</span>
+                <span class="n">hidden_dim</span><span class="p">,</span>
+                <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span>
+                <span class="n">momentum</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                <span class="n">affine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">track_running_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">dropout_rate</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="n">negative_slope</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">normalization</span> <span class="o">==</span> <span class="s2">&quot;layernorm&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bn_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LayerNorm</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">normalization</span> <span class="o">==</span> <span class="s2">&quot;batchnorm&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bn_1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm1d</span><span class="p">(</span>
+                <span class="n">hidden_dim</span><span class="p">,</span>
+                <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span>
+                <span class="n">momentum</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                <span class="n">affine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">track_running_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mean</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_var</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FuseMapEncoder.forward">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.FuseMapEncoder.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">adj</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass for the FuseMapEncoder class.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : torch.Tensor</span>
+<span class="sd">            The input tensor.</span>
+<span class="sd">        adj : torch.Tensor</span>
+<span class="sd">            The adjacency matrix.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        z_sample : torch.Tensor</span>
+<span class="sd">        The sampled latent space tensor.</span>
+<span class="sd">        None</span>
+<span class="sd">        None</span>
+<span class="sd">        z_mean : torch.Tensor</span>
+<span class="sd">        The mean of the latent space tensor.</span>
+<span class="sd">            </span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; x = torch.randn(10, 100)</span>
+<span class="sd">        &gt;&gt;&gt; adj = torch.randn(100, 100)</span>
+<span class="sd">        &gt;&gt;&gt; enc = FuseMapEncoder(100, 50, 10, 0.1)</span>
+<span class="sd">        &gt;&gt;&gt; z_sample, _, _, z_mean = enc(x, adj)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">h_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_0</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">h_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn_0</span><span class="p">(</span><span class="n">h_1</span><span class="p">)</span>
+        <span class="n">h_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_0</span><span class="p">(</span><span class="n">h_1</span><span class="p">)</span>
+        <span class="n">h_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout_0</span><span class="p">(</span><span class="n">h_1</span><span class="p">)</span>
+
+        <span class="n">h_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_1</span><span class="p">(</span><span class="n">h_1</span><span class="p">)</span>
+        <span class="n">h_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn_1</span><span class="p">(</span><span class="n">h_2</span><span class="p">)</span>
+        <span class="n">h_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_1</span><span class="p">(</span><span class="n">h_2</span><span class="p">)</span>
+        <span class="n">h_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout_1</span><span class="p">(</span><span class="n">h_2</span><span class="p">)</span>
+
+
+        <span class="n">z_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">h_2</span><span class="p">)</span>
+        <span class="n">z_log_var</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softplus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_var</span><span class="p">(</span><span class="n">h_2</span><span class="p">))</span>
+
+        <span class="n">z_sample</span> <span class="o">=</span> <span class="n">D</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">z_mean</span><span class="p">,</span> <span class="n">z_log_var</span><span class="p">)</span>
+        <span class="c1"># z_sample_r = z_sample.rsample()</span>
+
+        <span class="n">z_spatial</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">adj</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">z_mean</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">z_sample</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">z_spatial</span><span class="p">,</span> <span class="n">z_mean</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="FuseMapDecoder">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.FuseMapDecoder">[docs]</a>
+<span class="k">class</span> <span class="nc">FuseMapDecoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gene_embedding</span><span class="p">,</span> <span class="n">var_index</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FuseMapDecoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding</span> <span class="o">=</span> <span class="n">gene_embedding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_index</span> <span class="o">=</span> <span class="n">var_index</span>
+        <span class="c1"># self.activation_3 = nn.LeakyReLU(negative_slope=0.2)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation_3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+
+<div class="viewcode-block" id="FuseMapDecoder.forward">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.FuseMapDecoder.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z_spatial</span><span class="p">,</span> <span class="n">adj</span><span class="p">):</span>
+        <span class="n">h_4</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">z_spatial</span><span class="p">)</span>
+        <span class="n">x_recon_spatial</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">h_4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_index</span><span class="p">])</span>
+        <span class="n">x_recon_spatial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_3</span><span class="p">(</span><span class="n">x_recon_spatial</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">x_recon_spatial</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="FuseMapAdaptDecoder">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.FuseMapAdaptDecoder">[docs]</a>
+<span class="k">class</span> <span class="nc">FuseMapAdaptDecoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var_index</span><span class="p">,</span> <span class="n">gene_embedding_pretrain</span><span class="p">,</span> <span class="n">gene_embedding_new</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FuseMapAdaptDecoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding_pretrain</span> <span class="o">=</span> <span class="n">gene_embedding_pretrain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding_new</span> <span class="o">=</span> <span class="n">gene_embedding_new</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_index</span> <span class="o">=</span> <span class="n">var_index</span>
+        <span class="c1"># self.activation_3 = nn.LeakyReLU(negative_slope=0.2)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation_3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+        
+<div class="viewcode-block" id="FuseMapAdaptDecoder.forward">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.FuseMapAdaptDecoder.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z_spatial</span><span class="p">,</span> <span class="n">adj</span><span class="p">,</span> <span class="n">gene_embedding_pretrain</span><span class="p">,</span> <span class="n">gene_embedding_new</span><span class="p">):</span>
+        <span class="n">h_4</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">z_spatial</span><span class="p">)</span>
+        <span class="c1"># p=0</span>
+        <span class="c1"># gene_embed_all = torch.hstack([gene_embedding_pretrain, self.gene_embedding_new ])</span>
+
+        <span class="n">gene_embed_all</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding_new</span><span class="p">,</span>
+                <span class="n">gene_embedding_pretrain</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">x_recon_spatial</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mm</span><span class="p">(</span><span class="n">h_4</span><span class="p">,</span> <span class="n">gene_embed_all</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_index</span><span class="p">])</span>
+        <span class="n">x_recon_spatial</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_3</span><span class="p">(</span><span class="n">x_recon_spatial</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">x_recon_spatial</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Fuse_network">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.Fuse_network">[docs]</a>
+<span class="k">class</span> <span class="nc">Fuse_network</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    FuseMap model.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pca_dim : int</span>
+<span class="sd">        The dimension of the PCA.</span>
+<span class="sd">    input_dim : list</span>
+<span class="sd">        The list of input dimensions.</span>
+<span class="sd">    hidden_dim : int</span>
+<span class="sd">        The dimension of the hidden layer.</span>
+<span class="sd">    latent_dim : int</span>
+<span class="sd">        The dimension of the latent space.</span>
+<span class="sd">    dropout_rate : float</span>
+<span class="sd">        The dropout rate.</span>
+<span class="sd">    var_name : list</span>
+<span class="sd">        The list of variable names.</span>
+<span class="sd">    all_unique_genes : list</span>
+<span class="sd">        The list of all unique genes.</span>
+<span class="sd">    use_input : str</span>
+<span class="sd">        The input type.</span>
+<span class="sd">    n_atlas : int</span>
+<span class="sd">        The number of atlases.</span>
+<span class="sd">    input_identity : list</span>
+<span class="sd">        The list of input identities.</span>
+<span class="sd">    n_obs : list</span>
+<span class="sd">        The list of number of observations.</span>
+<span class="sd">    num_epoch : int</span>
+<span class="sd">        The number of epochs.</span>
+<span class="sd">    pretrain_model : bool</span>
+<span class="sd">        Whether the model is pretrained.</span>
+<span class="sd">    pretrain_n_atlas : int</span>
+<span class="sd">        The number of pretrained atlases.</span>
+<span class="sd">    PRETRAINED_GENE : list</span>
+<span class="sd">        The list of pretrained genes.</span>
+<span class="sd">    new_train_gene : list</span>
+<span class="sd">        The list of new training genes.</span>
+<span class="sd">    use_llm_gene_embedding : bool</span>
+<span class="sd">        Whether to use the LLM gene embedding.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; model = Fuse_network(100, [10, 20], 50, 10, 0.1, [&#39;gene1&#39;, &#39;gene2&#39;], [&#39;gene1&#39;, &#39;gene2&#39;], &#39;norm&#39;, 2, [&#39;scrna&#39;, &#39;scrna&#39;], [100, 200], 100)</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">pca_dim</span><span class="p">,</span>
+        <span class="n">input_dim</span><span class="p">,</span>
+        <span class="n">hidden_dim</span><span class="p">,</span>
+        <span class="n">latent_dim</span><span class="p">,</span>
+        <span class="n">dropout_rate</span><span class="p">,</span>
+        <span class="n">var_name</span><span class="p">,</span>
+        <span class="n">all_unique_genes</span><span class="p">,</span>
+        <span class="n">use_input</span><span class="p">,</span>
+        <span class="n">n_atlas</span><span class="p">,</span>
+        <span class="n">input_identity</span><span class="p">,</span>
+        <span class="n">n_obs</span><span class="p">,</span>
+        <span class="n">num_epoch</span><span class="p">,</span>
+        <span class="n">pretrain_model</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">pretrain_n_atlas</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">PRETRAINED_GENE</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">new_train_gene</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">use_llm_gene_embedding</span><span class="o">=</span><span class="s1">&#39;false&#39;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Fuse_network</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scrna_seq_adj</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">use_input</span> <span class="o">==</span> <span class="s2">&quot;norm&quot;</span> <span class="ow">or</span> <span class="n">use_input</span> <span class="o">==</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_atlas</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_encoder_module</span><span class="p">(</span>
+                    <span class="s2">&quot;atlas&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">input_dim</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">,</span> <span class="n">dropout_rate</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleDict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">)</span>
+
+        <span class="c1">##### build gene embedding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_index</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">use_llm_gene_embedding</span><span class="o">==</span><span class="s1">&#39;false&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pretrain_model</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding_pretrained</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">PRETRAINED_GENE</span><span class="p">))</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding_new</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_train_gene</span><span class="p">))</span>
+                <span class="p">)</span>
+                <span class="n">all_genes</span> <span class="o">=</span> <span class="n">new_train_gene</span> <span class="o">+</span> <span class="n">PRETRAINED_GENE</span>
+                <span class="k">for</span> <span class="n">ij</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_atlas</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">var_index</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">all_genes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">var_name</span><span class="p">[</span><span class="n">ij</span><span class="p">]])</span>
+                <span class="n">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding_new</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_unique_genes</span><span class="p">))</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">ij</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_atlas</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">var_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">all_unique_genes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">var_name</span><span class="p">[</span><span class="n">ij</span><span class="p">]]</span>
+                    <span class="p">)</span>
+                <span class="n">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">use_llm_gene_embedding</span><span class="o">==</span><span class="s1">&#39;combine&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pretrain_model</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding_pretrained</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">PRETRAINED_GENE</span><span class="p">))</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding_new</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_train_gene</span><span class="p">))</span>
+                <span class="p">)</span>
+                <span class="n">all_genes</span> <span class="o">=</span> <span class="n">new_train_gene</span> <span class="o">+</span> <span class="n">PRETRAINED_GENE</span>
+                <span class="k">for</span> <span class="n">ij</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_atlas</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">var_index</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">all_genes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">var_name</span><span class="p">[</span><span class="n">ij</span><span class="p">]])</span>
+                <span class="n">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding_new</span><span class="p">)</span>
+            
+                <span class="n">path_genept</span><span class="o">=</span><span class="s2">&quot;./data/GenePT_gene_protein_embedding_model_3_text_pca.pickle&quot;</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_genept</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                    <span class="n">GPT_3_5_gene_embeddings</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>  
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">llm_gene_embedding</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_genes</span><span class="p">))</span>    
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">gene</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_genes</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">GPT_3_5_gene_embeddings</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">llm_gene_embedding</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">GPT_3_5_gene_embeddings</span><span class="p">[</span><span class="n">gene</span><span class="p">])</span>
+
+                <span class="c1"># Calculate gene embedding loss</span>
+                <span class="n">ground_truth_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_gene_embedding</span><span class="o">.</span><span class="n">T</span>
+                <span class="n">ind</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ground_truth_matrix</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">!=</span><span class="mi">0</span>
+                <span class="n">ground_truth_matrix</span><span class="o">=</span><span class="n">ground_truth_matrix</span><span class="p">[</span><span class="n">ind</span><span class="p">,:]</span>
+                
+                <span class="bp">self</span><span class="o">.</span><span class="n">llm_ind</span><span class="o">=</span><span class="n">ind</span>
+                <span class="n">ground_truth_matrix_normalized</span> <span class="o">=</span> <span class="n">ground_truth_matrix</span> <span class="o">/</span> <span class="n">ground_truth_matrix</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ground_truth_rel_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">ground_truth_matrix_normalized</span><span class="p">,</span> <span class="n">ground_truth_matrix_normalized</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_unique_genes</span><span class="p">))</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">ij</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_atlas</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">var_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">all_unique_genes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">var_name</span><span class="p">[</span><span class="n">ij</span><span class="p">]]</span>
+                    <span class="p">)</span>
+                <span class="n">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding</span><span class="p">)</span>
+
+                <span class="n">path_genept</span><span class="o">=</span><span class="s2">&quot;./data/GenePT_gene_protein_embedding_model_3_text_pca.pickle&quot;</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_genept</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                    <span class="n">GPT_3_5_gene_embeddings</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>  
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">llm_gene_embedding</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_unique_genes</span><span class="p">))</span>    
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">gene</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_unique_genes</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">GPT_3_5_gene_embeddings</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">llm_gene_embedding</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">GPT_3_5_gene_embeddings</span><span class="p">[</span><span class="n">gene</span><span class="p">])</span>
+
+                <span class="c1"># Calculate gene embedding loss</span>
+                <span class="n">ground_truth_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_gene_embedding</span><span class="o">.</span><span class="n">T</span>
+                <span class="n">ind</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ground_truth_matrix</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">!=</span><span class="mi">0</span>
+                <span class="n">ground_truth_matrix</span><span class="o">=</span><span class="n">ground_truth_matrix</span><span class="p">[</span><span class="n">ind</span><span class="p">,:]</span>
+                
+                <span class="bp">self</span><span class="o">.</span><span class="n">llm_ind</span><span class="o">=</span><span class="n">ind</span>
+                <span class="n">ground_truth_matrix_normalized</span> <span class="o">=</span> <span class="n">ground_truth_matrix</span> <span class="o">/</span> <span class="n">ground_truth_matrix</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ground_truth_rel_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">ground_truth_matrix_normalized</span><span class="p">,</span> <span class="n">ground_truth_matrix_normalized</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">use_llm_gene_embedding</span><span class="o">==</span><span class="s1">&#39;true&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pretrain_model</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;pretrain_model is not supported for use_llm_gene_embedding&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding</span> <span class="o">=</span>  <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_unique_genes</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">ij</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_atlas</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">var_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">all_unique_genes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">var_name</span><span class="p">[</span><span class="n">ij</span><span class="p">]]</span>
+                    <span class="p">)</span>
+
+                <span class="n">path_genept</span><span class="o">=</span><span class="s2">&quot;./jupyter_notebook/data/GenePT_emebdding_v2/GenePT_gene_protein_embedding_model_3_text_pca.pickle&quot;</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_genept</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+                    <span class="n">GPT_3_5_gene_embeddings</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>    
+                <span class="c1"># reset_parameters(self.gene_embedding)</span>
+                <span class="c1"># ind=0</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">gene</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_unique_genes</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">GPT_3_5_gene_embeddings</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="c1"># print(gene)</span>
+                        <span class="c1"># ind+=1</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding</span><span class="p">[:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">GPT_3_5_gene_embeddings</span><span class="p">[</span><span class="n">gene</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding</span><span class="o">=</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;use_llm_gene_embedding should be either &#39;true&#39; or &#39;false&#39; or &#39;combine&#39;&quot;</span><span class="p">)</span>
+
+        <span class="c1">##### build decoders</span>
+        <span class="k">if</span> <span class="n">pretrain_model</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ij</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_atlas</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_adaptdecoder_module</span><span class="p">(</span>
+                    <span class="s2">&quot;atlas&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ij</span><span class="p">),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">var_index</span><span class="p">[</span><span class="n">ij</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding_pretrained</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding_new</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ij</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_atlas</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_decoder_module</span><span class="p">(</span>
+                    <span class="s2">&quot;atlas&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ij</span><span class="p">),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">gene_embedding</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">var_index</span><span class="p">[</span><span class="n">ij</span><span class="p">],</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleDict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">)</span>
+
+        <span class="c1">##### build discriminators</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">discriminator_single</span> <span class="o">=</span> <span class="n">Discriminator</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">n_atlas</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">discriminator_spatial</span> <span class="o">=</span> <span class="n">Discriminator</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">n_atlas</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">pretrain_model</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">discriminator_single_pretrain</span> <span class="o">=</span> <span class="n">Discriminator</span><span class="p">(</span>
+                <span class="n">latent_dim</span><span class="p">,</span> <span class="n">pretrain_n_atlas</span><span class="p">,</span> <span class="n">dropout_rate</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">discriminator_spatial_pretrain</span> <span class="o">=</span> <span class="n">Discriminator</span><span class="p">(</span>
+                <span class="n">latent_dim</span><span class="p">,</span> <span class="n">pretrain_n_atlas</span><span class="p">,</span> <span class="n">dropout_rate</span>
+            <span class="p">)</span>
+
+        <span class="c1">##### build scrnaseq adjacency matrix</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_atlas</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">input_identity</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;scrna&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scrna_seq_adj</span><span class="p">[</span><span class="s2">&quot;atlas&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">Adj_model</span><span class="p">(</span><span class="n">n_obs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scrna_seq_adj</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleDict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scrna_seq_adj</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Fuse_network.add_encoder_module">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.Fuse_network.add_encoder_module">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_encoder_module</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="o">=</span><span class="mf">0.1</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add an encoder module to the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : str</span>
+<span class="sd">            The key for the encoder module.</span>
+<span class="sd">        input_dim : int</span>
+<span class="sd">            The dimension of the input.</span>
+<span class="sd">        hidden_dim : int</span>
+<span class="sd">            The dimension of the hidden layer.</span>
+<span class="sd">        latent_dim : int</span>
+<span class="sd">            The dimension of the latent space.</span>
+<span class="sd">        dropout_rate : float</span>
+<span class="sd">            The dropout rate.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; model = Fuse_network(100, [10, 20], 50, 10, 0.1, [&#39;gene1&#39;, &#39;gene2&#39;], [&#39;gene1&#39;, &#39;gene2&#39;], &#39;norm&#39;, 2, [&#39;scrna&#39;, &#39;scrna&#39;], [100, 200], 100)</span>
+<span class="sd">        &gt;&gt;&gt; model.add_encoder_module(&#39;atlas1&#39;, 10, 50, 10, 0.1)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">FuseMapEncoder</span><span class="p">(</span>
+            <span class="n">input_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">,</span> <span class="n">dropout_rate</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Fuse_network.add_decoder_module">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.Fuse_network.add_decoder_module">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_decoder_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">gene_embedding</span><span class="p">,</span> <span class="n">var_index</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a decoder module to the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : str</span>
+<span class="sd">            The key for the decoder module.</span>
+<span class="sd">        gene_embedding : torch.Tensor</span>
+<span class="sd">            The gene embedding tensor.</span>
+<span class="sd">        var_index : list</span>
+<span class="sd">            The list of variable indices.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; model = Fuse_network(100, [10, 20], 50, 10, 0.1, [&#39;gene1&#39;, &#39;gene2&#39;], [&#39;gene1&#39;, &#39;gene2&#39;], &#39;norm&#39;, 2, [&#39;scrna&#39;, &#39;scrna&#39;], [100, 200], 100)</span>
+<span class="sd">        &gt;&gt;&gt; model.add_decoder_module(&#39;atlas1&#39;, torch.randn(10, 100), [1, 2, 3])</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">FuseMapDecoder</span><span class="p">(</span><span class="n">gene_embedding</span><span class="p">,</span> <span class="n">var_index</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Fuse_network.add_adaptdecoder_module">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.Fuse_network.add_adaptdecoder_module">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_adaptdecoder_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">var_index</span><span class="p">,</span> <span class="n">gene_pretrain</span><span class="p">,</span> <span class="n">gene_new</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add an adapted decoder module to the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : str</span>
+<span class="sd">            The key for the adapted decoder module.</span>
+<span class="sd">        var_index : list</span>
+<span class="sd">            The list of variable indices.</span>
+<span class="sd">        gene_pretrain : torch.Tensor</span>
+<span class="sd">            The pretrained gene embedding tensor.</span>
+<span class="sd">        gene_new : torch.Tensor</span>
+<span class="sd">            The new gene embedding tensor.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; model = Fuse_network(100, [10, 20], 50, 10, 0.1, [&#39;gene1&#39;, &#39;gene2&#39;], [&#39;gene1&#39;, &#39;gene2&#39;], &#39;norm&#39;, 2, [&#39;scrna&#39;, &#39;scrna&#39;], [100, 200], 100)</span>
+<span class="sd">        &gt;&gt;&gt; model.add_adaptdecoder_module(&#39;atlas1&#39;, [1, 2, 3], torch.randn(10, 100), torch.randn(10, 100))</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">FuseMapAdaptDecoder</span><span class="p">(</span><span class="n">var_index</span><span class="p">,</span> <span class="n">gene_pretrain</span><span class="p">,</span> <span class="n">gene_new</span><span class="p">)</span></div>
+</div>
+
+
+
+
+
+<div class="viewcode-block" id="NNTransfer">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.NNTransfer">[docs]</a>
+<span class="k">class</span> <span class="nc">NNTransfer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">output_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NNTransfer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activate</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Softmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NNTransfer.forward">
+<a class="viewcode-back" href="../../modules/model.html#fusemap.model.NNTransfer.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Yichun He
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Yichun He.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

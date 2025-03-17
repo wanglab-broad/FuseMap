@@ -1,0 +1,2 @@
+output_save_dir,keep_celltype,keep_tissueregion,use_llm_gene_embedding,pretrain_model_path
+/Users/mingzeyuan/Workspace/FuseMap/output/integrate_merfish_starmap,,,false,
