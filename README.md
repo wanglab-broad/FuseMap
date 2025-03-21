@@ -38,14 +38,9 @@ scanpy
 seaborn
 ```
 
-## Installation
-```
-conda env create -f fusemap_environment.yml
-```
 
-
-## Tutorial
-- Read a [tutorial](./tutorial_sample_data.ipynb) on [sample data](https://drive.google.com/drive/folders/1DKfP5awTUa5gaL0WB-csD0M8v-COiBfY?usp=sharing) .
+## Installation and Tutorial
+- Read the tutorial [here](https://fusemap.readthedocs.io/en/latest/) .
 
 
 ## Citation
