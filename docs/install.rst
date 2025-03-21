@@ -7,7 +7,7 @@ Installing the package
 --------------------------------------------------------------------------------
 
 The FuseMap package can be
-downloaded from `GitHub <https://github.com/yichunher/fusemap>`__.
+downloaded from `GitHub <https://github.com/wanglab-broad/FuseMap>`__.
 Installation is quick and performed using ``pip`` in the usual manner:
 
 ::
