@@ -30,25 +30,27 @@ extensions = ["sphinx.ext.autodoc",
 # autodoc configuration
 autodoc_typehints = "description"
 autodoc_mock_imports = ["anndata",
-                        "hnswlib",
-                        "captum",
-                        "circlify",
+                        "dgl",
+                        # "hnswlib",
+                        # "captum",
+                        # "circlify",
                         "matplotlib",
-                        "networkx",
-                        "numba",
-                        "numcodecs",
+                        # "networkx",
+                        # "numba",
+                        # "numcodecs",
                         "numpy",
-                        "obonet",
+                        # "obonet",
                         "pandas",
-                        "pegasusio",
-                        "pytorch_lightning",
+                        # "pegasusio",
+                        # "pytorch_lightning",
                         "scanpy",
                         "scipy",
                         "seaborn",
-                        "tiledb",
+                        # "tiledb",
                         "tqdm",
                         "torch",
-                        "zarr"]
+                        # "zarr",
+                        ]
 
 # todo configuration
 todo_include_todos = True
@@ -102,3 +104,17 @@ html_css_files = ['custom.css']
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = "fusemap-doc"
+
+
+
+# Prevent DGL from actually loading
+import sys
+from unittest.mock import MagicMock
+
+class Mock(MagicMock):
+    @classmethod
+    def __getattr__(cls, name):
+        return MagicMock()
+
+MOCK_MODULES = ['dgl', 'dgl.data', 'dgl.nn', 'dgl.function']
+sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
