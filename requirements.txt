@@ -8,3 +8,4 @@ fusemap
 # numpy==1.24.1
 # easydict
 # arcplot
+pandoc

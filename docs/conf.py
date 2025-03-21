@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.abspath('../../fusemap'))
 project = 'FuseMap'
 copyright = '2025, Yichun He'
 author = 'Yichun He'
-release = '1.0.0'
+release = '1.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -58,12 +58,12 @@ todo_include_todos = True
 
 # nbsphinx configuration
 nbsphinx_thumbnails = {
-    'notebooks/1_spatial_integration_imaging' : '_static/test.png',
-    'notebooks/2_spatial_integration_cross_tech': '_static/test.png',
-    'notebooks/3_gene_spatial_imputation': '_static/test.png',
-    'notebooks/4_map_new_dataset_customized': '_static/test.png',
-    'notebooks/5_map_new_dataset_molCCF': '_static/test.png',
-    'notebooks/6_cell_to_cell_interaction': '_static/test.png'
+    'notebooks/1. Spatially integrate imaging-based data' : '_static/test.png',
+    'notebooks/2. Spatially integrate imaging-based and sequencing-based data': '_static/test.png',
+    'notebooks/3. Spatially impute transcriptome-wide genes': '_static/test.png',
+    'notebooks/4. Map new datasets to existing pre-trained FuseMap model (customized)': '_static/test.png',
+    'notebooks/5. Map new datasets to the existing pre-trained FuseMap model (molCCF)': '_static/test.png',
+    'notebooks/6. Infer cell-cell communication/interactions': '_static/test.png'
 
 }
 
