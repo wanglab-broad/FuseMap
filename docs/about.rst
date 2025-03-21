@@ -5,7 +5,7 @@ Support
 --------------------------------------------------------------------------------
 
 You can report issues with FuseMap using our GitHub
-`issue tracker <https://github.com/yichunher/fusemap/issues>`__.
+`issue tracker <https://github.com/wanglab-broad/FuseMap>`__.
 
 .. _Authors:
 

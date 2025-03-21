@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 sys.path.insert(0, os.path.abspath('../../fusemap'))
 
 project = 'FuseMap'
-copyright = '2024, Yichun He'
+copyright = '2025, Yichun He'
 author = 'Yichun He'
 release = '1.0.0'
 
@@ -56,11 +56,13 @@ todo_include_todos = True
 
 # nbsphinx configuration
 nbsphinx_thumbnails = {
-    'notebooks/spatial_integrate_tech': '_static/test.png',
-    'notebooks/spatial_integrate_species': '_static/test.png',
-    'notebooks/spatial_impute': '_static/test.png',
-    'notebooks/spatial_map_mousebrain': '_static/test.png',
-    'notebooks/spatial_map_mousehuman': '_static/test.png'
+    'notebooks/1_spatial_integration_imaging' : '_static/test.png',
+    'notebooks/2_spatial_integration_cross_tech': '_static/test.png',
+    'notebooks/3_gene_spatial_imputation': '_static/test.png',
+    'notebooks/4_map_new_dataset_customized': '_static/test.png',
+    'notebooks/5_map_new_dataset_molCCF': '_static/test.png',
+    'notebooks/6_cell_to_cell_interaction': '_static/test.png'
+
 }
 
 
