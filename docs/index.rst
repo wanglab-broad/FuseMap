@@ -23,7 +23,6 @@ Contents
     Overview <self>
     Installation <install>
     Tutorials <tutorials>
-    API Reference <api>
     About <about>
 
 ------------------------------------------

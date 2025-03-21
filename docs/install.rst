@@ -19,7 +19,7 @@ Installation is quick and performed using ``pip`` in the usual manner:
 .. note::
 
     A GPU is necessary for accelerating computations.
-    Estimated time is 4 mins for integrating 200,000 cells on a single GPU.
+    Estimated time is 10 mins for integrating 200,000 cells with a single GPU.
 
 Downloading the pretrained models
 --------------------------------------------------------------------------------
