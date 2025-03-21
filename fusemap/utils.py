@@ -9,7 +9,7 @@ import torch
 import anndata as ad
 import pandas as pd
 import numpy as np
-import dgl
+# import dgl
 import random
 from fusemap.model import NNTransfer
 try:

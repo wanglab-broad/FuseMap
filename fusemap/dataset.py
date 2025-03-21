@@ -1,6 +1,6 @@
 import torch
 import scipy.sparse as sp
-import dgl
+# import dgl
 import numpy as np
 from torch.utils.data import Dataset, DataLoader, DataLoader
 import itertools

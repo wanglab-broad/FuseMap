@@ -1,6 +1,6 @@
 import logging
 import torch.nn.functional as F
-import sklearn
+# import sklearn
 import numpy as np
 import torch
 import torch.distributions as D
@@ -8,7 +8,7 @@ import pandas as pd
 from sparse import COO
 from fusemap.config import *
 import torch.nn as nn
-from sklearn import preprocessing
+# from sklearn import preprocessing
 
 def AE_Gene_loss(recon_x, x, z_distribution):
     """
