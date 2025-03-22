@@ -9,7 +9,7 @@ import torch
 import anndata as ad
 import pandas as pd
 import numpy as np
-# import dgl
+import dgl
 import random
 from fusemap.model import NNTransfer
 try:
@@ -257,3 +257,65 @@ def transfer_annotation(X_input, save_dir, molccf_path):
                 all_predictions.extend(predicted.detach().cpu().numpy())
         ad_embed.obs['fusemap_tissueregion']=[le_gt_tissue_region_main_STARmap[i] for i in all_predictions]
         ad_embed.write_h5ad(save_dir + "/ad_tissueregion_embedding.h5ad")
+
+def NNTransferTrain(model, criterion, optimizer, train_loader,val_loader, device, 
+                    save_pth=None, epochs=200):
+    eval_accuracy_mini=0#np.inf
+    patience_count=0
+    for epoch in range(epochs):
+        model.train()
+        loss_all=0
+        for inputs, labels in train_loader:
+            inputs, labels = inputs.to(device), labels.to(device)
+            optimizer.zero_grad()
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+            loss_all+=loss.item()
+        eval_loss, eval_accuracy = NNTransferEvaluate(model, val_loader, criterion, device)
+        if eval_accuracy_mini<eval_accuracy:
+            eval_accuracy_mini=eval_accuracy
+#             torch.save(model.state_dict(), save_pth)
+            print(f"Epoch {epoch}/{epochs} - Train Loss: {loss_all / len(train_loader)}, Accuracy: {eval_accuracy}")
+            patience_count=0
+        else:
+            patience_count+=1
+        if patience_count>10:
+            p=0
+            print(f"Epoch {epoch}/{epochs} - early stopping due to patience count")
+            break
+            
+def NNTransferEvaluate(model, dataloader, criterion, device):
+    model.eval()
+    total_loss = 0
+    correct = 0
+    total = 0
+    with torch.no_grad():
+        for inputs, labels in dataloader:
+            inputs, labels = inputs.to(device), labels.to(device)
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
+            total_loss += loss.item()
+            _, predicted = outputs.max(1)
+            total += labels.size(0)
+            correct += predicted.eq(labels).sum().item()
+    accuracy = 100. * correct / total
+    return total_loss/len(dataloader), accuracy
+
+def NNTransferPredictWithUncertainty(model, dataloader, device):
+    model.eval()
+    all_predictions = []
+    all_uncertainties = []
+
+    with torch.no_grad():
+        for inputs in dataloader:
+            inputs = inputs[0].to(device)
+            outputs = model(inputs)
+            _, predicted = torch.max(outputs, 1)
+            confidence = torch.max(outputs, dim=1)[0]
+            uncertainty = 1 - confidence
+            all_predictions.extend(predicted.detach().cpu().numpy())
+            all_uncertainties.extend(uncertainty.detach().cpu().numpy())
+
+    return np.vstack(all_predictions), np.vstack(all_uncertainties)
