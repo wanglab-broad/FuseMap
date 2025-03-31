@@ -181,7 +181,7 @@ def get_representative_embeddings(Z_cells, cell_labels, n_types=None, n_prototyp
 
         if method == "kmeans":
             # Use K-Means clustering to find prototypes
-            kmeans = KMeans(n_clusters=n_prototypes, random_state=0, n_init="auto")
+            kmeans = KMeans(n_clusters=n_prototypes, random_state=0, n_init=10)
             kmeans.fit(embeddings)
             Z_representative[k, :, :] = kmeans.cluster_centers_  # Shape: [n_prototypes, C]
         else:
