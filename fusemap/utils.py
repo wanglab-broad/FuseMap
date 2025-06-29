@@ -12,6 +12,14 @@ import numpy as np
 import dgl
 import random
 from fusemap.model import NNTransfer
+import torch
+from sklearn import preprocessing
+from torch.utils.data import DataLoader, TensorDataset
+from torch.utils.data import random_split
+from torch import optim, nn
+import sklearn
+import numpy as np
+import pandas as pd
 try:
     import pickle5 as pickle
 except ModuleNotFoundError:
@@ -203,6 +211,8 @@ def read_cell_embedding(X_input, save_dir,keep_celltype, keep_tissueregion, use_
         ad_embed.write_h5ad(save_dir + "/ad_tissueregion_embedding.h5ad")
 
 
+
+
 def transfer_annotation(X_input, save_dir, molccf_path):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -277,13 +287,13 @@ def NNTransferTrain(model, criterion, optimizer, train_loader,val_loader, device
         if eval_accuracy_mini<eval_accuracy:
             eval_accuracy_mini=eval_accuracy
 #             torch.save(model.state_dict(), save_pth)
-            print(f"Epoch {epoch}/{epochs} - Train Loss: {loss_all / len(train_loader)}, Accuracy: {eval_accuracy}")
+            # print(f"Epoch {epoch}/{epochs} - Train Loss: {loss_all / len(train_loader)}, Accuracy: {eval_accuracy}")
             patience_count=0
         else:
             patience_count+=1
         if patience_count>10:
             p=0
-            print(f"Epoch {epoch}/{epochs} - early stopping due to patience count")
+            # print(f"Epoch {epoch}/{epochs} - early stopping due to patience count")
             break
             
 def NNTransferEvaluate(model, dataloader, criterion, device):
@@ -319,3 +329,49 @@ def NNTransferPredictWithUncertainty(model, dataloader, device):
             all_uncertainties.extend(uncertainty.detach().cpu().numpy())
 
     return np.vstack(all_predictions), np.vstack(all_uncertainties)
+
+
+def transfer_celltype(ad_cell_subset, label_key, cell_emb_sample, assign_key = 'predicted_celltype'):
+    sample1_embeddings = ad_cell_subset.X
+    sample1_labels = list(ad_cell_subset.obs[label_key])
+
+    le = preprocessing.LabelEncoder()
+    le.fit(sample1_labels)
+
+    sample1_labels = le.transform(sample1_labels)
+    sample1_labels = sample1_labels.astype('str').astype('int')
+
+    dataset1 = TensorDataset(torch.Tensor(sample1_embeddings), torch.Tensor(sample1_labels).long())
+    train_size = int(0.8 * len(dataset1))  # Use 80% of the data for training
+    val_size = len(dataset1) - train_size
+    train_dataset, val_dataset = random_split(dataset1, [train_size, val_size])
+
+    val_size = int(0.5 * len(val_dataset))  # Use 10% of the data for val and 10% for testing
+    test_size = len(val_dataset) - val_size
+    val_dataset, test_dataset = random_split(val_dataset, [val_size, test_size])
+
+    train_loader = DataLoader(train_dataset, batch_size=256, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=256, shuffle=False)
+    test_loader = DataLoader(test_dataset, batch_size=256, shuffle=False)
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    class_weight = torch.Tensor(sklearn.utils.class_weight.compute_class_weight(class_weight='balanced',
+                                                                                classes=np.unique(sample1_labels),
+                                                                                y=sample1_labels))
+    model = NNTransfer(input_dim=sample1_embeddings.shape[1],
+                    output_dim=len(np.unique(sample1_labels)))
+    model.to(device)  # Move the model to GPU if available
+    criterion = nn.CrossEntropyLoss(weight=class_weight.to(device))
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+    NNTransferTrain(model, criterion, optimizer, train_loader, val_loader, device,epochs=50)
+
+    sample2_embeddings = cell_emb_sample.X
+    dataset2 = TensorDataset(torch.Tensor(sample2_embeddings))
+    dataloader2 = DataLoader(dataset2, batch_size=256, shuffle=False)
+    sample2_predictions, sample2_uncertainty = NNTransferPredictWithUncertainty(model, dataloader2, device)
+    sample2_predictions = le.inverse_transform(sample2_predictions)
+
+    cell_emb_sample.obs[assign_key] = sample2_predictions
+    return cell_emb_sample
+

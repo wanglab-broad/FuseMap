@@ -4,7 +4,7 @@ import scipy
 from scipy.spatial import Delaunay
 from scipy.sparse.csr import csr_matrix
 import scanpy as sc
-# from sklearn.neighbors import NearestNeighbors
+from sklearn.neighbors import NearestNeighbors
 from scipy.spatial import cKDTree
 import logging
 
