@@ -53,7 +53,7 @@ np.float_ = np.float64
 def map_molCCF(path: str, section_IDs: List[str], 
                transfer_main_level: bool,
                transfer_sub_level: bool,
-               log: Annotated[callable, "Logger function"] = print) -> str:
+               log=print) -> str:
     """Given a path to a directory that has query spatial transcriptomics, 
     the matched section IDs, 
     transfer_main_level, a bool value where true indicates transfer main level cell types and false indicates not to transfer,
@@ -61,6 +61,13 @@ def map_molCCF(path: str, section_IDs: List[str],
     the tool will map each sample to the molCCF. output will be saved in output/fusemap/[input directory name]/molCCF_mapping/."""
     
     import os
+
+    # Add to memory
+    try:
+        from fusemap_agent import add_to_memory
+        add_to_memory("FuseMapTool", "map_molCCF", f"Starting molCCF mapping for path: {path}, sections: {section_IDs}")
+    except ImportError:
+        pass
 
     print(os.getcwd())
     last_folder = os.path.basename(os.path.normpath(path))  
@@ -186,16 +193,32 @@ def map_molCCF(path: str, section_IDs: List[str],
 
             ad_embed_control.write_h5ad(f'{output_save_dir}/{name}/ad_tissueregion_embedding.h5ad')
         
-    return f"New query data mapped to molCCF and results saved in {output_save_dir}."
+    result = f"New query data mapped to molCCF and results saved in {output_save_dir}."
+    
+    # Add to memory
+    try:
+        from fusemap_agent import add_to_memory
+        add_to_memory("FuseMapTool", "map_molCCF", result)
+    except ImportError:
+        pass
+    
+    return result
 
 
 
 ### ---------------- Tool 2: spatially integrate new datasets ---------------- ###
 @tool
-def fusemap_integrate(path: str, description, log: Annotated[callable, "Logger function"] = print) -> str:
+def fusemap_integrate(path: str, description, log=print) -> str:
     """Given a path to a directory that has query spatial transcriptomics, 
     description of the query dataset, the tool will use FuseMap to spatially integrate datasets. 
     Output will be saved in output/fusemap/[input directory name]/spatial_integrate/."""
+
+    # Add to memory
+    try:
+        from fusemap_agent import add_to_memory
+        add_to_memory("FuseMapTool", "fusemap_integrate", f"Starting integration for path: {path}, description: {description}")
+    except ImportError:
+        pass
 
     data_dir_list = [path+'/'+f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
     last_folder = os.path.basename(os.path.normpath(path))
@@ -253,7 +276,16 @@ def fusemap_integrate(path: str, description, log: Annotated[callable, "Logger f
     spatial_integrate(X_input, args, kneighbor, input_identity)
     print(f"Time elapsed: {(time() - start_time) / 60:.2f} s")
 
-    return f"New query data are integrated by FuseMap and results are saved in {output_dir}."
+    result = f"New query data are integrated by FuseMap and results are saved in {output_dir}."
+    
+    # Add to memory
+    try:
+        from fusemap_agent import add_to_memory
+        add_to_memory("FuseMapTool", "fusemap_integrate", result)
+    except ImportError:
+        pass
+    
+    return result
 
 
 
@@ -347,7 +379,14 @@ def finalize_mainlevel(data_path,
                         tissue_description,
                         key_select,
                         llm,
-                        log: Annotated[callable, "Logger function"] = print) -> str:
+                        log=print) -> str:
+    
+    # Add to memory
+    try:
+        from fusemap_agent import add_to_memory
+        add_to_memory("FuseMapTool", "finalize_mainlevel", f"Starting main-level finalization for {tissue_description}, key: {key_select}")
+    except ImportError:
+        pass
     
     adata_output_save_path = './output/data/annotated_user_data.h5ad'
     ### if folder not exist, create it
@@ -508,8 +547,17 @@ def finalize_mainlevel(data_path,
         plt.axis('off')
         plt.savefig(f'./output/figures/user_data_spatial_{i}_main_level_{key_select}.png',dpi=300,transparent=True)
 
-    return f"Finalized adata saved in with main level cell types saved in column key 'main_level_{key_select}'. " \
+    result = f"Finalized adata saved in with main level cell types saved in column key 'main_level_{key_select}'. " \
     f"Plotted figures saved in './output/figures/user_data_main_level_{key_select}.png'."
+    
+    # Add to memory
+    try:
+        from fusemap_agent import add_to_memory
+        add_to_memory("FuseMapTool", "finalize_mainlevel", result)
+    except ImportError:
+        pass
+    
+    return result
 
 
 class finalize_mainlevel_tool(BaseTool):
@@ -534,7 +582,7 @@ class finalize_mainlevel_tool(BaseTool):
              integrate_path: str, 
              tissue_description: str, 
              key_select: str, 
-             log: Annotated[callable, "Logger function"] = print):
+             log=print):
         return finalize_mainlevel(data_path, map_path, integrate_path, tissue_description, key_select, self.llm, log)
     
 
@@ -551,6 +599,13 @@ def annotate_sublevel(data_path: str,
                      key_select,
                      llm, 
                      log):
+
+    # Add to memory
+    try:
+        from fusemap_agent import add_to_memory
+        add_to_memory("FuseMapTool", "annotate_sublevel", f"Starting sub-level annotation for {tissue_type}, key: {key_select}")
+    except ImportError:
+        pass
 
     def create_subtype_matcher(llm):
         region_prompt = ChatPromptTemplate.from_messages([
@@ -721,10 +776,19 @@ def annotate_sublevel(data_path: str,
                 plt.savefig(f'./output/figures/user_data_sub_{focus_main_level_type}_spatial_{i}.png',dpi=300,transparent=True)
 
 
-    return f"Annotated subtype {focus_main_level_type}. adata saved in {adata_output_save_path} of key 'sub_level_{key_select}'. \
+    result = f"Annotated subtype {focus_main_level_type}. adata saved in {adata_output_save_path} of key 'sub_level_{key_select}'. \
         gene markers saved in f'./output/data/subtype_{focus_main_level_type}.csv'.\
     Figures saved in './output/figures/'."
- 
+    
+    # Add to memory
+    try:
+        from fusemap_agent import add_to_memory
+        add_to_memory("FuseMapTool", "annotate_sublevel", result)
+    except ImportError:
+        pass
+    
+    return result
+
 
 class annotate_sublevel_tool(BaseTool):
     name: str = "annotate_sublevel"
@@ -752,7 +816,7 @@ class annotate_sublevel_tool(BaseTool):
              map_path: str, 
              integrate_path: str, 
              key_select: str, 
-             log: Annotated[callable, "Logger function"] = print):
+             log=print):
         return annotate_sublevel(data_path, tissue_type, map_path, integrate_path, key_select, self.llm, log)
     
     

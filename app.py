@@ -78,8 +78,8 @@ def main():
 
     save_path = './output/'
     ### remove save_path if it exists
-    if os.path.exists(save_path):
-        shutil.rmtree(save_path)
+    # if os.path.exists(save_path):
+    #     shutil.rmtree(save_path)
 
     os.makedirs(f'{save_path}/data', exist_ok=True)
     os.makedirs(f'{save_path}/figures', exist_ok=True)

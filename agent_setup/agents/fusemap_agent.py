@@ -119,7 +119,12 @@ def create_fusemap_agent(llm):
     Finally, you can call plotting functions to show cell type composition changes across conditions.
 
     If the user specifically request to run a tool, you should just call the tool with correct input.
-    Always return a 'FINAL ANSWER' with a complete summary of all actions taken.
+
+    The final answer should be in the following format:
+    'FINAL ANSWER'
+    first take action 1, get result 1, detailed output is ... 
+    then take action 2, get result 2, detailed output is ...
+    then take action 3, get result 3, detailed output is ...
     """)
 
 

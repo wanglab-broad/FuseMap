@@ -8,7 +8,39 @@ from langchain.schema.messages import SystemMessage
 import agent_setup.tools.brain_atlas_tools as brain_atlas_tools
 import streamlit as st
 import inspect
+import datetime
 from agent_setup.tools.brain_atlas_tools import match_brain_region_tool, match_brain_type_tool
+
+# Global memory variable to record all outputs from each agent and tool
+atlas_agent_memory = []
+
+def add_to_atlas_memory(agent_name: str, tool_name: str, output: str):
+    """Add an entry to the atlas agent memory"""
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    entry = {
+        "timestamp": timestamp,
+        "agent": agent_name,
+        "tool": tool_name,
+        "output": output
+    }
+    atlas_agent_memory.append(entry)
+    return entry
+
+def get_atlas_memory_summary() -> str:
+    """Get a summary of all recorded atlas agent outputs"""
+    if not atlas_agent_memory:
+        return "No atlas agent outputs recorded yet."
+    
+    summary = "=== ATLAS AGENT MEMORY SUMMARY ===\n\n"
+    for entry in atlas_agent_memory:
+        summary += f"[{entry['timestamp']}] {entry['agent']} - {entry['tool']}:\n"
+        summary += f"{entry['output'][:200]}...\n\n"
+    return summary
+
+def clear_atlas_memory():
+    """Clear the atlas agent memory"""
+    global atlas_agent_memory
+    atlas_agent_memory = []
 
 def extract_tool_descriptions(tools):
     """Extract descriptions from tool functions automatically"""
@@ -79,7 +111,7 @@ def create_atlas_agent(llm):
     Perform all steps unless the user requests something specific.
 
     When the user specifically requires something like visualizing a 2D section, you can perform the corresponding tool.
-    Before you finish, for each matched cell type symbols, you can explain the symbols with detailed information.
+    Before you finish, if there is cell type symbols from the spatial brain atlas in the input or output, you should explain the symbols with detailed information.
     If input is not specific, ask the user to provide more information.
     Keep path of the output files complete and unchanged.
     Keep all output information unchanged when you return the final answer.
@@ -114,29 +146,42 @@ def atlas_agent_tool(llm):
 
         progress = container.progress(0, text="Initializing...")
 
+        # Add input to memory
+        add_to_atlas_memory("AtlasAgent", "Input", input_text)
+
         # Simulated stepwise progress based on the AtlasAgent's known workflow
         try:
             progress.progress(10, text="🔍 Step 1: Identifying genes, cell types, and brain regions...")
+            add_to_atlas_memory("AtlasAgent", "Step1", "Identifying genes, cell types, and brain regions")
             # You could extract some summary here if needed
 
             progress.progress(30, text="🧬 Step 2: Matching brain regions and cell types in atlas...")
+            add_to_atlas_memory("AtlasAgent", "Step2", "Matching brain regions and cell types in atlas")
             # Simulate delay or intermediate output if available
 
             progress.progress(50, text="🧠 Step 3: Plotting 3D regions and gene expression...")
+            add_to_atlas_memory("AtlasAgent", "Step3", "Plotting 3D regions and gene expression")
             # Optionally, st.write() partial results if your tools return them
 
             progress.progress(70, text="🧾 Step 4: Finding matching 2D tissue sections...")
+            add_to_atlas_memory("AtlasAgent", "Step4", "Finding matching 2D tissue sections")
 
             progress.progress(90, text="🖼️ Step 5: Generating 2D gene/cell/region plots...")
+            add_to_atlas_memory("AtlasAgent", "Step5", "Generating 2D gene/cell/region plots")
 
             # Actual execution of all steps (this is when your tools run)
             result = atlas_agent.run(input_text)
+            
+            # Add final result to memory
+            add_to_atlas_memory("AtlasAgent", "FinalResult", result)
 
             progress.progress(100, text="✅ Atlas analysis complete.")
+            add_to_atlas_memory("AtlasAgent", "Completion", "Atlas analysis completed successfully")
 
         except Exception as e:
             progress.progress(100, text="❌ Atlas Agent failed.")
             container.error(f"Error: {str(e)}")
+            add_to_atlas_memory("AtlasAgent", "Error", f"Atlas Agent failed with error: {str(e)}")
             return "FINAL ANSWER: Error occurred."
 
         return result

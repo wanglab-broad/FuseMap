@@ -151,16 +151,22 @@ def plot_region_distribution(region_id: List[str], gene_id: List[str] = None, lo
 
     subset = ad_cell[ad_cell.obs['ap_order'] < 404]
     for region in region_id:
-        # log(f"📍 Plotting region: {region}")
+        log(f"📍 Plotting region: {region}")
         region_cells = subset[subset.obs['tissue_main'] == region]
+        if region_cells.shape[0] == 0:
+            log(f"⚠️ No cells found for region: {region}")
+            continue
         fig = px.scatter_3d(
             region_cells.obs,
             x='global_x', y='global_y', z='global_z',
             color='tissue_sub',
-            title=f'3D Cell Distribution in {region}'
+            title=f'3D Cell Distribution in {region}',
+            color_discrete_sequence=px.colors.qualitative.Plotly  # or Dark24, Light24, etc.
+
         )
         fig.update_traces(marker_size=1)
         fig.write_html(f"output/figures/Brain_region_{region}_subregion_3D.html")
+
         output_string += f"Saved 3D cell distribution plot for {region} in output/figures/Brain_region_{region}_subregion_3D.html.\n"
         log(f"✅ Saved 3D cell distribution plot for {region}")
 
@@ -175,14 +181,18 @@ def plot_region_distribution(region_id: List[str], gene_id: List[str] = None, lo
                     ad_gene_exp = ad.AnnData(X=gene_exp)
                     ad_gene_exp.obs = region_cells.obs
                     ad_gene_exp.var.index = [gene]
+                    gene_vals = gene_exp[:, 0]
                     fig = px.scatter_3d(
                         ad_gene_exp.obs,
                         x='global_x', y='global_y', z='global_z',
-                        color=gene_exp[:, 0],
-                        title=f'3D Gene Expression of {gene} in {region}'
+                        color=gene_vals,
+                        title=f'3D Gene Expression of {gene} in {region}',
+                        color_continuous_scale=px.colors.sequential.Reds,  # or 'Plasma', 'Inferno', etc.
+                        range_color=[gene_vals.min(), gene_vals.max()]        # optional: fixes the colorbar range
                     )
                     fig.update_traces(marker_size=1)
                     fig.write_html(f"output/figures/Brain_region_{region}_gene_{gene}_3D.html")
+
                     log(f"✅ Saved 3D gene expression plot for {gene}")
                     output_string += f"Saved 3D gene expression plot for {gene} in output/figures/Brain_region_{region}_gene_{gene}_3D.html.\n"
                         
@@ -342,4 +352,3 @@ def explain_cell_type(cell_type: list[str], log: Annotated[callable, "Logger fun
                 output_string += i + ': ' + 'No description found' + '\n'
         output_string += '\n'
     return output_string
-
