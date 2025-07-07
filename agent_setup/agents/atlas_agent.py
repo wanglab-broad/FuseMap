@@ -80,7 +80,7 @@ def create_atlas_tools(llm):
         match_brain_type_tool(llm),
         brain_atlas_tools.plot_region_distribution,
         brain_atlas_tools.find_section_ids,
-        brain_atlas_tools.read_one_section,
+        # brain_atlas_tools.read_one_section,
         brain_atlas_tools.explain_cell_type
     ]
     return atlas_tools
@@ -106,7 +106,6 @@ def create_atlas_agent(llm):
     2. Match cell types, and brain regions to find the matched cell types symbols and brain regions symbols in the spatial brain atlas using `match_brain_regions` and `match_brain_type`.
     3. Plot 3D region and gene expression using `plot_region_distribution`.
     4. Use `find_section_ids` to find relevant 2D tissue sections with given cell types and brain regions.
-    5. Use `read_one_section` to generate detailed 2D section adata and visualizations with given section id.
     If one step is not successful, you should retry the step.
     Perform all steps unless the user requests something specific.
 
