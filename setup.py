@@ -5,7 +5,7 @@ with open('README.md','r') as f:
 
 setup(
     name='fusemap',
-    version='0.0.1',
+    version='0.0.2',
     packages=find_packages(),
     install_requires=[
         'scanpy==1.9.3',
@@ -16,6 +16,7 @@ setup(
         'dglgo==0.0.2',
         "streamlit==1.45.1",
         "openai==1.82.1",
+        "langchain_anthropic==0.3.14",
         "langchain==0.3.25",
         "langchain-community==0.3.24",
         "langchain-openai==0.3.18",
@@ -23,6 +24,11 @@ setup(
         "plotly==6.1.2",
         "harmonypy==0.0.10",
         "langgraph==0.4.7",
+        # "langgraph-checkpoints==2.0.26",
+        "langgraph-prebuilt==0.2.2",
+        "langgraph-sdk==0.1.70",
+        "langsmith==0.3.43",
+        "easydict==1.13",
         "numpy==1.26.2"
     ],
     entry_points={
