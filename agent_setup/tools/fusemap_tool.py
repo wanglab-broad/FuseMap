@@ -32,7 +32,8 @@ import numpy as np
 import os
 import scanpy as sc
 from easydict import EasyDict as edict
-from fusemap import seed_all, spatial_map, spatial_integrate,transfer_celltype
+from fusemap import seed_all, spatial_map, spatial_integrate
+from fusemap.utils import transfer_celltype
 import copy
 seed_all(0)
 start_time = time()
