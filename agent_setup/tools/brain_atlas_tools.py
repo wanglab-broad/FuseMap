@@ -13,6 +13,8 @@ from langchain_core.tools import tool
 from langchain.prompts import ChatPromptTemplate
 from langchain.base_language import BaseLanguageModel
 # from agent_setup.config import llm
+import pandas as pd
+import itertools
 
 # Fix numpy compatibility with older scanpy
 np.float_ = np.float64
@@ -219,12 +221,41 @@ def find_section_ids(cell_types: List[str], brain_regions: List[str], log: Annot
         ad_cell.obs['tissue_main'].isin(brain_regions)
     ]['ap_order'].unique()
 
+    ### choose 20% highest percentage sections
+    ad_cell.obs['in_brain'] = ad_cell.obs['tissue_main'].isin(brain_regions)
+    # filter to only the orders of interest, then group & compute percentage
+    percent_df = (
+        ad_cell.obs[ad_cell.obs['ap_order'].isin(matched)]
+        .groupby('ap_order')['in_brain']
+        .mean()                # fraction of True’s
+        .mul(100)              # to percent
+        .round(1)              # e.g. 50.0
+        .astype(str)
+        .add('%')              # append “%”
+    )
+    # convert to dict if you like
+    result = percent_df.to_dict()
+    # 1. Convert to a float Series
+    s = (
+        pd.Series(result)
+        .str.rstrip('%')       # drop the “%”
+        .str.strip()            # drop whitespace
+        .astype(float)         # to numeric
+    )
+    # 2. Compute the 80th percentile threshold
+    threshold = s.quantile(0.8)
+    # 3. Select keys ≥ threshold
+    top_keys = s[s >= threshold].index.tolist()
+    # 4. If that yields fewer than 2 keys, fallback to the top‐2 overall
+    if len(top_keys) < 2:
+        top_keys = s.nlargest(2).index.tolist()
+    matched = np.sort(top_keys)
+    # print("Selected keys:", top_keys)
+
+
     log(f"📊 Found {len(matched)} matching sections: {matched}")
 
-    matched = np.sort(matched)
 
-    import pandas as pd
-    import itertools
 
     # Precompute section-wise total counts
     section_counts = ad_cell.obs.groupby('ap_order').size()
