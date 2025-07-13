@@ -1,0 +1,232 @@
+Nomenclature,Subcluster Symbol,Main cluster description,Marker gene,"Cell type description (maturation, common name etc)",Cell states OR cell types
+VLM_1-[Ptgds_Slc6a13_Igf2],VLM_1,Vascular and leptomeningeal cells,Ptgds_Slc6a13_Igf2,Vascular leptomeningeal cells,Cell type
+VLM_2-[Ptgds_Slc47a1_Mgp],VLM_2,Vascular and leptomeningeal cells,Ptgds_Slc47a1_Mgp,Vascular leptomeningeal cells,Cell type
+PER_1-[Pltp_Pglyrp1],PER_1,Pericytes,Pltp_Pglyrp1,"Pericytes, possibly mixed with vascular endothelial cells",Cell type
+PER_2-[Pltp_Pglyrp1_Notum],PER_2,Pericytes,Pltp_Pglyrp1_Notum,"Pericytes, Notum high",Cell type
+PER_3-[Pltp_Vwf],PER_3,Pericytes,Pltp_Vwf,"Pericytes, Vwf high",Cell type
+PER_4-[Pltp_Ebf2],PER_4,Pericytes,Pltp_Ebf2,"Pericytes, Ebf2 high",Cell type
+VEN_1-[Vtn_Rgs5_Abcc9],VEN_1,Vascular endothelial cells,Vtn_Rgs5_Abcc9,Vascular endothelial cells,Cell type
+VEN_2-[Vtn_Rgs5],VEN_2,Vascular endothelial cells,Vtn_Rgs5,"Vascular endothelial cells, possibly mixed with pericytes",Cell type
+VSM_1-[Myh11_Vim_Tagln],VSM_1,Vascular smooth muscle cells,Myh11_Vim_Tagln,"Vascular smooth muscle cells, arterial",Cell type
+OEC-[Apod_Kctd12_Vtn],OEC,Olfactory ensheathing cells,Apod_Kctd12_Vtn,Olfactory ensheathing cells,Cell type
+OPC-[Pdgfra_Cspg5_C1ql1],OPC,Oligodendrocyte precursor cells,Pdgfra_Cspg5_C1ql1,Oligodendrocyte precursor cells,Cell type
+AC_1-[Slc6a11_Agt_Itih3],AC_1,Astrocytes,Slc6a11_Agt_Itih3,"Astrocytes, non-telencephalon",Cell type
+AC_2-[Mfge8_Cspg5],AC_2,Astrocytes,Mfge8_Cspg5,"Astrocytes, telencephalon",Cell type
+AC_3-[Mfge8_Cspg5_Gldc],AC_3,Astrocytes,Mfge8_Cspg5_Gldc,"Astrocytes, telencephalon",Cell type
+AC_4-[Gdf10_Hopx],AC_4,Astrocytes,Gdf10_Hopx,"Astrocytes, Bergmann glia",Cell type
+AC_5-[C4b_Gfap_Mbp],AC_5,Astrocytes,C4b_Gfap_Mbp,"Astrocytes, fibrous",Cell type
+AC_6-[Myoc_Grap],AC_6,Astrocytes,Myoc_Grap,"Astrocytes, meninge",Cell type
+EPEN_1-[Ccdc153_Tmem212],EPEN_1,Ependymal cells,Ccdc153_Tmem212,Ependymal cells,Cell type
+EPEN_2-[Ccdc153_Tmem212_Fam183b],EPEN_2,Ependymal cells,Ccdc153_Tmem212_Fam183b,"Ependymal cells, Fam183b high",Cell type
+CHOR-[Ttr_Folr1],CHOR,Choroid plexus epithelial cells,Ttr_Folr1,Choroid plexus epithelial cells,Cell type
+HYPEN-[Sspo_Vim_Spp2],HYPEN,Subcommissural organ hypendymal cells,Sspo_Vim_Spp2,"Hypendymal cell, subcommissural organ",Cell type
+OLG_1-[Opalin_Mal],OLG_1,Oligodendrocytes,Opalin_Mal,Mature oligodendrocytes,Cell type
+OLG_2-[Klk6_Anln_Mal],OLG_2,Oligodendrocytes,Klk6_Anln_Mal,Mature oligodendrocytes,Cell type
+OLG_3-[Gpr17_Tnr_Lims2],OLG_3,Oligodendrocytes,Gpr17_Tnr_Lims2,Committed oligodendrocytes cells (COP),Cell type or maturation state
+MGL_1-[Csf1r_Ctss_Tmem119],MGL_1,Microglia,Csf1r_Ctss_Tmem119,Microglia,Cell type
+MGL_2-[Ccl4],MGL_2,Microglia,Ccl4,"Microglia, activated",Cell state
+MGL_3-[Ccl3],MGL_3,Microglia,Ccl3,"Microglia, activated",Cell state
+PVM-[Mrc1_F13a1],PVM,Perivascular macrophages,Mrc1_F13a1,Perivascular macrophages,Cell type
+CHO_1-[Slc5a7],CHO_1,Cholinergic and monoaminergic neurons,Slc5a7,Cholinergic interneurons,Cell type
+CHO_2-[Chat],CHO_2,Cholinergic and monoaminergic neurons,Chat,Cholinergic interneurons,Cell type
+CHO_3-[Chat_Slc5a7_Ecel1_Lhx8],CHO_3,Cholinergic and monoaminergic neurons,Chat_Slc5a7_Ecel1_Lhx8,Cholinergic interneurons,Cell type
+CHO_4-[Chat_Nefm_Nefh],CHO_4,Cholinergic and monoaminergic neurons,Chat_Nefm_Nefh,"Cholinergic neurons, afferent nuclei of cranial nerves III, IV, V, VI, VII, XII",Cell type
+SER_6-[Ecel1],SER_6,Cholinergic and monoaminergic neurons,Ecel1,Serotonergic neurons,Cell type
+CHO_5-[Chat_Slc5a7_Nos1],CHO_5,Cholinergic and monoaminergic neurons,Chat_Slc5a7_Nos1,Cholinergic interneurons,Cell type
+CHO_6-[Slc18a3_Tacr1],CHO_6,Cholinergic and monoaminergic neurons,Slc18a3_Tacr1,Cholinergic interneurons,Cell type
+DOP_1-[Th_Ret_Slc18a2_Slc6a3],DOP_1,Cholinergic and monoaminergic neurons,Th_Ret_Slc18a2_Slc6a3,Dopaminergic neurons,Cell type
+MEGLU_6-[Cartpt_Ucn],MEGLU_6,Cholinergic and monoaminergic neurons,Cartpt_Ucn,Glutamatergic projection neurons of the raphe nucleus,Cell type
+SER_1-[Slc18a2],SER_1,Cholinergic and monoaminergic neurons,Slc18a2,Serotonergic neurons,Cell type
+SER_2-[Slc6a4],SER_2,Cholinergic and monoaminergic neurons,Slc6a4,Serotonergic neurons,Cell type
+SER_3-[Tph2],SER_3,Cholinergic and monoaminergic neurons,Tph2,Serotonergic neurons,Cell type
+SER_4-[Fev],SER_4,Cholinergic and monoaminergic neurons,Fev,Serotonergic neurons,Cell type
+SER_5-[Slc6a4_Slc18a2_Tph2_Maob],SER_5,Cholinergic and monoaminergic neurons,Slc6a4_Slc18a2_Tph2_Maob,"Serotonergic neurons, hindbrain",Cell type
+DOP_2-[Slc18a2_Dbh_Th],DOP_2,Cholinergic and monoaminergic neurons,Slc18a2_Dbh_Th,"Noradrenergic-dopaminergic neuron, double positive of Dbh and Th",Cell type
+HA_1-[Slc18a2_Hdc_Maob],HA_1,Cholinergic and monoaminergic neurons,Slc18a2_Hdc_Maob,"Histaminergic neuron, tuberomammillary nucleus of the hypothalamus",Cell type
+INH_1-[Atp2b4_Nrgn_Zic1_Grm5],INH_1,Peptidergic neurons,Atp2b4_Nrgn_Zic1_Grm5,"Inhibitory neurons, septal nucleus",Cell type
+INH_2-[Atp2b4_Nrgn_Scn5a],INH_2,Peptidergic neurons,Atp2b4_Nrgn_Scn5a,Inhibitory neurons,Cell type
+INH_3-[Slc32a1_Ecel1],INH_3,Peptidergic neurons,Slc32a1_Ecel1,Inhibitory neurons,Cell type
+INH_4-[Slc32a1_Arhgap6],INH_4,Peptidergic neurons,Slc32a1_Arhgap6,Inhibitory neurons,Cell type
+PEP_1-[Baiap3],PEP_1,Peptidergic neurons,Baiap3,Peptidergic neurons,Cell type
+PEP_2-[Baiap3_Dlk1],PEP_2,Peptidergic neurons,Baiap3_Dlk1,Peptidergic neurons,Cell type
+PEP_3-[Baiap3_Irs4],PEP_3,Peptidergic neurons,Baiap3_Irs4,Peptidergic neurons,Cell type
+PEP_4-[Baiap3_Prlr],PEP_4,Peptidergic neurons,Baiap3_Prlr,Peptidergic neurons,Cell type
+PEP_5-[Baiap3_Otp],PEP_5,Peptidergic neurons,Baiap3_Otp,Peptidergic neurons,Cell type
+PEP_6-[Baiap3_Nts_Gad2],PEP_6,Peptidergic neurons,Baiap3_Nts_Gad2,Peptidergic neurons,Cell type
+PEP_7-[Baiap3_Arhgap36],PEP_7,Peptidergic neurons,Baiap3_Arhgap36,Peptidergic neurons,Cell type
+PEP_8-[Baiap3_Fezf1_Slc17a6_Cbln1],PEP_8,Peptidergic neurons,Baiap3_Fezf1_Slc17a6_Cbln1,"Peptidergic neurons, excitatory",Cell type
+PEP_9-[Baiap3_Gal],PEP_9,Peptidergic neurons,Baiap3_Gal,Peptidergic neurons,Cell type
+PEP_10-[Baiap3_Gal_Ghrh],PEP_10,Peptidergic neurons,Baiap3_Gal_Ghrh,Peptidergic neurons,Cell type
+PEP_11-[Baiap3_Cartpt_Rgs4],PEP_11,Peptidergic neurons,Baiap3_Cartpt_Rgs4,Peptidergic neurons,Cell type
+PEP_12-[Baiap3_Peg10_Trh_Cbln1],PEP_12,Peptidergic neurons,Baiap3_Peg10_Trh_Cbln1,Peptidergic neurons,Cell type
+PEP_13-[Baiap3_Galr1],PEP_13,Peptidergic neurons,Baiap3_Galr1,Peptidergic neurons,Cell type
+PEP_14-[Baiap3_Dgkk],PEP_14,Peptidergic neurons,Baiap3_Dgkk,Peptidergic neurons,Cell type
+PEP_15-[Baiap3_Pomc_Dlk1],PEP_15,Peptidergic neurons,Baiap3_Pomc_Dlk1,Peptidergic neurons,Cell type
+PEP_16-[Avp_Dlk1],PEP_16,Peptidergic neurons,Avp_Dlk1,"Vasopressin-producing cells, hypothalamus",Cell type
+PEP_17-[Pmch_Cartpt],PEP_17,Peptidergic neurons,Pmch_Cartpt,"Pmch neurons, hypothalamus",Cell type
+PEP_18-[Baiap3_Asb4],PEP_18,Peptidergic neurons,Baiap3_Asb4,"Peptidergic neurons, hypothalamus",Cell type
+PEP_19-[Pdyn_Nptx2],PEP_19,Peptidergic neurons,Pdyn_Nptx2,"Peptidergic neurons, hypothalamus",Cell type
+PEP_20-[Agrp_Npy_Dlk1],PEP_20,Peptidergic neurons,Agrp_Npy_Dlk1,"Peptidergic neurons, hypothalamus",Cell type
+PEP_21-[Oxt_Pkib],PEP_21,Peptidergic neurons,Oxt_Pkib,"Oxytocin-producing cells, hypothalamus",Cell type
+PEP_22-[Baiap3_Ucn3_Tac1],PEP_22,Peptidergic neurons,Baiap3_Ucn3_Tac1,"Peptidergic neurons, hypothalamus",Cell type
+PEP_23-[Hcrt_Pdyn],PEP_23,Peptidergic neurons,Hcrt_Pdyn,"Orexin-producing neurons, hypothalamus",Cell type
+PEP_24-[Oxt],PEP_24,Peptidergic neurons,Oxt,"Oxytocin-producing cells, hypothalamus",Cell type
+TEINH_35-[Peg10_Sst_Pdyn],TEINH_35,Peptidergic neurons,Peg10_Sst_Pdyn,Inhibitory neurons; peptidergic neurons,Cell type
+DEINH_1-[Pvalb_Hs3st4_Ramp3],DEINH_1,Di- and mesencephalon inhibitory neurons,Pvalb_Hs3st4_Ramp3,Inhibitory neurons,Cell type
+INH_11-[Gad1_Chrna2],INH_11,Di- and mesencephalon inhibitory neurons,Gad1_Chrna2,Inhibitory neurons,Cell type
+INH_12-[Gad1_Syt2_Pvalb_Spp1],INH_12,Di- and mesencephalon inhibitory neurons,Gad1_Syt2_Pvalb_Spp1,Inhibitory neurons,Cell type
+INH_5-[Gad1_Cacna2d2],INH_5,Di- and mesencephalon inhibitory neurons,Gad1_Cacna2d2,Inhibitory neurons,Cell type
+INH_7-[Gad1_Gata3_Asic4],INH_7,Di- and mesencephalon inhibitory neurons,Gad1_Gata3_Asic4,Inhibitory neurons,Cell type
+MEINH_1-[Gad1_Asic4_Tal1],MEINH_1,Di- and mesencephalon inhibitory neurons,Gad1_Asic4_Tal1,Inhibitory neurons,Cell type
+MEINH_2-[Gad1_Sox14],MEINH_2,Di- and mesencephalon inhibitory neurons,Gad1_Sox14,Inhibitory neurons,Cell type
+MEINH_3-[Gad1_Gabrr2],MEINH_3,Di- and mesencephalon inhibitory neurons,Gad1_Gabrr2,Inhibitory neurons,Cell type
+DEGLU_1-[Prkcd_Synpo2],DEGLU_1,Di- and mesencephalon excitatory neurons,Prkcd_Synpo2,"Excitatory neurons, thalamus",Cell type
+DEGLU_2-[Necab1_Ntng1_Rgs16],DEGLU_2,Di- and mesencephalon excitatory neurons,Necab1_Ntng1_Rgs16,"Excitatory neurons, thalamus",Cell type
+DEGLU_3-[Necab1_C1ql3],DEGLU_3,Di- and mesencephalon excitatory neurons,Necab1_C1ql3,"Excitatory neurons, thalamus",Cell type
+DEGLU_4-[Resp18_Pitx2_Nxph4],DEGLU_4,Di- and mesencephalon excitatory neurons,Resp18_Pitx2_Nxph4,"Excitatory neurons, Hypothalamus",Cell type
+DEGLU_5-[Cbln4_Cbln1_Wnt4],DEGLU_5,Di- and mesencephalon excitatory neurons,Cbln4_Cbln1_Wnt4,"Excitatory neurons, thalamus",Cell type
+DEGLU_6-[Prox1_Cbln1_Zic1],DEGLU_6,Di- and mesencephalon excitatory neurons,Prox1_Cbln1_Zic1,"Excitatory neurons, thalamus",Cell type
+GLU_3-[Slc17a6_Nxph4],GLU_3,Di- and mesencephalon excitatory neurons,Slc17a6_Nxph4,Excitatory neurons,Cell type
+HABCHO_1-[Gm5741],HABCHO_1,Di- and mesencephalon excitatory neurons,Gm5741,"Cholinergic neurons, habenula",Cell type
+HABCHO_2-[Gm5741_Nwd2_Gng8_Lrrc55_Tac2],HABCHO_2,Di- and mesencephalon excitatory neurons,Gm5741_Nwd2_Gng8_Lrrc55_Tac2,"Cholinergic neurons, habenula",Cell type
+HABCHO_3-[Nwd2],HABCHO_3,Di- and mesencephalon excitatory neurons,Nwd2,"Cholinergic neurons, habenula",Cell type
+HABGLU_1-[Slc17a6_Htr5b],HABGLU_1,Di- and mesencephalon excitatory neurons,Slc17a6_Htr5b,"Excitatory neurons, habenula",Cell type
+MEGLU_1-[Resp18_Baiap3_Hap1],MEGLU_1,Di- and mesencephalon excitatory neurons,Resp18_Baiap3_Hap1,"Excitatory neurons, midbrain",Cell type
+MEGLU_2-[Resp18_Baiap3_Lhx9_Cbln2],MEGLU_2,Di- and mesencephalon excitatory neurons,Resp18_Baiap3_Lhx9_Cbln2,"Excitatory neurons, midbrain",Cell type
+MEGLU_3-[Tpbg_Sema3f_Ndst4],MEGLU_3,Di- and mesencephalon excitatory neurons,Tpbg_Sema3f_Ndst4,"Excitatory neurons, midbrain",Cell type
+MEGLU_4-[Resp18_Tcf7l2],MEGLU_4,Di- and mesencephalon excitatory neurons,Resp18_Tcf7l2,"Excitatory neurons, midbrain",Cell type
+MEGLU_5-[Resp18_Col25a1_Ebf2],MEGLU_5,Di- and mesencephalon excitatory neurons,Resp18_Col25a1_Ebf2,"Excitatory neurons, midbrain",Cell type
+NGNBL_1-[Mki67_Top2a],NGNBL_1,Non-glutamatergic neuroblasts,Mki67_Top2a,Neuronal intermidate progenitor cells,Cell type or maturation state
+NGNBL_2-[Cdca7_Sox4_Sp9],NGNBL_2,Non-glutamatergic neuroblasts,Cdca7_Sox4_Sp9,Neuroblasts,Cell type or maturation state
+NGNBL_3-[Prokr2_Meis2],NGNBL_3,Non-glutamatergic neuroblasts,Prokr2_Meis2,Neuroblasts,Cell type or maturation state
+NGNBL_4-[Gnb3_Sag_Pde6g],NGNBL_4,Non-glutamatergic neuroblasts,Gnb3_Sag_Pde6g,Neuroblast-like,Cell type
+GNBL_1-[Cdhr1_Lrrc55_Ms4a15],GNBL_1,Glutamatergic neuroblasts,Cdhr1_Lrrc55_Ms4a15,"Neuroblasts, olfactory bulb",Cell type or maturation state
+GNBL_2-[Cdhr1_Ly6g6e_Nxph4],GNBL_2,Glutamatergic neuroblasts,Cdhr1_Ly6g6e_Nxph4,"Neuroblasts, olfactory bulb",Cell type or maturation state
+GNBL_3-[Cdhr1],GNBL_3,Glutamatergic neuroblasts,Cdhr1,"Neuroblasts, olfactory bulb",Cell type or maturation state
+GNBL_4-[Sln_Cbln1],GNBL_4,Glutamatergic neuroblasts,Sln_Cbln1,"Neuroblasts, cerebellum",Cell type
+GNBL_5-[Sln_Ctxn3_Ebf3],GNBL_5,Glutamatergic neuroblasts,Sln_Ctxn3_Ebf3,"Neuroblasts, triangular nucleus of septum",Cell type
+GLU_1-[Glra1_Vamp1_Nefm],GLU_1,Hindbrain/spinal cord neurons,Glra1_Vamp1_Nefm,Excitatory neurons,Cell type
+GLU_2-[Glra1_Lingo4_Scn4b],GLU_2,Hindbrain/spinal cord neurons,Glra1_Lingo4_Scn4b,Excitatory neurons,Cell type
+GLU_4-[Nefh_Sncg_Nefm],GLU_4,Hindbrain/spinal cord neurons,Nefh_Sncg_Nefm,Excitatory neurons,Cell type
+HBGLU_1-[Spp1_Slc17a7_Pvalb],HBGLU_1,Hindbrain/spinal cord neurons,Spp1_Slc17a7_Pvalb,"Excitatory neurons, hindbrain",Cell type
+HBGLU_2-[Htr5b_C1ql1],HBGLU_2,Hindbrain/spinal cord neurons,Htr5b_C1ql1,"Excitatory neurons, hindbrain",Cell type
+HBINH_1-[Slc32a1_Otp],HBINH_1,Hindbrain/spinal cord neurons,Slc32a1_Otp,Inhibitory neurons,Cell type
+INH_9-[Hoxb6],INH_9,Hindbrain/spinal cord neurons,Hoxb6,Inhibitory-like neurons,Cell type
+INH_10-[Serpinb1b],INH_10,Hindbrain/spinal cord neurons,Serpinb1b,Inhibitory neurons,Cell type
+INH_6-[Slc6a5_Lamp5_Glra1],INH_6,Hindbrain/spinal cord neurons,Slc6a5_Lamp5_Glra1,Inhibitory neurons,Cell type
+INH_8-[Hoxb8_Hoxb6_Serpinb1b],INH_8,Hindbrain/spinal cord neurons,Hoxb8_Hoxb6_Serpinb1b,Inhibitory neurons,Cell type
+TEINH_1-[Sst_Npy_Crhbp_Bdkrb1],TEINH_1,Telencephalon inhibitory interneurons,Sst_Npy_Crhbp_Bdkrb1,Sst interneurons,Cell type
+TEINH_2-[Vip_Adarb2],TEINH_2,Telencephalon inhibitory interneurons,Vip_Adarb2,Vip interneurons,Cell type
+TEINH_3-[Lamp5_Kit_Npy_Pde11a],TEINH_3,Telencephalon inhibitory interneurons,Lamp5_Kit_Npy_Pde11a,Lamp5 interneurons,Cell type
+TEINH_4-[Sst_Npy_Crhbp],TEINH_4,Telencephalon inhibitory interneurons,Sst_Npy_Crhbp,Sst interneurons,Cell type
+TEINH_5-[Pvalb_Syt2_Cox6a2],TEINH_5,Telencephalon inhibitory interneurons,Pvalb_Syt2_Cox6a2,PV interneurons,Cell type
+TEINH_6-[Pvalb_Syt2],TEINH_6,Telencephalon inhibitory interneurons,Pvalb_Syt2,PV interneurons,Cell type
+TEINH_7-[Pvalb_Rbp4_Kcnc2],TEINH_7,Telencephalon inhibitory interneurons,Pvalb_Rbp4_Kcnc2,PV interneurons,Cell type
+TEINH_8-[Pvalb_Crhbp_Igfbp4],TEINH_8,Telencephalon inhibitory interneurons,Pvalb_Crhbp_Igfbp4,PV interneurons,Cell type
+TEINH_9-[Adarb2_Cxcl14_Reln],TEINH_9,Telencephalon inhibitory interneurons,Adarb2_Cxcl14_Reln,Lamp5 interneurons,Cell type
+TEINH_10-[Vip_Htr3a_Th_Pde1c],TEINH_10,Telencephalon inhibitory interneurons,Vip_Htr3a_Th_Pde1c,Olfactory bulb outer plexiform layer interneuron,Cell type
+TEINH_11-[Vip_Adarb2_Htr3a],TEINH_11,Telencephalon inhibitory interneurons,Vip_Adarb2_Htr3a,Vip interneurons,Cell type
+TEINH_12-[Sst],TEINH_12,Telencephalon inhibitory interneurons,Sst,Sst interneurons,Cell type
+TEINH_13-[Lamp5_Kit_Reln_Ndnf],TEINH_13,Telencephalon inhibitory interneurons,Lamp5_Kit_Reln_Ndnf,Lamp5 interneurons,Cell type
+TEINH_14-[Vip_Adarb2_Pthlh],TEINH_14,Telencephalon inhibitory interneurons,Vip_Adarb2_Pthlh,Vip interneurons,Cell type
+TEINH_15-[Pvalb_Cemip_Adamts15],TEINH_15,Telencephalon inhibitory interneurons,Pvalb_Cemip_Adamts15,PV interneurons,Cell type
+TEINH_16-[Adarb2_Cxcl14_Htr3a],TEINH_16,Telencephalon inhibitory interneurons,Adarb2_Cxcl14_Htr3a,"Sncg interneurons, Cck+",Cell type
+TEINH_17-[Pvalb_Oprd1_Kcnc2],TEINH_17,Telencephalon inhibitory interneurons,Pvalb_Oprd1_Kcnc2,PV interneurons,Cell type
+TEINH_18-[Sst_Npy_Nos1],TEINH_18,Telencephalon inhibitory interneurons,Sst_Npy_Nos1,Sst interneurons,Cell type
+TEINH_19-[Sst_Npas1_Lypd6],TEINH_19,Telencephalon inhibitory interneurons,Sst_Npas1_Lypd6,Sst interneurons,Cell type
+TEINH_20-[Adarb2_Yjefn3_Cck],TEINH_20,Telencephalon inhibitory interneurons,Adarb2_Yjefn3_Cck,"Sncg interneurons, Cck+",Cell type
+TEINH_21-[Sst_Col19a1_Reln],TEINH_21,Telencephalon inhibitory interneurons,Sst_Col19a1_Reln,Sst interneurons,Cell type
+TEINH_22-[Vip_Th_Pde1c],TEINH_22,Telencephalon inhibitory interneurons,Vip_Th_Pde1c,Olfactory bulb outer plexiform layer interneuron,Cell type
+TEINH_23-[Pvalb_Syt2_Crhbp],TEINH_23,Telencephalon inhibitory interneurons,Pvalb_Syt2_Crhbp,PV interneurons,Cell type
+TEINH_24-[Adarb2_Npas1],TEINH_24,Telencephalon inhibitory interneurons,Adarb2_Npas1,Sncg interneurons,Cell type
+TEINH_25-[Pvalb_Igfbp4_Gpr83_Pthlh],TEINH_25,Telencephalon inhibitory interneurons,Pvalb_Igfbp4_Gpr83_Pthlh,PV interneurons,Cell type
+TEINH_26-[Sst_Pdyn_Sfrp2],TEINH_26,Telencephalon inhibitory interneurons,Sst_Pdyn_Sfrp2,Sst interneurons,Cell type
+TEINH_27-[Lamp5_Pde11a_Hapln1],TEINH_27,Telencephalon inhibitory interneurons,Lamp5_Pde11a_Hapln1,Lamp5 interneurons,Cell type
+TEINH_28-[Sst_Lypd6_Rbp4],TEINH_28,Telencephalon inhibitory interneurons,Sst_Lypd6_Rbp4,Sst interneurons,Cell type
+TEINH_29-[Sst_Lypd6_Grik1],TEINH_29,Telencephalon inhibitory interneurons,Sst_Lypd6_Grik1,Sst interneurons,Cell type
+TEINH_30-[Pvalb_Pthlh_Igfbp4],TEINH_30,Telencephalon inhibitory interneurons,Pvalb_Pthlh_Igfbp4,PV interneurons,Cell type
+TEINH_31-[Pnoc],TEINH_31,Telencephalon inhibitory interneurons,Pnoc,Telencephalon interneurons. Pnoc+,Cell type
+TEINH_32-[Pvalb_Cox6a2],TEINH_32,Telencephalon inhibitory interneurons,Pvalb_Cox6a2,PV interneurons,Cell type
+TEINH_33-[Lamp5_Myh8_Pde11a],TEINH_33,Telencephalon inhibitory interneurons,Lamp5_Myh8_Pde11a,Lamp5 interneurons,Cell type
+TEINH_34-[Col25a1_Adarb2_Krt73],TEINH_34,Telencephalon inhibitory interneurons,Col25a1_Adarb2_Krt73,Telencephalon interneurons,Cell type
+OBINH_1-[Gad1_Pbx3],OBINH_1,Olfactory inhibitory neurons,Gad1_Pbx3,Olfactory inhibitory neurons,Cell type
+OBINH_2-[Gad1_Pbx3_Sp9],OBINH_2,Olfactory inhibitory neurons,Gad1_Pbx3_Sp9,Olfactory inhibitory neurons,Cell type
+OBINH_3-[Gad1_Tpbg_Tiam2],OBINH_3,Olfactory inhibitory neurons,Gad1_Tpbg_Tiam2,"Olfactory inhibitory neurons, inner horizontal cell",Cell type
+OBINH_4-[Gad1_Pbx3_Scgn],OBINH_4,Olfactory inhibitory neurons,Gad1_Pbx3_Scgn,Olfactory inhibitory neurons,Cell type
+OBINH_5-[Gad1_Pbx3_Nr4a3],OBINH_5,Olfactory inhibitory neurons,Gad1_Pbx3_Nr4a3,Olfactory inhibitory neurons,Cell type
+OBINH_6-[Gad1_Pbx3_Chrna2],OBINH_6,Olfactory inhibitory neurons,Gad1_Pbx3_Chrna2,Olfactory inhibitory neurons,Cell type
+OBINH_7-[Gad1_Th_Trh],OBINH_7,Olfactory inhibitory neurons,Gad1_Th_Trh,"Dopaminergic periglomerular interneuron, olfactory bulb",Cell type
+TEGLU_1-[Lypd1_Hpcal1_Dbpht2],TEGLU_1,Telencephalon projecting excitatory neurons,Lypd1_Hpcal1_Dbpht2,"Excitatory neurons, amygdala",Cell type
+TEGLU_2-[Dcn_Cadm1_Prkcg],TEGLU_2,Telencephalon projecting excitatory neurons,Dcn_Cadm1_Prkcg,Excitatory neurons,Cell type
+TEGLU_3-[Kcng1_C1ql3_Hpcal1],TEGLU_3,Telencephalon projecting excitatory neurons,Kcng1_C1ql3_Hpcal1,Excitatory neurons,Cell type
+TEGLU_4-[Neurod6_Cpne6_Nptx1],TEGLU_4,Telencephalon projecting excitatory neurons,Neurod6_Cpne6_Nptx1,Excitatory neurons,Cell type
+TEGLU_5-[Neurod6_Prkcg_Cpne6],TEGLU_5,Telencephalon projecting excitatory neurons,Neurod6_Prkcg_Cpne6,Excitatory neurons,Cell type
+TEGLU_6-[Neurod6_Nr3c2_Rgs14],TEGLU_6,Telencephalon projecting excitatory neurons,Neurod6_Nr3c2_Rgs14,Excitatory neurons,Cell type
+TEGLU_7-[Nptx1_Hs3st4_Rprm],TEGLU_7,Telencephalon projecting excitatory neurons,Nptx1_Hs3st4_Rprm,Excitatory neurons,Cell type
+TEGLU_8-[Cux2_Lamp5_Rgs4],TEGLU_8,Telencephalon projecting excitatory neurons,Cux2_Lamp5_Rgs4,Excitatory neurons,Cell type
+TEGLU_9-[Rorb_Rgs4_Grm2],TEGLU_9,Telencephalon projecting excitatory neurons,Rorb_Rgs4_Grm2,Excitatory neurons,Cell type
+TEGLU_10-[Tshz2_Dkk3_Neurod6],TEGLU_10,Telencephalon projecting excitatory neurons,Tshz2_Dkk3_Neurod6,Excitatory neurons,Cell type
+TEGLU_11-[Lmo3_Slc30a3_Rprm],TEGLU_11,Telencephalon projecting excitatory neurons,Lmo3_Slc30a3_Rprm,Excitatory neurons,Cell type
+TEGLU_12-[Grfa2_Necab1_Plcxd2],TEGLU_12,Telencephalon projecting excitatory neurons,Grfa2_Necab1_Plcxd2,Excitatory neurons,Cell type
+TEGLU_13-[Nxph3_Prss12_Hs3st4],TEGLU_13,Telencephalon projecting excitatory neurons,Nxph3_Prss12_Hs3st4,Excitatory neurons,Cell type
+TEGLU_14-[Parm1_Tox_Kcng1],TEGLU_14,Telencephalon projecting excitatory neurons,Parm1_Tox_Kcng1,Excitatory neurons,Cell type
+TEGLU_15-[Scube1_Pde1a_Hs3st2],TEGLU_15,Telencephalon projecting excitatory neurons,Scube1_Pde1a_Hs3st2,Excitatory neurons,Cell type
+TEGLU_16-[Matn2_Cpne6_Lypd1],TEGLU_16,Telencephalon projecting excitatory neurons,Matn2_Cpne6_Lypd1,Excitatory neurons,Cell type
+TEGLU_17-[C1ql3_Col6a1_Rasl10a],TEGLU_17,Telencephalon projecting excitatory neurons,C1ql3_Col6a1_Rasl10a,Excitatory neurons,Cell type
+TEGLU_18-[Hs3st2_Slc24a2_Rasl10a],TEGLU_18,Telencephalon projecting excitatory neurons,Hs3st2_Slc24a2_Rasl10a,Excitatory neurons,Cell type
+TEGLU_19-[Cux2_Nptx2_C1ql3],TEGLU_19,Telencephalon projecting excitatory neurons,Cux2_Nptx2_C1ql3,Excitatory neurons,Cell type
+TEGLU_20-[Bmp3_C1ql3_Atp2b4],TEGLU_20,Telencephalon projecting excitatory neurons,Bmp3_C1ql3_Atp2b4,Excitatory neurons,Cell type
+TEGLU_21-[Kcns1_Rgs4_Vamp1],TEGLU_21,Telencephalon projecting excitatory neurons,Kcns1_Rgs4_Vamp1,Excitatory neurons,Cell type
+TEGLU_22-[Tshz2_Nxph3_Lypd1],TEGLU_22,Telencephalon projecting excitatory neurons,Tshz2_Nxph3_Lypd1,Excitatory neurons,Cell type
+TEGLU_23-[Nr4a2_Synpr_Rgs12],TEGLU_23,Telencephalon projecting excitatory neurons,Nr4a2_Synpr_Rgs12,Excitatory neurons,Cell type
+TEGLU_24-[Slc17a7_Nrgn],TEGLU_24,Telencephalon projecting excitatory neurons,Slc17a7_Nrgn,Excitatory neurons,Cell type
+TEGLU_25-[Cux2_Grp_C1ql3],TEGLU_25,Telencephalon projecting excitatory neurons,Cux2_Grp_C1ql3,Excitatory neurons,Cell type
+TEGLU_26-[Lmo3_Abi3bp_Ndst4],TEGLU_26,Telencephalon projecting excitatory neurons,Lmo3_Abi3bp_Ndst4,Excitatory neurons,Cell type
+TEGLU_27-[Cux2_Cckbr_C1ql3],TEGLU_27,Telencephalon projecting excitatory neurons,Cux2_Cckbr_C1ql3,Excitatory neurons,Cell type
+TEGLU_28-[Necab1_Cbln4_Cbln1],TEGLU_28,Telencephalon projecting excitatory neurons,Necab1_Cbln4_Cbln1,Excitatory neurons,Cell type
+TEGLU_29-[Slc17a7_Nrgn_Tbr1_Chrm1_Olfm2],TEGLU_29,Telencephalon projecting excitatory neurons,Slc17a7_Nrgn_Tbr1_Chrm1_Olfm2,Excitatory neurons,Cell type
+TEGLU_30-[Tshz2_Rxfp1_Dkk3],TEGLU_30,Telencephalon projecting excitatory neurons,Tshz2_Rxfp1_Dkk3,Excitatory neurons,Cell type
+TEGLU_31-[Cux2_C1ql3_Nwd2],TEGLU_31,Telencephalon projecting excitatory neurons,Cux2_C1ql3_Nwd2,Excitatory neurons,Cell type
+TEGLU_32-[Cux2_C1ql3_Rgs14],TEGLU_32,Telencephalon projecting excitatory neurons,Cux2_C1ql3_Rgs14,Excitatory neurons,Cell type
+TEGLU_33-[Cux2_C1ql3_Chrm3],TEGLU_33,Telencephalon projecting excitatory neurons,Cux2_C1ql3_Chrm3,Excitatory neurons,Cell type
+TEGLU_34-[Bmp3_Rprm_Hs3st4],TEGLU_34,Telencephalon projecting excitatory neurons,Bmp3_Rprm_Hs3st4,Excitatory neurons,Cell type
+TEGLU_35-[Tshz2_Cbln1_Nrep],TEGLU_35,Telencephalon projecting excitatory neurons,Tshz2_Cbln1_Nrep,Excitatory neurons,Cell type
+TEGLU_36-[Cux2_Junb_Fos],TEGLU_36,Telencephalon projecting excitatory neurons,Cux2_Junb_Fos,"Excitatory neurons, activated",Cell type or activity state
+TEGLU_37-[Slc17a7_Myl4],TEGLU_37,Telencephalon projecting excitatory neurons,Slc17a7_Myl4,Excitatory neurons,Cell type
+TEGLU_38-[Cux2_C1ql3_Dclk3],TEGLU_38,Telencephalon projecting excitatory neurons,Cux2_C1ql3_Dclk3,Excitatory neurons,Cell type
+TEGLU_39-[Slc17a7_Slc30a3],TEGLU_39,Telencephalon projecting excitatory neurons,Slc17a7_Slc30a3,Excitatory neurons,Cell type
+TEGLU_40-[Slc17a7_Neurod6],TEGLU_40,Telencephalon projecting excitatory neurons,Slc17a7_Neurod6,Excitatory neurons,Cell type
+TEGLU_41-[Slc17a7_Satb1],TEGLU_41,Telencephalon projecting excitatory neurons,Slc17a7_Satb1,Excitatory neurons,Cell type
+MSN_1-[Drd2_Penk_Adora2a],MSN_1,Telencephalon projecting inhibitory neurons,Drd2_Penk_Adora2a,D2 medium spiny neurons,Cell type
+MSN_2-[Drd1_Tac1_Pdyn],MSN_2,Telencephalon projecting inhibitory neurons,Drd1_Tac1_Pdyn,D1 medium spiny neurons,Cell type
+MSN_3-[Drd1_Chrm4_Gpr139],MSN_3,Telencephalon projecting inhibitory neurons,Drd1_Chrm4_Gpr139,D1 medium spiny neurons,Cell type
+MSN_4-[Drd1_Tac1],MSN_4,Telencephalon projecting inhibitory neurons,Drd1_Tac1,D1 medium spiny neurons,Cell type
+MSN_5-[Adora2a_Penk],MSN_5,Telencephalon projecting inhibitory neurons,Adora2a_Penk,Indirect spiny projecting neurons,Cell type
+MSN_6-[Drd1_Foxp2_Lypd1],MSN_6,Telencephalon projecting inhibitory neurons,Drd1_Foxp2_Lypd1,D1 medium spiny neurons,Cell type
+MSN_7-[Drd2_Penk_Gpr83],MSN_7,Telencephalon projecting inhibitory neurons,Drd2_Penk_Gpr83,D2 medium spiny neurons,Cell type
+MSN_8-[Drd2_Penk_Dmkn],MSN_8,Telencephalon projecting inhibitory neurons,Drd2_Penk_Dmkn,D2 medium spiny neurons,Cell type
+MSN_9-[Drd1_Tac1_Otof],MSN_9,Telencephalon projecting inhibitory neurons,Drd1_Tac1_Otof,D1 medium spiny neurons,Cell type
+MSN_10-[Penk_Ppp1r1b],MSN_10,Telencephalon projecting inhibitory neurons,Penk_Ppp1r1b,Indirect spiny projecting neurons,Cell type
+MSN_11-[Drd1_Dmkn],MSN_11,Telencephalon projecting inhibitory neurons,Drd1_Dmkn,D1 medium spiny neurons,Cell type
+MSN_12-[Drd1_Tac1_Pde1a_Syt6],MSN_12,Telencephalon projecting inhibitory neurons,Drd1_Tac1_Pde1a_Syt6,D1 medium spiny neurons,Cell type
+MSN_13-[Drd1_Tac1_Pdyn_Nts],MSN_13,Telencephalon projecting inhibitory neurons,Drd1_Tac1_Pdyn_Nts,D1 medium spiny neurons,Cell type
+MSN_14-[Drd2_Penk_Gpr139],MSN_14,Telencephalon projecting inhibitory neurons,Drd2_Penk_Gpr139,D2 medium spiny neurons,Cell type
+DGGRC-[Nptx1_Prox1_C1ql3],DGGRC,Dentate gyrus granule neurons,Nptx1_Prox1_C1ql3,Dentate gyrus granule neurons,Cell type
+CBGRC_1-[Cbln1_Nrep],CBGRC_1,Cerebellum neurons,Cbln1_Nrep,"Granule neurons, cerebellum, Granular layer",Cell type
+CBGRC_2-[Cbln1_Nrep_Cnksr3],CBGRC_2,Cerebellum neurons,Cbln1_Nrep_Cnksr3,"Granule neurons, cerebellum, Granular layer",Cell type
+CBINH_1-[Pvalb_Gad1_Kit_Whrn],CBINH_1,Cerebellum neurons,Pvalb_Gad1_Kit_Whrn,"Molecular layer interneurons, cerebellum",Cell type
+CBINH_2-[Cbln1_Nrep_Sost],CBINH_2,Cerebellum neurons,Cbln1_Nrep_Sost,"Granular layer interneurons, cerebellum",Cell type
+CBPC-[Car8_Pcp2_Ppp1r17],CBPC,Cerebellum neurons,Car8_Pcp2_Ppp1r17,"Purkinje cells, cerebellum",Cell type
+NA_1-[Cenpf_Apold1_Sparc],NA_1,Unannotated,Cenpf_Apold1_Sparc,Possibly vascular subtype,NA
+NA_2-[Ntsr1_Gkn3],NA_2,Unannotated,Ntsr1_Gkn3,Possibly vascular leptomeningeal cells,NA
+NA_3-[Pltp_Sparc],NA_3,Unannotated,Pltp_Sparc,Glia-like cells,NA
+NA_4-[Sln],NA_4,Unannotated,Sln,Possibly neuroblasts,NA
+NA_5-[Ube2c_Sparc],NA_5,Unannotated,Ube2c_Sparc,Neural progenitor cells (Ube2c is a cell cycle gene),NA
+NA_6-[Prc1_Pltp],NA_6,Unannotated,Prc1_Pltp,Neural progenitor cells (Prc1 is a cell cycle gene),NA
+NA_7-[Hoxb8],NA_7,Unannotated,Hoxb8,Hoxb8(+) neuron-like cells,NA
+NA_8-[Cabp7_Esrrg],NA_8,Unannotated,Cabp7_Esrrg,Cabp7(+) neuron-like cells,NA
+NA_9-[Sfrp2],NA_9,Unannotated,Sfrp2,Sfrp2(+) neuron-like cells,NA
+NA_10-[Irx2],NA_10,Unannotated,Irx2,Irx2(+) neuron-like cells,NA
+NA_11-[Hcrtr2_Vamp1_Nefm],NA_11,Unannotated,Hcrtr2_Vamp1_Nefm,Hcrtr2(+) neuron-like cells,NA
+NA_12-[Oprm1_Glra1_Resp18],NA_12,Unannotated,Oprm1_Glra1_Resp18,Oprm1(+) neuron-like cells,NA
+SUM,,,,,

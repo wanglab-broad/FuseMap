@@ -1,0 +1,18 @@
+,Region_ID,Color,Description
+0,CTX_1,2db72d,"Cerebral cortex, dorsal part"
+1,LSX_HY_MB,dd8d96,"Lateral septal complex, Hypothalamus, Midbrain"
+2,CB_1,FAF9D5,Cerebellar granule layer and Purkinje cells
+3,STR,87CEFA,Striatum
+4,OB_1,ffc388,"Olfactory bulb inner layers (granule, mitral)"
+5,FT,000080,Fiber tracts
+6,OB_1,ffc388,"Olfactory bulb,Cerebral cortex layer 1, hippocampal formation"
+7,CTX_2,28182,"Cerebral cortex, dorsal part"
+8,OB_2,bb722e,"Cerebral cortex outer layers (glomerular, mitral)"
+9,TH,ed9ea9,Thalamus
+10,CB_2,d0c831,Cerebellar molecular layers
+11,Hbl_VS,696969,"Habenula, Ventricle systems(choroid plexus)"
+12,DG,8B008B,Hippocampal dentate gyrus
+13,HPF_CA,FF00FF,CA1-3 of hippocampal formation
+14,HY,c4b0d4,Two nuclei in the hypothalamus
+15,MYdp,696969,"Medulla, dorsal part"
+16,ENTm,2E8B57,"Entorhinal area, medial part"

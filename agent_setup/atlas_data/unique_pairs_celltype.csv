@@ -1,0 +1,192 @@
+index,main_STARmap,sub_STARmap
+23583,Cholinergic and monoaminergic neurons,CHO_4
+23590,Hindbrain neurons/Spinal cord neurons,INH_6
+23591,Hindbrain neurons/Spinal cord neurons,HBGLU_1
+23593,Hindbrain neurons/Spinal cord neurons,GLU_2
+23601,Cerebellum neurons,CBPC
+23623,Vascular endothelial cells,VEN_1
+23637,Hindbrain neurons/Spinal cord neurons,GLU_4
+23663,Hindbrain neurons/Spinal cord neurons,HBGLU_2
+23913,Hindbrain neurons/Spinal cord neurons,INH_10
+23918,Hindbrain neurons/Spinal cord neurons,HBINH_1
+23932,Cerebellum neurons,CBINH_1
+23934,Di- and mesencephalon inhibitory neurons,INH_5
+23936,Di- and mesencephalon inhibitory neurons,INH_11
+23937,Cerebellum neurons,CBINH_2
+23949,Di- and mesencephalon inhibitory neurons,DEINH_1
+23951,Hindbrain neurons/Spinal cord neurons,INH_8
+23977,Astrocytes,AC_4
+23982,Di- and mesencephalon inhibitory neurons,MEINH_1
+24144,Vascular and leptomeningeal cells,VLM_1
+24187,Vascular smooth muscle cells,VSM_1
+24357,Di- and mesencephalon inhibitory neurons,INH_7
+24438,Pericytes,PER_2
+24565,Perivascular macrophages,PVM
+25709,Microglia,MGL_1
+25734,Vascular and leptomeningeal cells,VLM_2
+25739,Cerebellum neurons,CBGRC_2
+25751,Oligodendrocyte precursor cells,OPC
+26690,Astrocytes,AC_5
+26757,Cerebellum neurons,CBGRC_1
+32594,Microglia,MGL_3
+32645,Microglia,MGL_2
+32718,Peptidergic neurons,PEP_14
+32721,Astrocytes,AC_1
+32818,Hindbrain neurons/Spinal cord neurons,INH_9
+32908,Astrocytes,AC_3
+32914,Pericytes,PER_1
+32965,Oligodendrocytes,OLG_2
+32973,Non-glutamatergic neuroblasts,NGNBL_1
+32989,Cholinergic and monoaminergic neurons,SER_5
+34064,Oligodendrocytes,OLG_3
+34103,Oligodendrocytes,OLG_1
+34289,Hindbrain neurons/Spinal cord neurons,GLU_1
+34459,Di- and mesencephalon excitatory neurons,MEGLU_2
+34682,Non-glutamatergic neuroblasts,NGNBL_3
+34839,Cholinergic and monoaminergic neurons,DOP_2
+35424,Cholinergic and monoaminergic neurons,CHO_5
+35606,Cholinergic and monoaminergic neurons,CHO_2
+35883,Pericytes,PER_4
+36794,Cholinergic and monoaminergic neurons,CHO_3
+37586,Ependymal cells,EPEN_2
+37708,Cholinergic and monoaminergic neurons,SER_3
+37898,Non-glutamatergic neuroblasts,NGNBL_2
+38074,Pericytes,PER_3
+38433,Astrocytes,AC_6
+38820,Ependymal cells,EPEN_1
+40828,Cholinergic and monoaminergic neurons,HA_1
+41433,Peptidergic neurons,INH_4
+41447,Peptidergic neurons,PEP_8
+41484,Peptidergic neurons,PEP_9
+42429,Peptidergic neurons,PEP_10
+42829,Di- and mesencephalon excitatory neurons,MEGLU_1
+42831,Peptidergic neurons,PEP_11
+42888,Peptidergic neurons,PEP_5
+42912,Cholinergic and monoaminergic neurons,SER_6
+42943,Di- and mesencephalon excitatory neurons,MEGLU_5
+43093,Peptidergic neurons,INH_2
+43140,Peptidergic neurons,INH_3
+43824,Peptidergic neurons,PEP_2
+44266,Peptidergic neurons,PEP_12
+44386,Cholinergic and monoaminergic neurons,SER_1
+45052,Di- and mesencephalon excitatory neurons,DEGLU_4
+45260,Di- and mesencephalon excitatory neurons,HABGLU_1
+45417,Cholinergic and monoaminergic neurons,CHO_6
+46550,Vascular endothelial cells,VEN_2
+46617,Olfactory ensheathing cells,OEC
+48418,Choroid plexus epithelial cells,CHOR
+50958,Telencephalon inhibitory interneurons,TEINH_4
+60762,Peptidergic neurons,PEP_21
+61810,Di- and mesencephalon excitatory neurons,DEGLU_3
+62535,Telencephalon projecting inhibitory neurons,MSN_10
+64836,Astrocytes,AC_2
+65318,Di- and mesencephalon excitatory neurons,HABCHO_1
+72985,Cholinergic and monoaminergic neurons,CHO_1
+73520,Peptidergic neurons,PEP_19
+73543,Dentate gyrus granule neurons,DGGRC
+73805,Peptidergic neurons,PEP_1
+74193,Di- and mesencephalon excitatory neurons,DEGLU_5
+74401,Peptidergic neurons,PEP_23
+74429,Cholinergic and monoaminergic neurons,MEGLU_6
+81618,Di- and mesencephalon inhibitory neurons,INH_12
+81639,Telencephalon inhibitory interneurons,TEINH_12
+81719,Telencephalon inhibitory interneurons,TEINH_6
+81739,Telencephalon inhibitory interneurons,TEINH_28
+82777,Glutamatergic neuroblasts,GNBL_1
+82976,Glutamatergic neuroblasts,GNBL_3
+83307,Di- and mesencephalon inhibitory neurons,MEINH_3
+85457,Glutamatergic neuroblasts,GNBL_4
+86527,Telencephalon inhibitory interneurons,TEINH_30
+86879,Telencephalon inhibitory interneurons,TEINH_23
+88295,Glutamatergic neuroblasts,GNBL_2
+89500,Telencephalon projecting excitatory neurons,TEGLU_41
+113992,Di- and mesencephalon excitatory neurons,DEGLU_2
+114794,Peptidergic neurons,TEINH_35
+116350,Telencephalon inhibitory interneurons,TEINH_16
+116778,Di- and mesencephalon inhibitory neurons,MEINH_2
+117500,Di- and mesencephalon excitatory neurons,HABCHO_3
+126316,Telencephalon inhibitory interneurons,TEINH_22
+126802,Telencephalon inhibitory interneurons,TEINH_9
+127331,Cholinergic and monoaminergic neurons,SER_4
+147332,Di- and mesencephalon excitatory neurons,MEGLU_4
+159449,Telencephalon projecting excitatory neurons,TEGLU_1
+160105,Telencephalon projecting excitatory neurons,TEGLU_8
+161264,Telencephalon inhibitory interneurons,TEINH_26
+162179,Telencephalon projecting excitatory neurons,TEGLU_25
+162186,Telencephalon projecting excitatory neurons,TEGLU_7
+162237,Di- and mesencephalon excitatory neurons,MEGLU_3
+162538,Di- and mesencephalon excitatory neurons,GLU_3
+207129,Telencephalon inhibitory interneurons,TEINH_19
+207943,Telencephalon projecting excitatory neurons,TEGLU_3
+218226,Telencephalon inhibitory interneurons,TEINH_5
+238385,Di- and mesencephalon excitatory neurons,DEGLU_6
+252295,Cholinergic and monoaminergic neurons,DOP_1
+255068,Peptidergic neurons,INH_1
+266093,Telencephalon inhibitory interneurons,TEINH_25
+266128,Telencephalon inhibitory interneurons,TEINH_7
+266200,Telencephalon inhibitory interneurons,TEINH_34
+267642,Telencephalon projecting inhibitory neurons,MSN_6
+275032,Telencephalon projecting excitatory neurons,TEGLU_22
+289722,Di- and mesencephalon excitatory neurons,DEGLU_1
+321454,Telencephalon projecting inhibitory neurons,MSN_2
+321521,Telencephalon projecting inhibitory neurons,MSN_7
+331936,Non-glutamatergic neuroblasts,NGNBL_4
+334407,Telencephalon projecting inhibitory neurons,MSN_8
+334536,Telencephalon inhibitory interneurons,TEINH_3
+335776,Telencephalon inhibitory interneurons,TEINH_2
+336090,Telencephalon inhibitory interneurons,TEINH_14
+353021,Olfactory inhibitory neurons,OBINH_4
+353910,Telencephalon inhibitory interneurons,TEINH_18
+361648,Subcommissural organ hypendymal cells,HYPEN
+365019,Telencephalon projecting inhibitory neurons,MSN_14
+377364,Telencephalon inhibitory interneurons,TEINH_13
+378286,Telencephalon inhibitory interneurons,TEINH_27
+378553,Telencephalon projecting excitatory neurons,TEGLU_17
+383743,Telencephalon projecting excitatory neurons,TEGLU_18
+383754,Telencephalon projecting excitatory neurons,TEGLU_13
+384005,Telencephalon projecting excitatory neurons,TEGLU_30
+385855,Telencephalon projecting excitatory neurons,TEGLU_4
+405506,Di- and mesencephalon excitatory neurons,HABCHO_2
+407088,Telencephalon projecting excitatory neurons,TEGLU_24
+433427,Telencephalon projecting excitatory neurons,TEGLU_11
+448193,Peptidergic neurons,PEP_20
+448646,Telencephalon projecting inhibitory neurons,MSN_3
+465997,Telencephalon projecting excitatory neurons,TEGLU_15
+478361,Cholinergic and monoaminergic neurons,SER_2
+707545,Telencephalon projecting inhibitory neurons,MSN_1
+709543,Telencephalon projecting inhibitory neurons,MSN_9
+711411,Telencephalon projecting excitatory neurons,TEGLU_26
+713390,Telencephalon projecting excitatory neurons,TEGLU_10
+713463,Telencephalon projecting excitatory neurons,TEGLU_19
+724865,Olfactory inhibitory neurons,OBINH_5
+734166,Glutamatergic neuroblasts,GNBL_5
+780959,Telencephalon inhibitory interneurons,TEINH_8
+787420,Olfactory inhibitory neurons,OBINH_2
+790256,Telencephalon projecting inhibitory neurons,MSN_4
+790993,Olfactory inhibitory neurons,OBINH_3
+791999,Telencephalon projecting excitatory neurons,TEGLU_14
+838846,Telencephalon inhibitory interneurons,TEINH_32
+839777,Telencephalon inhibitory interneurons,TEINH_20
+840787,Olfactory inhibitory neurons,OBINH_6
+852264,Telencephalon projecting excitatory neurons,TEGLU_29
+853152,Telencephalon projecting inhibitory neurons,MSN_11
+855679,Telencephalon projecting excitatory neurons,TEGLU_2
+888943,Olfactory inhibitory neurons,OBINH_7
+892022,Telencephalon projecting excitatory neurons,TEGLU_12
+896857,Telencephalon inhibitory interneurons,TEINH_24
+899797,Telencephalon projecting excitatory neurons,TEGLU_16
+900493,Telencephalon projecting excitatory neurons,TEGLU_28
+912106,Telencephalon projecting excitatory neurons,TEGLU_37
+912121,Telencephalon inhibitory interneurons,TEINH_11
+912958,Telencephalon projecting excitatory neurons,TEGLU_9
+925375,Telencephalon projecting excitatory neurons,TEGLU_35
+991113,Telencephalon projecting inhibitory neurons,MSN_5
+1013102,Telencephalon projecting excitatory neurons,TEGLU_23
+1016068,Telencephalon projecting excitatory neurons,TEGLU_40
+1025667,Telencephalon inhibitory interneurons,TEINH_1
+1026959,Telencephalon inhibitory interneurons,TEINH_10
+1052726,Telencephalon projecting excitatory neurons,TEGLU_6
+1300677,Telencephalon projecting excitatory neurons,TEGLU_5
+1572226,Telencephalon projecting inhibitory neurons,MSN_12
+2021460,Telencephalon projecting excitatory neurons,TEGLU_39
+3834239,Olfactory inhibitory neurons,OBINH_1
