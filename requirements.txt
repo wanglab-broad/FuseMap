@@ -33,7 +33,7 @@ easydict==1.13
 filelock==3.18.0
 fonttools==4.58.1
 frozenlist==1.6.0
-fusemap==0.0.0
+fusemap==0.0.1
 gitdb==4.0.12
 GitPython==3.1.44
 greenlet==3.2.2
