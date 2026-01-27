@@ -13,7 +13,7 @@ Note: FuseMap tutorial is here: https://fusemap.readthedocs.io/en/latest/
 - 2.2 Download atlas molCCF data at https://drive.google.com/file/d/15LIkQTridS_ATwDy6dejIdzbMm39sEv3/view?usp=sharing. Put under `FuseMap/agent_setup/atlas_data/`
 
 3. If you need FuseMap to analyze certain datasets, put anndata files under `path/to/your/input/anndata`.
-- An example disease dataset is also in https://drive.google.com/drive/folders/1ZRIbHTd9TAjmtr3V6WLkvrY4iLF5SH_U?usp=drive_link
+- The example datasets of disease, aging, embryo, species are in https://drive.google.com/drive/folders/1ZRIbHTd9TAjmtr3V6WLkvrY4iLF5SH_U?usp=drive_link
 
 4. Run in terminal:
 ```
@@ -35,10 +35,11 @@ You should see the interface running smoothly.
 
 1. Input OPENAI API key
 
-2. (Optional, leave blank if default) Input Base URL
+2. (Optional) Input Base URL
+- Leave blank if default
 
 
-3. Input Tavily API
+4. Input Tavily API
 - This is free, get one in https://www.tavily.com/
 
 4. Example input:
@@ -46,7 +47,8 @@ You should see the interface running smoothly.
 
 5. All output results are saved under `path/to/output`.
 - To view html figures on remote ssh, you can run: python3 -m http.server 8000
-- Final analyzed anndata file is in `path/to/output/data/annotated_user_data.h5ad`.
+
+Final analyzed anndata file is in `path/to/output/data/annotated_user_data.h5ad`.
 
 
 
