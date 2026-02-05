@@ -40,7 +40,8 @@ seaborn
 
 
 ## Installation and Tutorial
-- Read the tutorial [here](https://fusemap.readthedocs.io/en/latest/) .
+- Read the FuseMap tutorial [here](https://fusemap.readthedocs.io/en/latest/).
+- FuseMap-Agent set up tutorial [here](https://github.com/wanglab-broad/FuseMap/tree/main/agent_setup).
 
 
 ## Citation
