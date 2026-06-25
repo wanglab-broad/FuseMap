@@ -1,4 +1,5 @@
 import logging
+import math
 import torch.nn.functional as F
 import sklearn
 import numpy as np
@@ -421,7 +422,7 @@ def compute_ae_loss_pretrain(
 
     if (
         flagconfig.lambda_disc_single == 1
-    ):  # and loss_dis.item()<sum(loss_AE_all).item()/DIS_LAMDA:
+    ) and loss_dis.item() != 0:  # and loss_dis.item()<sum(loss_AE_all).item()/DIS_LAMDA:
         flagconfig.lambda_disc_single = (
             sum(loss_AE_all).item() / ModelType.DIS_LAMDA.value / loss_dis.item()
         )
@@ -746,7 +747,7 @@ def compute_ae_loss(
 
     if (
         flagconfig.lambda_disc_single == 1
-    ):  # and loss_dis.item()<sum(loss_AE_all).item()/DIS_LAMDA:
+    ) and loss_dis.item() != 0:  # and loss_dis.item()<sum(loss_AE_all).item()/DIS_LAMDA:
         flagconfig.lambda_disc_single = (
             sum(loss_AE_all).item() / ModelType.DIS_LAMDA.value / loss_dis.item()
         )
@@ -972,6 +973,32 @@ train ref data part
 """
 
 
+def _compute_entropy_gate(logits):
+    """Compute normalized entropy of discriminator output as a per-sample alignment weight.
+
+    Used by DiscGAL (Discriminator-Entropy Gated Adversarial Loss) to preserve
+    disease-specific niches during warm-start fine-tuning.
+
+    High entropy (discriminator confused) → weight ≈ 1 → align with atlas.
+    Low entropy (discriminator certain)   → weight ≈ 0 → preserve disease structure.
+
+    Parameters
+    ----------
+    logits : torch.Tensor
+        Raw discriminator logits of shape (N, C).
+
+    Returns
+    -------
+    torch.Tensor
+        Per-sample gate values in [0, 1] of shape (N,), detached from computation graph.
+    """
+    probs = F.softmax(logits, dim=1)
+    log_probs = torch.log(probs + 1e-8)
+    entropy = -(probs * log_probs).sum(dim=1)
+    max_entropy = math.log(probs.shape[1])
+    return (entropy / max_entropy).detach()
+
+
 def compute_dis_loss_map(
     adapt_model,
     flag_source_cat_single,
@@ -1038,16 +1065,15 @@ def compute_dis_loss_map(
             )
 
     ### compute dis loss
+    # DiscGAL: compute logits separately for entropy gating
+    disc_logits_single = torch.hstack(
+        [
+            adapt_model.discriminator_single(z_mean_cat_single),
+            adapt_model.discriminator_single_pretrain(z_mean_cat_single),
+        ]
+    )
     loss_dis_single = F.cross_entropy(
-        F.softmax(
-            torch.hstack(
-                [
-                    adapt_model.discriminator_single(z_mean_cat_single),
-                    adapt_model.discriminator_single_pretrain(z_mean_cat_single),
-                ]
-            ),
-            dim=1,
-        ),
+        F.softmax(disc_logits_single, dim=1),
         torch.hstack(
             [
                 flag_source_cat_single[mask_batch_single_all],
@@ -1056,18 +1082,19 @@ def compute_dis_loss_map(
         ),
         reduction="none",
     )
-    loss_dis_single = loss_dis_single.sum() / loss_dis_single.numel()
+    # DiscGAL: mild entropy gating for discriminator step (floor=0.5 preserves gradient signal)
+    gate_single = torch.clamp(_compute_entropy_gate(disc_logits_single), min=0.5)
+    loss_dis_single = (gate_single * loss_dis_single).sum() / loss_dis_single.numel()
 
+    # DiscGAL: compute spatial logits separately for entropy gating
+    disc_logits_spatial = torch.hstack(
+        [
+            adapt_model.discriminator_spatial(z_mean_cat_spatial),
+            adapt_model.discriminator_spatial_pretrain(z_mean_cat_spatial),
+        ]
+    )
     loss_dis_spatial = F.cross_entropy(
-        F.softmax(
-            torch.hstack(
-                [
-                    adapt_model.discriminator_spatial(z_mean_cat_spatial),
-                    adapt_model.discriminator_spatial_pretrain(z_mean_cat_spatial),
-                ]
-            ),
-            dim=1,
-        ),
+        F.softmax(disc_logits_spatial, dim=1),
         torch.hstack(
             [
                 flag_source_cat_spatial[mask_batch_spatial_all],
@@ -1076,7 +1103,9 @@ def compute_dis_loss_map(
         ),
         reduction="none",
     )
-    loss_dis_spatial = loss_dis_spatial.sum() / loss_dis_spatial.numel()
+    # DiscGAL: mild entropy gating for discriminator step (floor=0.5)
+    gate_spatial = torch.clamp(_compute_entropy_gate(disc_logits_spatial), min=0.5)
+    loss_dis_spatial = (gate_spatial * loss_dis_spatial).sum() / loss_dis_spatial.numel()
 
     loss_dis = flagconfig.lambda_disc_single * (loss_dis_single + loss_dis_spatial)
     # loss_dis = self.lambda_disc_single * (loss_dis_single )
@@ -1180,16 +1209,15 @@ def compute_ae_loss_map(
             )
 
     ### compute dis loss
+    # DiscGAL: compute logits separately for entropy gating
+    disc_logits_single = torch.hstack(
+        [
+            adapt_model.discriminator_single(z_mean_cat_single),
+            adapt_model.discriminator_single_pretrain(z_mean_cat_single),
+        ]
+    )
     loss_dis_single = F.cross_entropy(
-        F.softmax(
-            torch.hstack(
-                [
-                    adapt_model.discriminator_single(z_mean_cat_single),
-                    adapt_model.discriminator_single_pretrain(z_mean_cat_single),
-                ]
-            ),
-            dim=1,
-        ),
+        F.softmax(disc_logits_single, dim=1),
         torch.hstack(
             [
                 flag_source_cat_single[mask_batch_single_all],
@@ -1198,18 +1226,19 @@ def compute_ae_loss_map(
         ),
         reduction="none",
     )
-    loss_dis_single = loss_dis_single.sum() / loss_dis_single.numel()
+    # DiscGAL: full entropy gating for encoder (disease-specific cells get zero adversarial pressure)
+    gate_single = _compute_entropy_gate(disc_logits_single)
+    loss_dis_single = (gate_single * loss_dis_single).sum() / loss_dis_single.numel()
 
+    # DiscGAL: compute spatial logits separately for entropy gating
+    disc_logits_spatial = torch.hstack(
+        [
+            adapt_model.discriminator_spatial(z_mean_cat_spatial),
+            adapt_model.discriminator_spatial_pretrain(z_mean_cat_spatial),
+        ]
+    )
     loss_dis_spatial = F.cross_entropy(
-        F.softmax(
-            torch.hstack(
-                [
-                    adapt_model.discriminator_spatial(z_mean_cat_spatial),
-                    adapt_model.discriminator_spatial_pretrain(z_mean_cat_spatial),
-                ]
-            ),
-            dim=1,
-        ),
+        F.softmax(disc_logits_spatial, dim=1),
         torch.hstack(
             [
                 flag_source_cat_spatial[mask_batch_spatial_all],
@@ -1218,13 +1247,15 @@ def compute_ae_loss_map(
         ),
         reduction="none",
     )
-    loss_dis_spatial = loss_dis_spatial.sum() / loss_dis_spatial.numel()
+    # DiscGAL: full entropy gating for encoder (disease-specific cells get zero adversarial pressure)
+    gate_spatial = _compute_entropy_gate(disc_logits_spatial)
+    loss_dis_spatial = (gate_spatial * loss_dis_spatial).sum() / loss_dis_spatial.numel()
 
     loss_dis = flagconfig.lambda_disc_single * (loss_dis_single + loss_dis_spatial)
 
     if (
         flagconfig.lambda_disc_single == 1
-    ):  # and loss_dis.item()<sum(loss_AE_all).item()/DIS_LAMDA:
+    ) and loss_dis.item() != 0:  # and loss_dis.item()<sum(loss_AE_all).item()/DIS_LAMDA:
         flagconfig.lambda_disc_single = sum(loss_AE_all).item() / ModelType.DIS_LAMDA.value / loss_dis.item()
         logging.info(f"\n\nlambda_disc_single changed to {flagconfig.lambda_disc_single}\n")
         loss_dis = flagconfig.lambda_disc_single * loss_dis
@@ -1233,5 +1264,7 @@ def compute_ae_loss_map(
         "dis_ae": loss_dis,
         "loss_AE_all": loss_AE_all,
         "loss_all": -loss_dis + sum(loss_AE_all),
+        "gate_mean_single": gate_single.mean().item(),
+        "gate_mean_spatial": gate_spatial.mean().item(),
     }
     return loss_all

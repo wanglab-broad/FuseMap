@@ -33,7 +33,7 @@ easydict==1.13
 filelock==3.18.0
 fonttools==4.58.1
 frozenlist==1.6.0
-fusemap==0.0.1
+fusemap==0.0.0
 gitdb==4.0.12
 GitPython==3.1.44
 greenlet==3.2.2
@@ -186,9 +186,3 @@ xxhash==3.5.0
 yarl==1.20.0
 zipp==3.22.0
 zstandard==0.23.0
-nbsphinx
-sphinx>=5.3.0
-pydata-sphinx-theme
-sphinx-gallery==0.10
-sphinx-book-theme
-tangram==0.7.0

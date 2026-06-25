@@ -1,0 +1,62 @@
+[project]
+name = "fusemap"
+version = "0.0.2"
+description = "FuseMap: Spatial Brain AI Agent for multi-modal spatial transcriptomics integration"
+readme = "README.md"
+requires-python = ">=3.10,<3.11"
+license = {text = "MIT"}
+
+dependencies = [
+    # ── Core scientific stack ──
+    "numpy==1.26.2",
+    "scanpy>=1.9",
+    "anndata>=0.9",
+    "scipy>=1.10",
+    "pandas>=2.0",
+    "scikit-learn>=1.3",
+    "matplotlib>=3.7",
+    "seaborn>=0.12",
+    "h5py>=3.9",
+    "umap-learn>=0.5",
+    # ── Deep learning ──
+    "torch==2.0.1",
+    "dgl==1.1.1",
+    "sparse==0.14.0",
+    "leidenalg==0.10.1",
+    "dglgo==0.0.2",
+    # ── LLM / Agent framework ──
+    "openai==1.82.1",
+    "langchain==0.3.25",
+    "langchain-community==0.3.24",
+    "langchain-openai==0.3.18",
+    "langchain-anthropic==0.3.14",
+    "langgraph==0.4.7",
+    "langgraph-prebuilt==0.2.2",
+    "langgraph-sdk==0.1.70",
+    "langsmith==0.3.43",
+    # ── Web UI ──
+    "streamlit==1.45.1",
+    "audio-recorder-streamlit==0.0.10",
+    "plotly==6.1.2",
+    # ── Misc ──
+    "harmonypy==0.0.10",
+    "easydict==1.13",
+    "python-dotenv>=1.0",
+    "rdkit-pypi==2022.9.5",
+    "tiktoken>=0.7",
+    "nvitop>=1.6.2",
+]
+
+[project.scripts]
+fusemap = "fusemap:spatial_integrate"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# ── uv-specific configuration ──
+[tool.uv]
+# PyTorch CUDA 11.7 wheel index (for torch==2.0.1+cu117)
+extra-index-url = [
+    "https://download.pytorch.org/whl/cu117",
+]

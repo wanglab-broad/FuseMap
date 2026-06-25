@@ -1,27 +1,37 @@
 ### ---research_agent.py--- ###
 
 from langchain_community.tools.tavily_search import TavilySearchResults
-import openai
-# from agent_setup.config import llm
-import streamlit as st
-from audio_recorder_streamlit import audio_recorder
-from langchain.agents import AgentType, initialize_agent
-from langchain.callbacks import StreamlitCallbackHandler
-from langchain.chat_models import ChatOpenAI
-from langchain.memory import ConversationBufferMemory
-from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
-from langchain.tools import DuckDuckGoSearchRun
-from langchain.schema.messages import SystemMessage
-from langchain.prompts import MessagesPlaceholder
 from langgraph.prebuilt import create_react_agent
-from langchain_core.messages import AIMessage
-
-import tempfile
-import datetime
-from tempfile import NamedTemporaryFile
-from langchain.agents import Tool, initialize_agent, AgentType
-from langchain.chat_models import ChatOpenAI
+from langchain.agents import Tool
+from agent_setup.progress_utils import log_progress
 import os
+
+
+def create_research_agent(llm):
+    """
+    Create a research agent that can search for information using Tavily.
+    This version is designed to work outside of Streamlit context (e.g., in tests).
+    """
+    from agent_setup.agent_utils import AgentWrapper
+
+    tavily_tool = TavilySearchResults(max_results=5,
+                                    tavily_api_key=os.environ["TAVILY_API_KEY"])
+
+    system_prompt = (
+        "You are a helpful AI research assistant. "
+        "Use the search tool to find information about scientific topics, "
+        "including cell types, genes, and tissue regions in diseases. "
+        "Provide comprehensive answers with references."
+    )
+
+    # Create agent using LangGraph's create_react_agent
+    graph = create_react_agent(
+        llm,
+        tools=[tavily_tool],
+        prompt=system_prompt,
+    )
+
+    return AgentWrapper(graph)
 
 
 def research_agent_tool(llm):
@@ -54,10 +64,10 @@ def research_agent_tool(llm):
     )
 
     def get_final_message_from_stream(input_text):
-        container = st.container()
-        container.markdown("🔍 Running Research Agent...")
-
-        progress = container.progress(0, text="Starting research...")
+        # Do NOT call st.* here: this runs inside a background thread where
+        # Streamlit has no session context. In bare mode, st.* calls succeed
+        # silently but corrupt the frontend delta queue → white screen.
+        log_progress("🔍 [ResearchAgent] Starting literature search...")
 
         stream = search_sub_agent.stream(
             {"messages": [("user", input_text)]},
@@ -65,13 +75,22 @@ def research_agent_tool(llm):
         )
 
         final = None
-        for i, step in enumerate(stream):
-            progress.progress(min(100, (i + 1) * 10), text="Analyzing literature...")
+        step_count = 0
+        for step in stream:
+            step_count += 1
             messages = step.get("messages", [])
             if messages:
-                final = messages[-1]
+                last = messages[-1]
+                msg_type = type(last).__name__
+                # Emit a brief live update for each ReAct step
+                if hasattr(last, "content") and last.content:
+                    preview = str(last.content)[:80].replace("\n", " ")
+                    if len(str(last.content)) > 80:
+                        preview += "…"
+                    log_progress(f"🔍 [ResearchAgent] Step {step_count} ({msg_type}): {preview}")
+                final = last
 
-        progress.progress(100, text="Research complete.")
+        log_progress("✅ [ResearchAgent] Research complete.")
         
         if isinstance(final, tuple):
             return str(final[1])
@@ -85,8 +104,22 @@ def research_agent_tool(llm):
     return Tool(
         name="ResearchAgent",
         func=lambda input: "FINAL ANSWER: " + get_final_message_from_stream(input),
-        description="""This tool is used to search for information about change of gene expression, cell types, and brain regions, e.g., under brain diseases and conditions with references,
-        under the help of a dedicated search agent.
+        description="""Search scientific literature for neuroscience background knowledge.
+
+        Capabilities:
+        1. Find disease mechanisms, pathology, and affected brain regions/cell types
+        2. Identify relevant genes and markers for a disease or condition
+        3. Explain neuroscience concepts, gene functions, and cell type biology
+        4. Retrieve references and citations from scientific literature
+
+        Use this agent FIRST when:
+        - The user asks about a disease (e.g. Alzheimer's, Parkinson's)
+        - Scientific context is needed before running atlas or analysis tools
+        - The user wants background on genes, cell types, or brain regions
+
+        Input: the user's question or topic to search.
+        Output: structured summary with affected cell types, genes, brain regions, and references.
+
         Do not change output message of the search agent.
     """
     )

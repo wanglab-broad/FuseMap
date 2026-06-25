@@ -331,6 +331,13 @@ def pretrain_model(
             f"{ModelType.save_dir}/trained_model/FuseMap_pretrain_model_final.pt",
         )
         logging.info("\n\nFile name changed in the end\n")
+    else:
+        # Fallback: save current model if no best model was saved yet
+        torch.save(
+            model.state_dict(),
+            f"{ModelType.save_dir}/trained_model/FuseMap_pretrain_model_final.pt",
+        )
+        logging.info("\n\nForced save of pretrain model at the end\n")
 
 
 def train_model(
@@ -597,6 +604,13 @@ def train_model(
             f"{ModelType.save_dir}/trained_model/FuseMap_final_model_final.pt",
         )
         logging.info("\n\nFile name changed in the end\n")
+    else:
+        # Fallback: save current model if no best model was saved yet
+        torch.save(
+            model.state_dict(),
+            f"{ModelType.save_dir}/trained_model/FuseMap_final_model_final.pt",
+        )
+        logging.info("\n\nForced save of final model at the end\n")
 
 
 def read_model(
@@ -971,6 +985,8 @@ def map_model(
         for i in range(ModelType.n_atlas):
             loss_atlas_i[i] = 0
         loss_atlas_val = 0
+        loss_gate_single_sum = 0
+        loss_gate_spatial_sum = 0
         anneal = (
             max(1 - (epoch - 1) / flagconfig.align_anneal, 0)
             if flagconfig.align_anneal
@@ -1080,6 +1096,8 @@ def map_model(
                 loss_atlas_i[i] += loss_part2["loss_AE_all"][i].item()
             loss_all_item += loss_part2["loss_all"].item()
             loss_ae_dis += loss_part2["dis_ae"].item()
+            loss_gate_single_sum += loss_part2.get("gate_mean_single", 1.0)
+            loss_gate_spatial_sum += loss_part2.get("gate_mean_spatial", 1.0)
 
         flagconfig.align_anneal /= 2
 
@@ -1089,7 +1107,9 @@ def map_model(
             Loss dis: {loss_dis / len(spatial_dataloader)},\
             Loss AE: {[i / len(spatial_dataloader) for i in loss_atlas_i.values()]} , \
             Loss ae dis:{loss_ae_dis / len(spatial_dataloader)},\
-            Loss all:{loss_all_item / len(spatial_dataloader)}\n"
+            Loss all:{loss_all_item / len(spatial_dataloader)},\
+            Gate single:{loss_gate_single_sum / len(spatial_dataloader):.3f},\
+            Gate spatial:{loss_gate_spatial_sum / len(spatial_dataloader):.3f}\n"
             )
 
         save_snapshot(
@@ -1232,3 +1252,10 @@ def map_model(
             f"{ModelType.save_dir}/trained_model/FuseMap_map_model_final.pt",
         )
         logging.info("\n\nFile name changed in the end\n")
+    else:
+        # Fallback: save current model if no best model was saved yet
+        torch.save(
+            adapt_model.state_dict(),
+            f"{ModelType.save_dir}/trained_model/FuseMap_map_model_final.pt",
+        )
+        logging.info("\n\nForced save of map model at the end\n")

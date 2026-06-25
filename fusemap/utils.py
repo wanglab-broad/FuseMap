@@ -220,7 +220,7 @@ def transfer_annotation(X_input, save_dir, molccf_path):
     # Load the .pkl file
     ad_embed = ad.read_h5ad(save_dir + "/ad_celltype_embedding.h5ad")
     if 'fusemap_celltype' not in ad_embed.obs.columns:
-        with open('/home/jialiulab/disk1/yichun/FuseMap/molCCF/transfer/le_gt_cell_type_main_STARmap.pkl', 'rb') as file:
+        with open('./molCCF/transfer/le_gt_cell_type_main_STARmap.pkl', 'rb') as file:
             le_gt_cell_type_main_STARmap = pickle.load(file)
         
         NNmodel = NNTransfer(input_dim=64,output_dim=len(le_gt_cell_type_main_STARmap))
@@ -247,7 +247,7 @@ def transfer_annotation(X_input, save_dir, molccf_path):
     # Load the .pkl file
     ad_embed = ad.read_h5ad(save_dir + "/ad_tissueregion_embedding.h5ad")
     if 'fusemap_tissueregion' not in ad_embed.obs.columns:
-        with open('/home/jialiulab/disk1/yichun/FuseMap/molCCF/transfer/le_gt_tissue_region_main_STARmap.pkl', 'rb') as file:
+        with open('./molCCF/transfer/le_gt_tissue_region_main_STARmap.pkl', 'rb') as file:
             le_gt_tissue_region_main_STARmap = pickle.load(file)
         
         NNmodel = NNTransfer(input_dim=64,output_dim=len(le_gt_tissue_region_main_STARmap))

@@ -1,110 +1,79 @@
-import getpass
 import os
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from pathlib import Path
+from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
-import sys
-import argparse
+
+# Load environment variables from .env file
+# Find the project root and load .env from there
+project_root = Path(__file__).parent.parent
+env_file = project_root / ".env"
+if env_file.exists():
+    load_dotenv(env_file)
+
+
+# Supported model configurations.
+# "temperature" is the value passed to the LLM constructor. Use None for models
+# that only accept their default temperature (e.g. GPT-5 reasoning models reject
+# temperature=0); None means the parameter is omitted and the provider default is used.
+SUPPORTED_MODELS = {
+    "gpt-4o": {"provider": "openai", "model_name": "gpt-4o", "temperature": 0},
+    "gpt-5": {"provider": "openai", "model_name": "gpt-5", "temperature": None},
+    "claude-sonnet-4": {"provider": "anthropic", "model_name": "claude-sonnet-4-20250514", "temperature": 0},
+    # Legacy alias for backward compatibility
+    "claude-3.7": {"provider": "anthropic", "model_name": "claude-sonnet-4-20250514", "temperature": 0},
+}
+
+
+def is_anthropic_model(model_choice: str) -> bool:
+    """Check if the given model choice is an Anthropic model."""
+    model_info = SUPPORTED_MODELS.get(model_choice, {})
+    return model_info.get("provider") == "anthropic"
+
+
+def is_openai_model(model_choice: str) -> bool:
+    """Check if the given model choice is an OpenAI model."""
+    model_info = SUPPORTED_MODELS.get(model_choice, {})
+    return model_info.get("provider") == "openai"
 
 
 def create_llm(model_choice="gpt-4o", api_key=None, base_url=None):
     """
     Create and return an LLM instance based on the provided parameters.
-    
+
     Args:
-        model_choice (str): The model to use ("gpt-4o" or "claude-3.7")
+        model_choice (str): The model to use (see SUPPORTED_MODELS for options)
         api_key (str): The API key for the LLM service
         base_url (str): Optional base URL for custom endpoints
-    
+
     Returns:
         The configured LLM instance
     """
     if not api_key:
         raise ValueError("API key is required")
-    
-    if model_choice == "gpt-4o":
-        if base_url and base_url.strip():
-            return ChatOpenAI(model=model_choice, api_key=api_key, base_url=base_url, temperature=0)
-        else:
-            return ChatOpenAI(model=model_choice, api_key=api_key, temperature=0)
-    elif model_choice == "claude-3.7" and base_url and base_url.strip():
-        return ChatAnthropic(model=model_choice, api_key=api_key, base_url=base_url, temperature=0)
-    elif model_choice == "claude-3.7":
-        return ChatAnthropic(model=model_choice, api_key=api_key, temperature=0)
-    else:
-        raise ValueError(f"Unsupported model choice: {model_choice}")
 
-
-
-def parse_args():
-    if 'ipykernel_launcher' in sys.argv[0]:
-        # Default values when running in Jupyter notebook
-        args = argparse.Namespace(
-            pca_dim=50,
-            hidden_dim=512,
-            latent_dim=64,
-            dropout_rate=0.2,
-            n_epochs=200,
-            batch_size=16,
-            learning_rate=0.001,
-            optim_kw='RMSprop',
-            use_input='norm',
-            harmonized_gene=True,
-            data_pth=None,
-            preprocess_save=False,
-            lambda_disc_single=1,
-            lambda_ae_single=1,
-            lambda_disc_spatial=1,
-            lambda_ae_spatial=1,
-            align_noise_coef=1.5,
-            align_anneal=1e10,
-            lr_patience_pretrain=2,
-            lr_factor_pretrain=0.5,
-            lr_limit_pretrain=0.00001,
-            patience_limit_final=5,
-            lr_patience_final=3,
-            lr_factor_final=0.5,
-            lr_limit_final=0.00001,
-            patience_limit_pretrain=4,
-            EPS=1e-10,
-            DIS_LAMDA=2,
-            TRAIN_WITHOUT_EVAL=3,
-            USE_REFERENCE_PCT=0.25,
-            verbose=False
+    if model_choice not in SUPPORTED_MODELS:
+        raise ValueError(
+            f"Unsupported model choice: {model_choice}. "
+            f"Supported models: {list(SUPPORTED_MODELS.keys())}"
         )
-    else:
-        # Argument parsing when running from the command line
-        parser = argparse.ArgumentParser(description="FuseMap")
-        parser.add_argument("--pca_dim", type=int, default=50)
-        parser.add_argument("--hidden_dim", type=int, default=512)
-        parser.add_argument("--latent_dim", type=int, default=64)
-        parser.add_argument("--dropout_rate", type=float, default=0.2)
-        parser.add_argument("--n_epochs", type=int, default=200)
-        parser.add_argument("--batch_size", type=int, default=16)
-        parser.add_argument("--learning_rate", type=float, default=0.001)
-        parser.add_argument("--optim_kw", type=str, default='RMSprop')
-        parser.add_argument("--use_input", type=str, default='norm')
-        parser.add_argument("--harmonized_gene", type=bool, default=True)
-        parser.add_argument("--data_pth", type=str, default=None)
-        parser.add_argument("--preprocess_save", type=bool, default=False)
-        parser.add_argument("--lambda_disc_single", type=int, default=1)
-        parser.add_argument("--lambda_ae_single", type=int, default=1)
-        parser.add_argument("--lambda_disc_spatial", type=int, default=1)
-        parser.add_argument("--lambda_ae_spatial", type=int, default=1)
-        parser.add_argument("--align_noise_coef", type=float, default=1.5)
-        parser.add_argument("--align_anneal", type=float, default=1e10)
-        parser.add_argument("--lr_patience_pretrain", type=int, default=2)
-        parser.add_argument("--lr_factor_pretrain", type=float, default=0.5)
-        parser.add_argument("--lr_limit_pretrain", type=float, default=0.00001)
-        parser.add_argument("--patience_limit_final", type=int, default=5)
-        parser.add_argument("--lr_patience_final", type=int, default=3)
-        parser.add_argument("--lr_factor_final", type=float, default=0.5)
-        parser.add_argument("--lr_limit_final", type=float, default=0.00001)
-        parser.add_argument("--patience_limit_pretrain", type=int, default=4)
-        parser.add_argument("--EPS", type=float, default=1e-10)
-        parser.add_argument("--DIS_LAMDA", type=int, default=2)
-        parser.add_argument("--TRAIN_WITHOUT_EVAL", type=int, default=3)
-        parser.add_argument("--USE_REFERENCE_PCT", type=float, default=0.25)
-        parser.add_argument("--verbose", type=bool, default=False)
-        args = parser.parse_args()
 
-    return args
+    model_info = SUPPORTED_MODELS[model_choice]
+    provider = model_info["provider"]
+    model_name = model_info["model_name"]
+    temperature = model_info.get("temperature", 0)
+
+    if provider == "openai":
+        kwargs = dict(model=model_name, api_key=api_key)
+        if temperature is not None:
+            kwargs["temperature"] = temperature
+        if base_url and base_url.strip():
+            kwargs["base_url"] = base_url
+        return ChatOpenAI(**kwargs)
+    elif provider == "anthropic":
+        kwargs = dict(model=model_name, api_key=api_key)
+        if temperature is not None:
+            kwargs["temperature"] = temperature
+        if base_url and base_url.strip():
+            kwargs["base_url"] = base_url
+        return ChatAnthropic(**kwargs)
