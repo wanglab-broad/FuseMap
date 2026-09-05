@@ -1,2 +1,6 @@
 docs/_build/
 docs/api/generated/
+docs/notebooks/tutorial_data/
+docs/notebooks/output_tutorial*/
+docs/notebooks/tutorial*_data/
+docs/notebooks/molCCF

@@ -64,12 +64,15 @@ todo_include_todos = True
 nbsphinx_execute = "never"
 
 nbsphinx_thumbnails = {
-    'notebooks/1_spatial_integration_imaging': '_static/test.png',
-    'notebooks/2_spatial_integration_cross_tech': '_static/test.png',
-    'notebooks/3_gene_spatial_imputation': '_static/test.png',
-    'notebooks/4_map_new_dataset_customized': '_static/test.png',
-    'notebooks/5_map_new_dataset_molCCF': '_static/test.png',
-    'notebooks/6_cell_to_cell_interaction': '_static/test.png',
+    'notebooks/1_spatial_integration_imaging': '_static/thumbs/tut1.png',
+    'notebooks/2_spatial_integration_cross_tech': '_static/thumbs/tut2.png',
+    'notebooks/3_gene_spatial_imputation': '_static/thumbs/tut3.png',
+    'notebooks/4_map_new_dataset_customized': '_static/thumbs/tut4.png',
+    'notebooks/5_map_new_dataset_molCCF': '_static/thumbs/tut5.png',
+    'notebooks/6_cell_to_cell_interaction': '_static/thumbs/tut6.png',
+    'notebooks/7_cross_condition_integration': '_static/thumbs/tut7.png',
+    'notebooks/8_bead_deconvolution': '_static/thumbs/tut8.png',
+    'notebooks/9_embryo_cross_resolution': '_static/thumbs/tut9.png',
 }
 
 templates_path = ['_templates']

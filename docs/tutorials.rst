@@ -3,9 +3,10 @@
 Tutorials
 ================================================================================
 
-Explanatory notebooks organized by FuseMap's core capabilities.
-Example data for all tutorials:
-`Google Drive <https://drive.google.com/drive/folders/1nMWUzIcmzd4BQztUenwPJdL9zh2gj2Dd?usp=sharing>`__.
+Explanatory notebooks organized by FuseMap's core capabilities. Every tutorial follows the
+same three steps: **download the data** (one cell) → **run FuseMap** (one function call) →
+**analyze the results**. Tutorials that need long training ship precomputed outputs so you
+can skip straight to the analysis.
 
 .. seealso::
 
@@ -23,6 +24,17 @@ technologies, and conditions become jointly analyzable.
 
     Integrate imaging-based data <notebooks/1_spatial_integration_imaging>
     Integrate imaging- and sequencing-based data <notebooks/2_spatial_integration_cross_tech>
+    Integrate across conditions (healthy × disease) <notebooks/7_cross_condition_integration>
+
+Deconvolve bead-resolution data
+--------------------------------------------------------------------------------
+
+Bead/spot technologies (Slide-seq, Visium HD) measure mixtures of cells. Stage-B
+deconvolution decomposes each bead into cell archetypes and rebuilds its embeddings.
+
+.. nbgallery::
+
+    Deconvolve Slide-seq beads (Stage-B) <notebooks/8_bead_deconvolution>
 
 Impute transcriptome-wide expression
 --------------------------------------------------------------------------------
@@ -37,14 +49,24 @@ letting FuseMap impute genes that were never measured in a section.
 Map new data to a reference
 --------------------------------------------------------------------------------
 
-Instead of retraining, project new sections onto a pretrained FuseMap model —
-your own reference or the molCCF universal mouse brain atlas — and transfer
-cell-type and tissue-region annotations.
+Project new sections onto a pretrained FuseMap model and transfer annotations.
+Mapping works best against large, diverse references such as molCCF; for small custom
+references, consider integrating jointly instead (see the note in Tutorial 4).
 
 .. nbgallery::
 
     Map to a customized pretrained model <notebooks/4_map_new_dataset_customized>
     Map to the molCCF mouse brain atlas <notebooks/5_map_new_dataset_molCCF>
+
+Beyond the brain
+--------------------------------------------------------------------------------
+
+The same pipeline generalizes to any tissue — here, whole mouse embryos across
+resolutions and technologies.
+
+.. nbgallery::
+
+    Whole-embryo cross-resolution integration <notebooks/9_embryo_cross_resolution>
 
 Downstream analysis
 --------------------------------------------------------------------------------

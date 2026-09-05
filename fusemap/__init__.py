@@ -8,3 +8,4 @@ from .dataset import *
 from fusemap.loss import *
 from fusemap.train_model import *
 from fusemap.preprocess import *
+from fusemap.api import *
