@@ -9,3 +9,5 @@ from fusemap.loss import *
 from fusemap.train_model import *
 from fusemap.preprocess import *
 from fusemap.api import *
+from fusemap import metrics
+from fusemap import pl
