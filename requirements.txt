@@ -194,3 +194,4 @@ sphinx-book-theme
 tangram==0.7.0
 sphinx-design
 sphinx-copybutton
+arcplot
