@@ -63,13 +63,13 @@ def _get_data_prepared(blocks_all, train_mask, device, model):
     ### discriminator flags
     flag_shape_single = [len(row_index_all[i]) for i in range(ModelType.n_atlas)]
     flag_all_single = torch.cat(
-        [torch.full((x,), i) for i, x in enumerate(flag_shape_single)]
+        [torch.full((x,), _atlas_label(i)) for i, x in enumerate(flag_shape_single)]
     )
     flag_source_cat_single = flag_all_single.long().to(device)
 
     flag_shape_spatial = [len(col_index_all[i]) for i in range(ModelType.n_atlas)]
     flag_all_spatial = torch.cat(
-        [torch.full((x,), i) for i, x in enumerate(flag_shape_spatial)]
+        [torch.full((x,), _atlas_label(i)) for i, x in enumerate(flag_shape_spatial)]
     )
     flag_source_cat_spatial = flag_all_spatial.long().to(device)
 
@@ -84,6 +84,15 @@ def _get_data_prepared(blocks_all, train_mask, device, model):
         row_index_all,
         col_index_all,
     )
+
+
+# Sharded training support: maps local atlas index -> global atlas index for
+# discriminator labels. None (default) = identity = original behavior.
+ATLAS_LABEL_MAP = None
+
+
+def _atlas_label(i):
+    return i if ATLAS_LABEL_MAP is None else ATLAS_LABEL_MAP[i]
 
 
 def get_data(blocks_all, feature_all, adj_all, train_mask, device, model):
@@ -146,13 +155,13 @@ def get_data(blocks_all, feature_all, adj_all, train_mask, device, model):
     ### discriminator flags
     flag_shape_single = [len(row_index_all[i]) for i in range(ModelType.n_atlas)]
     flag_all_single = torch.cat(
-        [torch.full((x,), i) for i, x in enumerate(flag_shape_single)]
+        [torch.full((x,), _atlas_label(i)) for i, x in enumerate(flag_shape_single)]
     )
     flag_source_cat_single = flag_all_single.long().to(device)
 
     flag_shape_spatial = [len(col_index_all[i]) for i in range(ModelType.n_atlas)]
     flag_all_spatial = torch.cat(
-        [torch.full((x,), i) for i, x in enumerate(flag_shape_spatial)]
+        [torch.full((x,), _atlas_label(i)) for i, x in enumerate(flag_shape_spatial)]
     )
     flag_source_cat_spatial = flag_all_spatial.long().to(device)
 
@@ -355,6 +364,7 @@ def pretrain_model(
     train_mask,
     val_mask,
     flagconfig,
+    dist_hooks=None,
 ):
     loss_atlas_val_best = float("inf")
     patience_counter = 0
@@ -461,6 +471,8 @@ def pretrain_model(
             )
             model.zero_grad(set_to_none=True)
             loss_part1["dis"].backward()
+            if dist_hooks is not None:
+                dist_hooks.sync_grads(model)
             optimizer_dis.step()
             loss_dis += loss_part1["dis"].item()
 
@@ -481,6 +493,8 @@ def pretrain_model(
             )
             model.zero_grad(set_to_none=True)
             loss_part2["loss_all"].backward()
+            if dist_hooks is not None:
+                dist_hooks.sync_grads(model)
             optimizer_ae.step()
 
             if ModelType.use_llm_gene_embedding=='combine':
@@ -488,6 +502,8 @@ def pretrain_model(
                     loss_part3 = compute_gene_embedding_loss(model)
                     model.zero_grad(set_to_none=True)
                     loss_part3.backward()
+                    if dist_hooks is not None:
+                        dist_hooks.sync_grads(model)
                     optimizer_ae.step()
                     loss_gene_embedding += loss_part3.item()
 
@@ -496,9 +512,11 @@ def pretrain_model(
             loss_all_item += loss_part2["loss_all"].item()
             loss_ae_dis += loss_part2["dis_ae"].item()
 
+        if dist_hooks is not None:
+            flagconfig.lambda_disc_single = dist_hooks.sync_value(flagconfig.lambda_disc_single)
         flagconfig.align_anneal /= 2
 
-        if ModelType.verbose.value == True:
+        if ModelType.verbose.value == True or os.environ.get("FUSEMAP_VERBOSE") == "1":
             logging.info(
                 f"\n\nTrain Epoch {epoch}/{ModelType.n_epochs}, \
             Loss dis: {loss_dis / len(spatial_dataloader)},\
@@ -563,16 +581,18 @@ def pretrain_model(
                     loss_atlas_val / len(spatial_dataloader) / ModelType.n_atlas
                 )
 
-                if ModelType.verbose.value == True:
+                if ModelType.verbose.value == True or os.environ.get("FUSEMAP_VERBOSE") == "1":
                     logging.info(
                         f"\n\nValidation Epoch {epoch + 1}/{ModelType.n_epochs}, \
                     Loss AE validation: {loss_atlas_val} \n"
                     )
 
+            if dist_hooks is not None:
+                loss_atlas_val = dist_hooks.sync_value(loss_atlas_val)
             scheduler_dis.step(loss_atlas_val)
             scheduler_ae.step(loss_atlas_val)
             current_lr = optimizer_dis.param_groups[0]["lr"]
-            if ModelType.verbose.value == True:
+            if ModelType.verbose.value == True or os.environ.get("FUSEMAP_VERBOSE") == "1":
                 logging.info(f"\n\ncurrent lr:{current_lr}\n")
 
             # If the loss is lower than the best loss so far, save the model And reset the patience counter
@@ -624,6 +644,7 @@ def train_model(
     train_mask,
     val_mask,
     flagconfig,
+    dist_hooks=None,
 ):
     with open(f"{ModelType.save_dir}/balance_weight_single.pkl", "rb") as openfile:
         balance_weight_single = pickle.load(openfile)
@@ -762,6 +783,8 @@ def train_model(
             )
             model.zero_grad(set_to_none=True)
             loss_part1["dis"].backward()
+            if dist_hooks is not None:
+                dist_hooks.sync_grads(model)
             optimizer_dis.step()
             loss_dis += loss_part1["dis"].item()
 
@@ -786,6 +809,8 @@ def train_model(
             )
             model.zero_grad(set_to_none=True)
             loss_part2["loss_all"].backward()
+            if dist_hooks is not None:
+                dist_hooks.sync_grads(model)
             optimizer_ae.step()
 
             if ModelType.use_llm_gene_embedding=='combine':
@@ -793,6 +818,8 @@ def train_model(
                     loss_part3 = compute_gene_embedding_loss(model)
                     model.zero_grad(set_to_none=True)
                     loss_part3.backward()
+                    if dist_hooks is not None:
+                        dist_hooks.sync_grads(model)
                     optimizer_ae.step()
                     loss_gene_embedding += loss_part3.item()
 
@@ -801,13 +828,15 @@ def train_model(
             loss_all_item += loss_part2["loss_all"].item()
             loss_ae_dis += loss_part2["dis_ae"].item()
 
+        if dist_hooks is not None:
+            flagconfig.lambda_disc_single = dist_hooks.sync_value(flagconfig.lambda_disc_single)
         flagconfig.align_anneal /= 2
 
         save_snapshot(
             model, ModelType.epochs_run_pretrain, epoch, ModelType.snapshot_path,ModelType.verbose.value
         )
 
-        if ModelType.verbose.value == True:
+        if ModelType.verbose.value == True or os.environ.get("FUSEMAP_VERBOSE") == "1":
             logging.info(
                 f"\n\nTrain Epoch {epoch + 1}/{ModelType.n_epochs.value}, \
             Loss dis: {loss_dis / len(spatial_dataloader)},\
@@ -875,16 +904,18 @@ def train_model(
                 loss_atlas_val = (
                     loss_atlas_val / len(spatial_dataloader) / ModelType.n_atlas
                 )
-                if ModelType.verbose.value == True:
+                if ModelType.verbose.value == True or os.environ.get("FUSEMAP_VERBOSE") == "1":
                     logging.info(
                         f"\n\nValidation Epoch {epoch + 1}/{ModelType.n_epochs.value}, \
                     Loss AE validation: {loss_atlas_val} \n"
                     )
 
+            if dist_hooks is not None:
+                loss_atlas_val = dist_hooks.sync_value(loss_atlas_val)
             scheduler_dis.step(loss_atlas_val)
             scheduler_ae.step(loss_atlas_val)
             current_lr = optimizer_dis.param_groups[0]["lr"]
-            if ModelType.verbose.value == True:
+            if ModelType.verbose.value == True or os.environ.get("FUSEMAP_VERBOSE") == "1":
                 logging.info(f"\n\ncurrent lr:{current_lr}\n")
 
             # If the loss is lower than the best loss so far, save the model And reset the patience counter
@@ -1473,7 +1504,7 @@ def map_model(
 
         flagconfig.align_anneal /= 2
 
-        if ModelType.verbose.value == True:
+        if ModelType.verbose.value == True or os.environ.get("FUSEMAP_VERBOSE") == "1":
             logging.info(
                 f"\n\nTrain Epoch {epoch}/{ModelType.n_epochs}, \
             Loss dis: {loss_dis / len(spatial_dataloader)},\
@@ -1571,16 +1602,18 @@ def map_model(
                         loss_atlas_val += loss_part2["loss_AE_all"][i].item()
 
                 loss_atlas_val = loss_atlas_val / len(spatial_dataloader) / ModelType.n_atlas
-                if ModelType.verbose.value == True:
+                if ModelType.verbose.value == True or os.environ.get("FUSEMAP_VERBOSE") == "1":
                     logging.info(
                         f"\n\nValidation Epoch {epoch + 1}/{ModelType.n_epochs.value}, \
                     Loss AE validation: {loss_atlas_val} \n"
                     )
 
+            if dist_hooks is not None:
+                loss_atlas_val = dist_hooks.sync_value(loss_atlas_val)
             scheduler_dis.step(loss_atlas_val)
             scheduler_ae.step(loss_atlas_val)
             current_lr = optimizer_dis.param_groups[0]["lr"]
-            if ModelType.verbose.value == True:
+            if ModelType.verbose.value == True or os.environ.get("FUSEMAP_VERBOSE") == "1":
                 logging.info(f"\n\ncurrent lr:{current_lr}\n")
 
             # If the loss is lower than the best loss so far, save the model And reset the patience counter

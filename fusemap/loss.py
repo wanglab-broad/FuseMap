@@ -1,3 +1,4 @@
+import os
 import logging
 import torch.nn.functional as F
 import sklearn
@@ -9,6 +10,18 @@ from sparse import COO
 from fusemap.config import *
 import torch.nn as nn
 from sklearn import preprocessing
+
+# Sharded training: optional cross-rank latent gather for the discriminator
+# terms. None (default) = single-process behavior. When set (by
+# spatial_integrate_sharded), it receives (z, flags) of the local batch and
+# returns the globally gathered (z_all, flags_all) where only the local slice
+# carries gradients. This makes the adversarial terms mathematically identical
+# to single-GPU training.
+DIST_GATHER = None
+DIST_SCALE = 1.0
+DIST_GATHER_VEC = None
+DIST_ALLSUM = None
+DIST_STEP = [0]
 
 def AE_Gene_loss(recon_x, x, z_distribution):
     """
@@ -487,6 +500,13 @@ def compute_dis_loss_pretrain(
     z_spatial_all = [z_all[i][2] for i in range(ModelType.n_atlas)]
     z_mean_cat_spatial = torch.cat(z_spatial_all)[mask_batch_spatial_all, :]
 
+    _flags_single = flag_source_cat_single[mask_batch_single_all]
+    _flags_spatial = flag_source_cat_spatial[mask_batch_spatial_all]
+    if DIST_GATHER is not None:
+        z_mean_cat_single, _flags_single, _ = DIST_GATHER(z_mean_cat_single, _flags_single)
+        z_mean_cat_spatial, _flags_spatial, _ = DIST_GATHER(z_mean_cat_spatial, _flags_spatial)
+        DIST_STEP[0] += 1
+        torch.manual_seed(970_000_000 + DIST_STEP[0])
     if anneal:
         if z_mean_cat_single.shape[0] > 1:
             noise_single = D.Normal(0, z_mean_cat_single.std(axis=0)).sample(
@@ -508,18 +528,21 @@ def compute_dis_loss_pretrain(
     ### compute dis loss
     loss_dis_single = F.cross_entropy(
         F.softmax(model.discriminator_single(z_mean_cat_single), dim=1),
-        flag_source_cat_single[mask_batch_single_all],
+        _flags_single,
         reduction="none",
     )
     loss_dis_single = loss_dis_single.sum() / loss_dis_single.numel()
 
     loss_dis_spatial = F.cross_entropy(
         F.softmax(model.discriminator_spatial(z_mean_cat_spatial), dim=1),
-        flag_source_cat_spatial[mask_batch_spatial_all],
+        _flags_spatial,
         reduction="none",
     )
     loss_dis_spatial = loss_dis_spatial.sum() / loss_dis_spatial.numel()
 
+    if DIST_SCALE != 1.0:
+        loss_dis_single = loss_dis_single * DIST_SCALE
+        loss_dis_spatial = loss_dis_spatial * DIST_SCALE
     loss_dis = flagconfig.lambda_disc_single * (loss_dis_single + loss_dis_spatial)
 
     loss_all = {"dis": loss_dis}
@@ -632,6 +655,13 @@ def compute_ae_loss_pretrain(
     ]
     z_mean_cat_spatial = torch.cat(z_spatial_all)[mask_batch_spatial_all, :]
 
+    _flags_single = flag_source_cat_single[mask_batch_single_all]
+    _flags_spatial = flag_source_cat_spatial[mask_batch_spatial_all]
+    if DIST_GATHER is not None:
+        z_mean_cat_single, _flags_single, _ = DIST_GATHER(z_mean_cat_single, _flags_single)
+        z_mean_cat_spatial, _flags_spatial, _ = DIST_GATHER(z_mean_cat_spatial, _flags_spatial)
+        DIST_STEP[0] += 1
+        torch.manual_seed(970_000_000 + DIST_STEP[0])
     if anneal:
         if z_mean_cat_single.shape[0] > 1:
             noise_single = D.Normal(0, z_mean_cat_single.std(axis=0)).sample(
@@ -654,14 +684,14 @@ def compute_ae_loss_pretrain(
     ### compute dis loss
     loss_dis_single = F.cross_entropy(
         F.softmax(model.discriminator_single(z_mean_cat_single), dim=1),
-        flag_source_cat_single[mask_batch_single_all],
+        _flags_single,
         reduction="none",
     )
     loss_dis_single = loss_dis_single.sum() / loss_dis_single.numel()
 
     loss_dis_spatial = F.cross_entropy(
         F.softmax(model.discriminator_spatial(z_mean_cat_spatial), dim=1),
-        flag_source_cat_spatial[mask_batch_spatial_all],
+        _flags_spatial,
         reduction="none",
     )
     loss_dis_spatial = loss_dis_spatial.sum() / loss_dis_spatial.numel()
@@ -673,7 +703,7 @@ def compute_ae_loss_pretrain(
         flagconfig.lambda_disc_single == 1
     ):  # and loss_dis.item()<sum(loss_AE_all).item()/DIS_LAMDA:
         flagconfig.lambda_disc_single = (
-            sum(loss_AE_all).item() / ModelType.DIS_LAMDA.value / loss_dis.item()
+            ((DIST_ALLSUM(sum(loss_AE_all).item()) if DIST_ALLSUM is not None else sum(loss_AE_all).item()) / ModelType.DIS_LAMDA.value / loss_dis.item())
         )
         print(f"lambda_disc_single changed to {flagconfig.lambda_disc_single}")
         loss_dis = flagconfig.lambda_disc_single * loss_dis
@@ -791,6 +821,11 @@ def compute_dis_loss(
     mask_batch_spatial_all = torch.hstack(mask_batch_spatial)
     balance_weight_single_block = torch.hstack(balance_weight_single_block)
     balance_weight_spatial_block = torch.hstack((balance_weight_spatial_block))
+    _w_single = balance_weight_single_block[mask_batch_single_all]
+    _w_spatial = balance_weight_spatial_block[mask_batch_spatial_all]
+    if DIST_GATHER_VEC is not None:
+        _w_single = DIST_GATHER_VEC(_w_single)
+        _w_spatial = DIST_GATHER_VEC(_w_spatial)
 
     z_all = [
         model.encoder["atlas" + str(i)](batch_features_all[i], adj_all[i])
@@ -803,6 +838,13 @@ def compute_dis_loss(
     z_spatial_all = [z_all[i][2] for i in range(ModelType.n_atlas)]
     z_mean_cat_spatial = torch.cat(z_spatial_all)[mask_batch_spatial_all, :]
 
+    _flags_single = flag_source_cat_single[mask_batch_single_all]
+    _flags_spatial = flag_source_cat_spatial[mask_batch_spatial_all]
+    if DIST_GATHER is not None:
+        z_mean_cat_single, _flags_single, _ = DIST_GATHER(z_mean_cat_single, _flags_single)
+        z_mean_cat_spatial, _flags_spatial, _ = DIST_GATHER(z_mean_cat_spatial, _flags_spatial)
+        DIST_STEP[0] += 1
+        torch.manual_seed(970_000_000 + DIST_STEP[0])
     if anneal:
         if z_mean_cat_single.shape[0] > 1:
             noise_single = D.Normal(0, z_mean_cat_single.std(axis=0)).sample(
@@ -824,22 +866,25 @@ def compute_dis_loss(
     ### compute dis loss
     loss_dis_single = F.cross_entropy(
         F.softmax(model.discriminator_single(z_mean_cat_single), dim=1),
-        flag_source_cat_single[mask_batch_single_all],
+        _flags_single,
         reduction="none",
     )
     loss_dis_single = (
-        balance_weight_single_block[mask_batch_single_all] * loss_dis_single
+        _w_single * loss_dis_single
     ).sum() / loss_dis_single.numel()
 
     loss_dis_spatial = F.cross_entropy(
         F.softmax(model.discriminator_spatial(z_mean_cat_spatial), dim=1),
-        flag_source_cat_spatial[mask_batch_spatial_all],
+        _flags_spatial,
         reduction="none",
     )
     loss_dis_spatial = (
-        balance_weight_spatial_block[mask_batch_spatial_all] * loss_dis_spatial
+        _w_spatial * loss_dis_spatial
     ).sum() / loss_dis_spatial.numel()
 
+    if DIST_SCALE != 1.0:
+        loss_dis_single = loss_dis_single * DIST_SCALE
+        loss_dis_spatial = loss_dis_spatial * DIST_SCALE
     loss_dis = flagconfig.lambda_disc_single * (loss_dis_single + loss_dis_spatial)
 
     loss_all = {"dis": loss_dis}
@@ -968,6 +1013,13 @@ def compute_ae_loss(
     ]
     z_mean_cat_spatial = torch.cat(z_spatial_all)[mask_batch_spatial_all, :]
 
+    _flags_single = flag_source_cat_single[mask_batch_single_all]
+    _flags_spatial = flag_source_cat_spatial[mask_batch_spatial_all]
+    if DIST_GATHER is not None:
+        z_mean_cat_single, _flags_single, _ = DIST_GATHER(z_mean_cat_single, _flags_single)
+        z_mean_cat_spatial, _flags_spatial, _ = DIST_GATHER(z_mean_cat_spatial, _flags_spatial)
+        DIST_STEP[0] += 1
+        torch.manual_seed(970_000_000 + DIST_STEP[0])
     if anneal:
         if z_mean_cat_single.shape[0] > 1:
             noise_single = D.Normal(0, z_mean_cat_single.std(axis=0)).sample(
@@ -991,23 +1043,28 @@ def compute_ae_loss(
     bw_spatial_per_atlas = list(balance_weight_spatial_block)
     balance_weight_single_block = torch.hstack(balance_weight_single_block)
     balance_weight_spatial_block = torch.hstack((balance_weight_spatial_block))
+    _w_single = balance_weight_single_block[mask_batch_single_all]
+    _w_spatial = balance_weight_spatial_block[mask_batch_spatial_all]
+    if DIST_GATHER_VEC is not None:
+        _w_single = DIST_GATHER_VEC(_w_single)
+        _w_spatial = DIST_GATHER_VEC(_w_spatial)
 
     loss_dis_single = F.cross_entropy(
         F.softmax(model.discriminator_single(z_mean_cat_single), dim=1),
-        flag_source_cat_single[mask_batch_single_all],
+        _flags_single,
         reduction="none",
     )
     loss_dis_single = (
-        balance_weight_single_block[mask_batch_single_all] * loss_dis_single
+        _w_single * loss_dis_single
     ).sum() / loss_dis_single.numel()
 
     loss_dis_spatial = F.cross_entropy(
         F.softmax(model.discriminator_spatial(z_mean_cat_spatial), dim=1),
-        flag_source_cat_spatial[mask_batch_spatial_all],
+        _flags_spatial,
         reduction="none",
     )
     loss_dis_spatial = (
-        balance_weight_spatial_block[mask_batch_spatial_all] * loss_dis_spatial
+        _w_spatial * loss_dis_spatial
     ).sum() / loss_dis_spatial.numel()
 
     loss_dis = flagconfig.lambda_disc_single * (loss_dis_single + loss_dis_spatial)
@@ -1016,7 +1073,7 @@ def compute_ae_loss(
         flagconfig.lambda_disc_single == 1
     ):  # and loss_dis.item()<sum(loss_AE_all).item()/DIS_LAMDA:
         flagconfig.lambda_disc_single = (
-            sum(loss_AE_all).item() / ModelType.DIS_LAMDA.value / loss_dis.item()
+            ((DIST_ALLSUM(sum(loss_AE_all).item()) if DIST_ALLSUM is not None else sum(loss_AE_all).item()) / ModelType.DIS_LAMDA.value / loss_dis.item())
         )
         print(f"lambda_disc_single changed to {flagconfig.lambda_disc_single}")
         loss_dis = flagconfig.lambda_disc_single * loss_dis
@@ -1521,7 +1578,7 @@ def compute_ae_loss_map(
     if (
         flagconfig.lambda_disc_single == 1
     ):  # and loss_dis.item()<sum(loss_AE_all).item()/DIS_LAMDA:
-        flagconfig.lambda_disc_single = sum(loss_AE_all).item() / ModelType.DIS_LAMDA.value / loss_dis.item()
+        flagconfig.lambda_disc_single = ((DIST_ALLSUM(sum(loss_AE_all).item()) if DIST_ALLSUM is not None else sum(loss_AE_all).item()) / ModelType.DIS_LAMDA.value / loss_dis.item())
         logging.info(f"\n\nlambda_disc_single changed to {flagconfig.lambda_disc_single}\n")
         loss_dis = flagconfig.lambda_disc_single * loss_dis
 

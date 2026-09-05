@@ -28,6 +28,8 @@ except ModuleNotFoundError:
 
 
 def seed_all(seed_value, cuda_deterministic=True):
+    import os as _os
+    seed_value = int(_os.environ.get("FUSEMAP_SEED", seed_value))
     logging.info(
         "\n\n---------------------------------- SEED ALL: {seed_value}  ----------------------------------\n"
     )
