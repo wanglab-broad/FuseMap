@@ -102,6 +102,7 @@ If FuseMap is useful for your research, please cite:
     Installation <install>
     Getting started <getting_started>
     Tutorials <tutorials>
+    Example data <data>
     Parameters <userguide/parameters>
     API reference <api/index>
     FuseMap Agent <agent/index>
