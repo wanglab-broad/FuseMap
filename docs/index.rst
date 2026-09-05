@@ -4,12 +4,13 @@ FuseMap
 Spatial integration and mapping with universal gene, cell, and tissue embeddings
 ---------------------------------------------------------------------------------
 
-FuseMap is a deep-learning framework for spatial transcriptomics
-that (1) bridges single-cell or single-spot gene expression within spatial contexts
-and (2) consolidates various gene panels across technologies, organs, and species.
-Trained across atlases, FuseMap yields **universal gene, cell, and tissue embeddings**
-in which datasets from different technologies, conditions, and resolutions
-can be analyzed jointly.
+FuseMap is a self-supervised deep-learning framework that builds a **spatial brain
+foundation model**: trained on seven mouse brain atlases (18.6 million cells/spots,
+26,665 genes, 434 sections), it learns **universal gene, single-cell, and spatial
+embeddings** that form a molecular common coordinate framework (**molCCF**).
+The same framework integrates, maps, and annotates new spatial transcriptomics
+data across technologies, conditions, organs, and species — and an **agentic AI
+system** provides autonomous, conversational analysis on top of it.
 
 .. container:: fusemap-hero
 

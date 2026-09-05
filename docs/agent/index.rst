@@ -3,9 +3,11 @@
 FuseMap Agent
 ================================================================================
 
-FuseMap Agent is a conversational AI interface to FuseMap and the molCCF mouse
-brain atlas. Ask questions in natural language — the system orchestrates three
-specialized agents to answer them:
+FuseMap Agent is the agentic AI system of the FuseMap paper — a conversational
+interface to the spatial brain foundation model and the molCCF mouse brain atlas.
+Ask questions in natural language; a **supervisor agent** decomposes your request
+into subtasks, delegates them to three specialized agents communicating through a
+shared memory (zero-shot ReAct paradigm), and aggregates their results:
 
 .. list-table::
    :header-rows: 1
@@ -13,6 +15,9 @@ specialized agents to answer them:
 
    * - Agent
      - What it does
+   * - **SupervisorAgent**
+     - Decomposes the user query into subtasks, delegates to the agents below,
+       and maintains coherent context across steps.
    * - **AtlasAgent**
      - Queries the 3D mouse brain atlas (molCCF): matches brain regions and
        cell types, retrieves marker genes, performs visual section matching.

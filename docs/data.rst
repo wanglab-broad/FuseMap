@@ -37,7 +37,7 @@ Tutorial datasets
      - Stereo-seq
      - adult mouse brain
      - 2, 8
-     - see paper Methods
+     - `Chen et al. 2022 <https://doi.org/10.1016/j.cell.2022.04.003>`__
      - `stereoseq_mousebrain.h5ad <https://drive.google.com/uc?id=17SZwS2qyOV4xNss9xb4UXYnAyz20Wery>`__
    * - ``slideseq_Puck34.h5ad``
      - Slide-seq V2
@@ -52,10 +52,10 @@ Tutorial datasets
      - `Langlieb et al. 2023 <https://doi.org/10.1038/s41586-023-06818-7>`__
      - `slideseq_Puck60.h5ad <https://drive.google.com/uc?id=1wCjQSjRYxqf3gHZjtkYA2Xg9-QSoOwtq>`__
    * - ``13months-disease-replicate_1.h5ad``
-     - MERFISH
-     - AD model hippocampus
+     - STARmap PLUS
+     - TauPS2APP AD model hippocampus (13-month)
      - 7, 8
-     - see paper Methods
+     - `Zeng et al. 2023 <https://doi.org/10.1038/s41593-022-01251-x>`__
      - `13months-disease-replicate_1.h5ad <https://drive.google.com/uc?id=1NUGPliw0ZCFxHwgVjjH3Pkm05LjdphaV>`__
    * - ``section1.h5ad``
      - STARmap
