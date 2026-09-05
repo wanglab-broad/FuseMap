@@ -192,3 +192,5 @@ pydata-sphinx-theme
 sphinx-gallery==0.10
 sphinx-book-theme
 tangram==0.7.0
+sphinx-design
+sphinx-copybutton

@@ -1,0 +1,32 @@
+/* FuseMap docs — palette matched to the paper figures (teal accent) */
+:root {
+    --pst-color-primary: #17767c;
+    --pst-color-link: #17767c;
+    --pst-color-link-hover: #0d4f54;
+}
+
+/* landing hero figure */
+.fusemap-hero img {
+    max-width: 92%;
+    margin: 0.5rem auto 1rem auto;
+    display: block;
+}
+
+/* navigation cards */
+.sd-card {
+    border-radius: 10px;
+    transition: box-shadow .15s ease-in-out, transform .15s ease-in-out;
+}
+.sd-card:hover {
+    box-shadow: 0 4px 14px rgba(23, 118, 124, .25);
+    transform: translateY(-2px);
+}
+.sd-card .sd-card-title {
+    color: #17767c;
+    font-weight: 600;
+}
+
+/* tighter tables in parameter reference */
+table.docutils td, table.docutils th {
+    padding: 6px 10px;
+}
