@@ -100,6 +100,15 @@ def spatial_integrate(
         ModelType.n_epochs.value,
         use_llm_gene_embedding=args.use_llm_gene_embedding
     )
+    if AnchorConfig.anchor_query_files:
+        subs = [t.strip() for t in AnchorConfig.anchor_query_files.split(",") if t.strip()]
+        AnchorConfig.anchor_query_atlases = {
+            i for i, ad_i in enumerate(X_input)
+            if any(t in str(ad_i.obs["file_name"].iloc[0]) for t in subs)
+        }
+        logging.info(
+            f"[FuseMap anchor] QUERY atlases (one-way pull): {sorted(AnchorConfig.anchor_query_atlases)}"
+        )
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     if args.use_llm_gene_embedding=='combine':
@@ -129,6 +138,9 @@ def spatial_integrate(
         shuffle=True,
         n_atlas=ModelType.n_atlas,
         drop_last=False,
+        feature_all=feature_all,
+        adj_all=adj_all,
+        input_identity=ModelType.input_identity,
     )
     spatial_dataloader_test = CustomGraphDataLoader(
         spatial_dataset_list,
@@ -137,6 +149,9 @@ def spatial_integrate(
         shuffle=False,
         n_atlas=ModelType.n_atlas,
         drop_last=False,
+        feature_all=feature_all,
+        adj_all=adj_all,
+        input_identity=ModelType.input_identity,
     )
     train_mask, val_mask = construct_mask(
         ModelType.n_atlas, spatial_dataset_list, g_all
@@ -204,6 +219,78 @@ def spatial_integrate(
         logging.info(
             "\n\n---------------------------------- Phase 4. Train final FuseMap model ----------------------------------\n"
         )
+        # ---- within-dataset structure preservation (opt-in) ----
+        # Precompute per-atlas expression-space kNN used by
+        # fusemap.loss.compute_struct_loss during the final training phase.
+        # struct_lambda == 0 (default) skips this entirely: no extra compute,
+        # no extra RNG draws, current behavior reproduced exactly.
+        if AnchorConfig.struct_lambda > 0:
+            import numpy as np
+            import scipy.sparse as sp
+            from sklearn.decomposition import TruncatedSVD
+            from sklearn.neighbors import NearestNeighbors
+
+            def _struct_svd_fit_transform(feat, n_comp, fit_cap=15000):
+                # random projection (Johnson-Lindenstrauss): one sparse matmul,
+                # no LAPACK/OpenBLAS eigen paths (which segfault on this host
+                # for large matrices). Neighborhood structure is preserved well
+                # enough for kNN purposes.
+                rng = np.random.RandomState(0)
+                R = rng.normal(
+                    0, 1.0 / np.sqrt(n_comp), size=(feat.shape[1], n_comp)
+                ).astype(np.float32)
+                red = feat.astype(np.float32) @ R
+                return np.asarray(red, dtype=np.float32)
+
+            def _struct_knn_torch(red, k):
+                # chunked exact kNN on GPU (falls back to CPU torch): avoids
+                # sklearn/OpenBLAS entirely
+                dev = "cuda" if torch.cuda.is_available() else "cpu"
+                X = torch.as_tensor(red, device=dev)
+                n = X.shape[0]
+                out = torch.empty((n, k), dtype=torch.long)
+                bs = 2048
+                for st in range(0, n, bs):
+                    en = min(st + bs, n)
+                    d = torch.cdist(X[st:en], X)
+                    d[torch.arange(en - st), torch.arange(st, en)] = float("inf")
+                    out[st:en] = d.topk(k, largest=False).indices.cpu()
+                return out.numpy().astype(np.int64)
+
+            logging.info(
+                f"[FuseMap struct] precomputing expression-space kNN "
+                f"(k={AnchorConfig.struct_k}) per atlas for structure loss"
+            )
+            struct_knn = {}
+            for i in range(ModelType.n_atlas):
+                feat = (
+                    adatas[i].obsm["spatial_input"]
+                    if "spatial_input" in adatas[i].obsm
+                    else adatas[i].X
+                )
+                if sp.issparse(feat):
+                    feat = feat.astype(np.float32)
+                else:
+                    feat = np.asarray(feat, dtype=np.float32)
+                n_comp = min(50, feat.shape[1] - 1, feat.shape[0] - 1)
+                if n_comp >= 2 and feat.shape[1] > n_comp:
+                    feat_red = (
+                        _struct_svd_fit_transform(feat, n_comp)
+                    )
+                else:
+                    feat_red = (
+                        np.asarray(feat.todense(), dtype=np.float32)
+                        if sp.issparse(feat)
+                        else feat
+                    )
+                k_eff = max(1, min(AnchorConfig.struct_k, feat_red.shape[0] - 1))
+                struct_knn[i] = _struct_knn_torch(feat_red, k_eff)
+                logging.info(
+                    f"[FuseMap struct] atlas {i}: expression kNN done "
+                    f"(n_obs={feat_red.shape[0]}, k={struct_knn[i].shape[1]}, "
+                    f"reduced_dim={feat_red.shape[1]})"
+                )
+            AnchorConfig.struct_knn = struct_knn
         train_model(
             model,
             spatial_dataloader,

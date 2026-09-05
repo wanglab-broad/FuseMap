@@ -11,6 +11,8 @@ import torch
 from tqdm import tqdm
 import scanpy as sc
 import torch.nn as nn
+import numpy as np
+from sklearn.neighbors import NearestNeighbors
 
 try:
     import pickle5 as pickle
@@ -18,7 +20,76 @@ except ModuleNotFoundError:
     import pickle
 
 
+def _is_prepared_blocks(blocks_all):
+    """True when batches were pre-sliced in DataLoader workers
+    (see fusemap.dataset.CustomGraphDataLoader)."""
+    first = blocks_all[0]
+    return isinstance(first, dict) and "row_index" in first
+
+
+def _get_data_prepared(blocks_all, train_mask, device, model):
+    """Fast path for worker-prepared batches: tensors are ready on CPU
+    (pinned) and only need an asynchronous host-to-device copy. Learnable
+    (scrna) adjacency blocks are still sliced from the model here, in the
+    main process, exactly as before."""
+    row_index_all = {}
+    col_index_all = {}
+    batch_features_all = []
+    adj_all_block = []
+    adj_all_block_dis = []
+    for i in range(ModelType.n_atlas):
+        block = blocks_all[i]
+        row_index_all[i] = block["row_index"]
+        col_index_all[i] = block["col_index"]
+        batch_features_all.append(block["feature"].to(device, non_blocking=True))
+        if ModelType.input_identity[i] == "ST":
+            adj_block = block["adj_block"].to(device, non_blocking=True)
+            adj_all_block.append(adj_block)
+            adj_all_block_dis.append(adj_block)
+        else:
+            adj_learned = model.scrna_seq_adj["atlas" + str(i)]()[
+                block["row_index"], :
+            ][:, block["col_index"]]
+            adj_all_block.append(adj_learned)
+            adj_all_block_dis.append(adj_learned.detach())
+
+    train_mask_batch_single = [
+        train_mask[i][row_index_all[i]] for i in range(ModelType.n_atlas)
+    ]
+    train_mask_batch_spatial = [
+        train_mask[i][col_index_all[i]] for i in range(ModelType.n_atlas)
+    ]
+
+    ### discriminator flags
+    flag_shape_single = [len(row_index_all[i]) for i in range(ModelType.n_atlas)]
+    flag_all_single = torch.cat(
+        [torch.full((x,), i) for i, x in enumerate(flag_shape_single)]
+    )
+    flag_source_cat_single = flag_all_single.long().to(device)
+
+    flag_shape_spatial = [len(col_index_all[i]) for i in range(ModelType.n_atlas)]
+    flag_all_spatial = torch.cat(
+        [torch.full((x,), i) for i, x in enumerate(flag_shape_spatial)]
+    )
+    flag_source_cat_spatial = flag_all_spatial.long().to(device)
+
+    return (
+        batch_features_all,
+        adj_all_block,
+        adj_all_block_dis,
+        train_mask_batch_single,
+        train_mask_batch_spatial,
+        flag_source_cat_single,
+        flag_source_cat_spatial,
+        row_index_all,
+        col_index_all,
+    )
+
+
 def get_data(blocks_all, feature_all, adj_all, train_mask, device, model):
+    if _is_prepared_blocks(blocks_all):
+        return _get_data_prepared(blocks_all, train_mask, device, model)
+
     row_index_all = {}
     col_index_all = {}
     for i_atlas in range(ModelType.n_atlas):
@@ -36,10 +107,18 @@ def get_data(blocks_all, feature_all, adj_all, train_mask, device, model):
         for i in range(ModelType.n_atlas)
     ]
 
-    adj_all_block = [
-        torch.FloatTensor(
+    # Each ST adjacency block is computed once and reused for both the AE and
+    # the discriminator inputs (previously computed twice, identically).
+    adj_block_st = {
+        i: torch.FloatTensor(
             adj_all[i][row_index_all[i], :].tocsc()[:, col_index_all[i]].todense()
         ).to(device)
+        for i in range(ModelType.n_atlas)
+        if ModelType.input_identity[i] == "ST"
+    }
+
+    adj_all_block = [
+        adj_block_st[i]
         if ModelType.input_identity[i] == "ST"
         else model.scrna_seq_adj["atlas" + str(i)]()[row_index_all[i], :][
             :, col_index_all[i]
@@ -47,9 +126,7 @@ def get_data(blocks_all, feature_all, adj_all, train_mask, device, model):
         for i in range(ModelType.n_atlas)
     ]
     adj_all_block_dis = [
-        torch.FloatTensor(
-            adj_all[i][row_index_all[i], :].tocsc()[:, col_index_all[i]].todense()
-        ).to(device)
+        adj_block_st[i]
         if ModelType.input_identity[i] == "ST"
         else model.scrna_seq_adj["atlas" + str(i)]()[row_index_all[i], :][
             :, col_index_all[i]
@@ -89,6 +166,183 @@ def get_data(blocks_all, feature_all, adj_all, train_mask, device, model):
         flag_source_cat_spatial,
         row_index_all,
         col_index_all,
+    )
+
+
+def _mnn_pairs(x, y, k):
+    """Mutual nearest-neighbor pairs between two latent matrices.
+
+    kNN (cosine) is computed in each direction and only mutual pairs are kept.
+    Brute-force (sklearn NearestNeighbors) is fine for the FuseMap scale
+    (~10-40k cells x 64 dims). Returns a list of (i_in_x, j_in_y) index tuples.
+    """
+    n_x, n_y = x.shape[0], y.shape[0]
+    if n_x == 0 or n_y == 0:
+        return []
+    k_xy = min(k, n_y)
+    k_yx = min(k, n_x)
+
+    def _cos_knn_gpu(q, r, kk):
+        # exact cosine kNN via torch chunked matmul (GPU if available):
+        # same metric/k as sklearn brute cosine, ~10-20x faster at 50-90k rows
+        dev = "cuda" if torch.cuda.is_available() else "cpu"
+        qn = torch.nn.functional.normalize(
+            torch.as_tensor(q, dtype=torch.float32, device=dev), dim=1)
+        rn = torch.nn.functional.normalize(
+            torch.as_tensor(r, dtype=torch.float32, device=dev), dim=1)
+        idxs, dists = [], []
+        for st in range(0, qn.shape[0], 8192):
+            sims = qn[st:st + 8192] @ rn.T
+            top = sims.topk(kk, dim=1, largest=True)
+            idxs.append(top.indices.cpu())
+            dists.append((1.0 - top.values).cpu())
+        del qn, rn
+        return torch.cat(dists).numpy(), torch.cat(idxs).numpy()
+
+    dist_x2y, idx_x2y = _cos_knn_gpu(x, y, k_xy)
+    idx_y2x = _cos_knn_gpu(y, x, k_yx)[1]
+    y_neighbor_sets = [set(row.tolist()) for row in idx_y2x]
+    sim_min = AnchorConfig.anchor_sim_threshold
+    pairs = []
+    n_raw = 0
+    for xi in range(n_x):
+        for jj, yj in enumerate(idx_x2y[xi]):
+            if xi in y_neighbor_sets[int(yj)]:
+                n_raw += 1
+                if 1.0 - dist_x2y[xi, jj] >= sim_min:
+                    pairs.append((xi, int(yj)))
+    return pairs, n_raw
+
+
+def _infer_full_latents(model, spatial_dataloader, feature_all, adj_all, mask, device):
+    """Compute full-dataset single (z_mean) and spatial (z_spatial) latents,
+    batch-wise, scattering each batch into per-atlas [n_obs_i, d] tensors by
+    global cell index (same inference pattern as read_model). One pass over the
+    dataloader covers every cell (largest atlas drives the loop; smaller atlases
+    are cycled). Model is temporarily set to eval() and restored afterwards.
+    """
+    d = ModelType.latent_dim.value
+    single = [
+        torch.zeros((ModelType.n_obs[i], d), device=device)
+        for i in range(ModelType.n_atlas)
+    ]
+    spatial = [
+        torch.zeros((ModelType.n_obs[i], d), device=device)
+        for i in range(ModelType.n_atlas)
+    ]
+    was_training = model.training
+    model.eval()
+    with torch.no_grad():
+        for blocks_all in spatial_dataloader:
+            (
+                batch_features_all,
+                adj_all_block,
+                _adj_all_block_dis,
+                _tmb_single,
+                _tmb_spatial,
+                _flag_single,
+                _flag_spatial,
+                row_index_all,
+                col_index_all,
+            ) = get_data(blocks_all, feature_all, adj_all, mask, device, model)
+            for i in range(ModelType.n_atlas):
+                z_i = model.encoder["atlas" + str(i)](
+                    batch_features_all[i], adj_all_block[i]
+                )
+                ri = torch.as_tensor(row_index_all[i], device=device, dtype=torch.long)
+                ci = torch.as_tensor(col_index_all[i], device=device, dtype=torch.long)
+                single[i][ri] = z_i[3].detach()
+                spatial[i][ci] = z_i[2].detach()
+    if was_training:
+        model.train()
+    return single, spatial
+
+
+def refresh_anchors(
+    model,
+    spatial_dataloader,
+    feature_all,
+    adj_all,
+    mask,
+    device,
+    anchor_state,
+    epoch,
+    phase,
+):
+    """Recompute cross-sample MNN anchors in the current shared latent space.
+
+    Computes full-dataset latents, finds MNN pairs between every atlas pair
+    (only needs to work well for n_atlas=2 but is implemented pairwise), caches
+    the (detached) full latents for one-sided partner lookup, and stores per-cell
+    partner index arrays. Logs the number of anchor pairs found at each refresh.
+    """
+    if anchor_state is None or AnchorConfig.anchor_lambda == 0:
+        return
+    single, spatial = _infer_full_latents(
+        model, spatial_dataloader, feature_all, adj_all, mask, device
+    )
+    anchor_state.single_cache = [s.detach() for s in single]
+    anchor_state.spatial_cache = [s.detach() for s in spatial]
+
+    partner = {}
+    n_pairs_total = 0
+    dist_weighted_sum = 0.0
+    dist_weight = 0
+    k = AnchorConfig.anchor_k
+    for a in range(ModelType.n_atlas):
+        for b in range(a + 1, ModelType.n_atlas):
+            xa = single[a].detach().cpu().numpy()
+            xb = single[b].detach().cpu().numpy()
+            pairs, n_raw = _mnn_pairs(xa, xb, k)
+            n_simfilt = len(pairs)
+            if AnchorConfig.anchor_stable_only:
+                cur = set(pairs)
+                prev = anchor_state.prev_pairs.get((a, b))
+                anchor_state.prev_pairs[(a, b)] = cur
+                if prev is not None:
+                    pairs = sorted(cur & prev)
+            logging.info(
+                f"[FuseMap anchor] pair filter ({a},{b}): raw={n_raw} "
+                f"sim>={AnchorConfig.anchor_sim_threshold}: {n_simfilt} "
+                f"stable: {len(pairs)}"
+            )
+            pa = torch.full(
+                (ModelType.n_obs[a],), -1, dtype=torch.long, device=device
+            )
+            pb = torch.full(
+                (ModelType.n_obs[b],), -1, dtype=torch.long, device=device
+            )
+            for (ia, ib) in pairs:
+                pa[ia] = ib
+                pb[ib] = ia
+            partner[(a, b)] = pa
+            partner[(b, a)] = pb
+            n_pairs_total += len(pairs)
+            if pairs:
+                ta = torch.as_tensor(
+                    [pr[0] for pr in pairs], device=device, dtype=torch.long
+                )
+                tb = torch.as_tensor(
+                    [pr[1] for pr in pairs], device=device, dtype=torch.long
+                )
+                dd = (
+                    torch.sqrt(((single[a][ta] - single[b][tb]) ** 2).sum(dim=1))
+                    .mean()
+                    .item()
+                )
+                dist_weighted_sum += dd * len(pairs)
+                dist_weight += len(pairs)
+
+    anchor_state.partner = partner
+    anchor_state.n_pairs = n_pairs_total
+    anchor_state.has_anchors = n_pairs_total > 0
+    anchor_state.mean_dist = (
+        dist_weighted_sum / dist_weight if dist_weight > 0 else float("nan")
+    )
+    logging.info(
+        f"\n\n[FuseMap anchor] {phase} epoch {epoch}: found {n_pairs_total} "
+        f"MNN anchor pairs (k={k}); mean cross-atlas single-latent distance "
+        f"{anchor_state.mean_dist}\n"
     )
 
 
@@ -135,6 +389,12 @@ def pretrain_model(
         verbose=True,
     )
 
+    anchor_state = (
+        AnchorState()
+        if AnchorConfig.anchor_lambda > 0 and AnchorConfig.anchor_in_pretrain
+        else None
+    )
+
     for epoch in tqdm(
         range(ModelType.epochs_run_pretrain + 1, ModelType.n_epochs.value)
     ):
@@ -153,6 +413,25 @@ def pretrain_model(
             else 0
         )
 
+        if (
+            anchor_state is not None
+            and epoch >= AnchorConfig.anchor_start_epoch
+            and (epoch - AnchorConfig.anchor_start_epoch)
+            % AnchorConfig.anchor_refresh_epochs
+            == 0
+        ):
+            refresh_anchors(
+                model,
+                spatial_dataloader,
+                feature_all,
+                adj_all,
+                train_mask,
+                device,
+                anchor_state,
+                epoch,
+                "pretrain",
+            )
+
         model.train()
 
         for blocks_all in tqdm(spatial_dataloader):
@@ -164,8 +443,8 @@ def pretrain_model(
                 train_mask_batch_spatial,
                 flag_source_cat_single,
                 flag_source_cat_spatial,
-                _,
-                _,
+                row_index_all,
+                col_index_all,
             ) = get_data(blocks_all, feature_all, adj_all, train_mask, device, model)
 
             # Train discriminator part
@@ -196,6 +475,9 @@ def pretrain_model(
                 train_mask_batch_single,
                 train_mask_batch_spatial,
                 flagconfig,
+                anchor_state=anchor_state,
+                row_index_all=row_index_all,
+                col_index_all=col_index_all,
             )
             model.zero_grad(set_to_none=True)
             loss_part2["loss_all"].backward()
@@ -350,6 +632,25 @@ def train_model(
     balance_weight_single = [i.to(device) for i in balance_weight_single]
     balance_weight_spatial = [i.to(device) for i in balance_weight_spatial]
 
+    anchor_pair_single = anchor_pair_spatial = None
+    _pp = f"{ModelType.save_dir}/balance_weight_pair_single.pkl"
+    if AnchorConfig.anchor_lambda > 0 and os.path.exists(_pp):
+        with open(_pp, "rb") as openfile:
+            anchor_pair_single = pickle.load(openfile)
+        with open(
+            f"{ModelType.save_dir}/balance_weight_pair_spatial.pkl", "rb"
+        ) as openfile:
+            anchor_pair_spatial = pickle.load(openfile)
+        anchor_pair_single = {
+            k: torch.as_tensor(v, dtype=torch.float32).to(device)
+            for k, v in anchor_pair_single.items()
+        }
+        anchor_pair_spatial = {
+            k: torch.as_tensor(v, dtype=torch.float32).to(device)
+            for k, v in anchor_pair_spatial.items()
+        }
+        logging.info("[FuseMap anchor] pairwise balance-weight gating ENABLED")
+
     loss_atlas_val_best = float("inf")
     patience_counter = 0
 
@@ -383,6 +684,8 @@ def train_model(
         verbose=True,
     )
 
+    anchor_state = AnchorState() if AnchorConfig.anchor_lambda > 0 else None
+
     for epoch in tqdm(range(ModelType.epochs_run_final + 1, ModelType.n_epochs.value)):
         loss_dis = 0
         loss_ae_dis = 0
@@ -398,6 +701,25 @@ def train_model(
             if flagconfig.align_anneal
             else 0
         )
+
+        if (
+            anchor_state is not None
+            and epoch >= AnchorConfig.anchor_start_epoch
+            and (epoch - AnchorConfig.anchor_start_epoch)
+            % AnchorConfig.anchor_refresh_epochs
+            == 0
+        ):
+            refresh_anchors(
+                model,
+                spatial_dataloader,
+                feature_all,
+                adj_all,
+                train_mask,
+                device,
+                anchor_state,
+                epoch,
+                "final",
+            )
 
         model.train()
 
@@ -456,6 +778,11 @@ def train_model(
                 balance_weight_single_block,
                 balance_weight_spatial_block,
                 flagconfig,
+                anchor_state=anchor_state,
+                row_index_all=row_index_all,
+                col_index_all=col_index_all,
+                anchor_pair_single=anchor_pair_single,
+                anchor_pair_spatial=anchor_pair_spatial,
             )
             model.zero_grad(set_to_none=True)
             loss_part2["loss_all"].backward()
@@ -617,36 +944,56 @@ def read_model(
                 )
 
         for blocks_all in tqdm(spatial_dataloader_test):
-            row_index_all = {}
-            col_index_all = {}
-            for i_atlas in range(ModelType.n_atlas):
-                row_index = list(blocks_all[i_atlas]["spatial"][0])
-                col_index = list(blocks_all[i_atlas]["spatial"][1])
-                row_index_all[i_atlas] = torch.sort(torch.vstack(row_index).flatten())[
-                    0
-                ].tolist()
-                col_index_all[i_atlas] = torch.sort(torch.vstack(col_index).flatten())[
-                    0
-                ].tolist()
+            if _is_prepared_blocks(blocks_all):
+                row_index_all = {
+                    i: blocks_all[i]["row_index"] for i in range(ModelType.n_atlas)
+                }
+                col_index_all = {
+                    i: blocks_all[i]["col_index"] for i in range(ModelType.n_atlas)
+                }
+                batch_features_all = [
+                    blocks_all[i]["feature"].to(device, non_blocking=True)
+                    for i in range(ModelType.n_atlas)
+                ]
+                adj_all_block_dis = [
+                    blocks_all[i]["adj_block"].to(device, non_blocking=True)
+                    if ModelType.input_identity[i] == "ST"
+                    else model.scrna_seq_adj["atlas" + str(i)]()[
+                        blocks_all[i]["row_index"], :
+                    ][:, blocks_all[i]["col_index"]].detach()
+                    for i in range(ModelType.n_atlas)
+                ]
+            else:
+                row_index_all = {}
+                col_index_all = {}
+                for i_atlas in range(ModelType.n_atlas):
+                    row_index = list(blocks_all[i_atlas]["spatial"][0])
+                    col_index = list(blocks_all[i_atlas]["spatial"][1])
+                    row_index_all[i_atlas] = torch.sort(
+                        torch.vstack(row_index).flatten()
+                    )[0].tolist()
+                    col_index_all[i_atlas] = torch.sort(
+                        torch.vstack(col_index).flatten()
+                    )[0].tolist()
 
-            batch_features_all = [
-                torch.FloatTensor(feature_all[i][row_index_all[i], :].toarray()).to(
-                    device
-                )
-                for i in range(ModelType.n_atlas)
-            ]
-            adj_all_block_dis = [
-                torch.FloatTensor(
-                    adj_all[i][row_index_all[i], :]
-                    .tocsc()[:, col_index_all[i]]
-                    .todense()
-                ).to(device)
-                if ModelType.input_identity[i] == "ST"
-                else model.scrna_seq_adj["atlas" + str(i)]()[row_index_all[i], :][
-                    :, col_index_all[i]
-                ].detach()
-                for i in range(ModelType.n_atlas)
-            ]
+                batch_features_all = [
+                    torch.FloatTensor(
+                        feature_all[i][row_index_all[i], :].toarray()
+                    ).to(device)
+                    for i in range(ModelType.n_atlas)
+                ]
+                adj_all_block_dis = [
+                    torch.FloatTensor(
+                        adj_all[i][row_index_all[i], :]
+                        .tocsc()[:, col_index_all[i]]
+                        .todense()
+                    ).to(device)
+                    if ModelType.input_identity[i] == "ST"
+                    else model.scrna_seq_adj["atlas" + str(i)]()[row_index_all[i], :][
+                        :, col_index_all[i]
+                    ].detach()
+                    for i in range(ModelType.n_atlas)
+                ]
 
             z_all = [
                 model.encoder["atlas" + str(i)](
@@ -718,7 +1065,11 @@ def balance_weight(model, adatas, save_dir, n_atlas, device):
                 use_rep="single",
                 metric="cosine",
             )
-            sc.tl.leiden(adata_, resolution=1, key_added="fusemap_single_leiden")
+            sc.tl.leiden(
+                adata_,
+                resolution=float(os.environ.get("FUSEMAP_BALANCE_RES", "4")),
+                key_added="fusemap_single_leiden",
+            )
             ad_fusemap_single_leiden.append(list(adata_.obs["fusemap_single_leiden"]))
             leiden_adata_single.append(
                 average_embeddings(adata_, "fusemap_single_leiden", "single")
@@ -730,7 +1081,11 @@ def balance_weight(model, adatas, save_dir, n_atlas, device):
                 use_rep="spatial",
                 metric="cosine",
             )
-            sc.tl.leiden(adata_, resolution=1, key_added="fusemap_spatial_leiden")
+            sc.tl.leiden(
+                adata_,
+                resolution=float(os.environ.get("FUSEMAP_BALANCE_RES", "4")),
+                key_added="fusemap_spatial_leiden",
+            )
             ad_fusemap_spatial_leiden.append(list(adata_.obs["fusemap_spatial_leiden"]))
             leiden_adata_spatial.append(
                 average_embeddings(adata_, "fusemap_spatial_leiden", "spatial")
@@ -772,7 +1127,10 @@ def balance_weight(model, adatas, save_dir, n_atlas, device):
             adata_.obs["fusemap_single_leiden"] = ad_fusemap_single_leiden[ind]
             adata_.obs["fusemap_spatial_leiden"] = ad_fusemap_spatial_leiden[ind]
 
-    if len(leiden_adata_single) > 6:
+    # joint K^n sparse product explodes at >=5-6 atlases with fine leiden
+    # (measured: 6 atlases x res=4 -> 6.8e9 nnz, 304 GiB OOM); GLUE's own
+    # pairwise-aggregated path scales linearly in pairs
+    if len(leiden_adata_single) >= 5:
         # raise ValueError('balance weight')
         balance_weight_single = get_balance_weight_subsample(
             leiden_adata_single, adatas_, "fusemap_single_leiden"
@@ -781,11 +1139,17 @@ def balance_weight(model, adatas, save_dir, n_atlas, device):
             leiden_adata_spatial, adatas_, "fusemap_spatial_leiden"
         )
     else:
+        # joint (all-pairs product) weights gate the DISCRIMINATOR: keep the
+        # original GLUE matching (0.5/4) — the strict env knobs apply only to
+        # the pairwise anchor weights below (joint product collapses to zero
+        # on heterogeneous collections when matching is strict).
         balance_weight_single = get_balance_weight(
-            adatas, leiden_adata_single, adatas_, "fusemap_single_leiden"
+            adatas, leiden_adata_single, adatas_, "fusemap_single_leiden",
+            cutoff=0.5, power=4,
         )
         balance_weight_spatial = get_balance_weight(
-            adatas, leiden_adata_spatial, adatas_, "fusemap_spatial_leiden"
+            adatas, leiden_adata_spatial, adatas_, "fusemap_spatial_leiden",
+            cutoff=0.5, power=4,
         )
 
     balance_weight_single = [torch.tensor(i).to(device) for i in balance_weight_single]
@@ -795,6 +1159,32 @@ def balance_weight(model, adatas, save_dir, n_atlas, device):
 
     save_obj(balance_weight_single, f"{save_dir}/balance_weight_single")
     save_obj(balance_weight_spatial, f"{save_dir}/balance_weight_spatial")
+
+    ### pairwise weights for ANCHOR gating (strictness from env, default 0.75/8).
+    ### key (a,b) -> weights of atlas a's cells for its pull toward atlas b.
+    pair_single, pair_spatial = {}, {}
+    for a in range(n_atlas):
+        for b in range(a + 1, n_atlas):
+            for pair_dict, leiden_list, key in (
+                (pair_single, leiden_adata_single, "fusemap_single_leiden"),
+                (pair_spatial, leiden_adata_spatial, "fusemap_spatial_leiden"),
+            ):
+                try:
+                    ws = get_balance_weight(
+                        [adatas[a], adatas[b]],
+                        [leiden_list[a], leiden_list[b]],
+                        [adatas_[a], adatas_[b]],
+                        key,
+                    )
+                except ValueError:
+                    ws = [
+                        np.zeros(adatas_[a].n_obs),
+                        np.zeros(adatas_[b].n_obs),
+                    ]
+                pair_dict[(a, b)] = ws[0]
+                pair_dict[(b, a)] = ws[1]
+    save_obj(pair_single, f"{save_dir}/balance_weight_pair_single")
+    save_obj(pair_spatial, f"{save_dir}/balance_weight_pair_spatial")
 
 
 def load_ref_model(

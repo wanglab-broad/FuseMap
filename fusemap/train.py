@@ -128,6 +128,9 @@ def train(X_input, save_dir, kneighbor, input_identity,
         shuffle=True,
         n_atlas=ModelType.n_atlas,
         drop_last=False,
+        feature_all=feature_all,
+        adj_all=adj_all,
+        input_identity=ModelType.input_identity,
     )
     spatial_dataloader_test = CustomGraphDataLoader(
         spatial_dataset_list,
@@ -136,6 +139,9 @@ def train(X_input, save_dir, kneighbor, input_identity,
         shuffle=False,
         n_atlas=ModelType.n_atlas,
         drop_last=False,
+        feature_all=feature_all,
+        adj_all=adj_all,
+        input_identity=ModelType.input_identity,
     )
     train_mask, val_mask = construct_mask(ModelType.n_atlas, spatial_dataset_list, g_all)
 

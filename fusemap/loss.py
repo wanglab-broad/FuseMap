@@ -160,6 +160,253 @@ def compute_gene_embedding_new_loss(
     return loss_part3
                 
 
+def compute_anchor_loss(
+    z_single_list,
+    z_spatial_list,
+    row_index_all,
+    col_index_all,
+    anchor_state,
+    balance_weight_single=None,
+    balance_weight_spatial=None,
+    anchor_pair_single=None,
+    anchor_pair_spatial=None,
+):
+    """Cross-sample MNN anchor alignment term (STAligner-style).
+
+    For every cell in the current minibatch that participates in a stored MNN
+    anchor pair, pull its latent toward the CACHED (detached) partner latent
+    from the other atlas. The partner side is detached, so this is a one-sided
+    pull per batch; it becomes symmetric across batches over time. Applied to
+    BOTH the single latent (z_mean) and the spatial latent (z_spatial) using the
+    same anchor pairs. Normalized by the number of anchored contributions.
+
+    Returns ``None`` when disabled or when no anchors are present in the batch,
+    so that ``AnchorConfig.anchor_lambda == 0`` reproduces the original loss
+    exactly (the term is never added).
+
+    Parameters
+    ----------
+    z_single_list : list of torch.Tensor
+        Per-atlas batch single latent (z_mean); rows aligned to row_index_all.
+    z_spatial_list : list of torch.Tensor
+        Per-atlas batch spatial latent (z_spatial); rows aligned to col_index_all.
+    row_index_all : dict or None
+        atlas -> global cell indices of the single-latent rows in this batch.
+    col_index_all : dict or None
+        atlas -> global cell indices of the spatial-latent rows in this batch.
+    anchor_state : AnchorState or None
+        Runtime anchor state (caches + partner maps).
+
+    Returns
+    -------
+    torch.Tensor or None
+        Scalar anchor loss, or None when there is nothing to add.
+    """
+    if (
+        anchor_state is None
+        or AnchorConfig.anchor_lambda == 0
+        or not getattr(anchor_state, "has_anchors", False)
+        or anchor_state.partner is None
+        or row_index_all is None
+        or col_index_all is None
+    ):
+        return None
+
+    device = z_single_list[0].device
+    total = None
+    count = 0
+    for i in range(ModelType.n_atlas):
+        row_idx = torch.as_tensor(row_index_all[i], device=device, dtype=torch.long)
+        col_idx = torch.as_tensor(col_index_all[i], device=device, dtype=torch.long)
+        for j in range(ModelType.n_atlas):
+            if i == j:
+                continue
+            # asymmetric mode: never pull anyone TOWARD a query (e.g. bead)
+            # dataset's latents; query datasets still get pulled toward others.
+            if j in AnchorConfig.anchor_query_atlases:
+                continue
+            partner = anchor_state.partner.get((i, j))
+            if partner is None:
+                continue
+            # ---- single latent (z_mean) ----
+            p_row = partner[row_idx]
+            m_row = p_row >= 0
+            if bool(m_row.any()):
+                cur = z_single_list[i][m_row]
+                tgt = anchor_state.single_cache[j][p_row[m_row]].detach()
+                d2 = ((cur - tgt) ** 2).sum(dim=1)
+                if anchor_pair_single is not None and (i, j) in anchor_pair_single:
+                    # pairwise gating: this pull is weighted by cell i's
+                    # correspondence in THIS pair only (no all-pairs product,
+                    # so one noisy sample cannot veto alignment in other pairs)
+                    w = anchor_pair_single[(i, j)][row_idx[m_row]].detach().flatten()
+                    total = (d2 * w).sum() if total is None else total + (d2 * w).sum()
+                    count += float(w.sum())
+                elif balance_weight_single is not None:
+                    # same per-cell protection as the discriminator loss:
+                    # cells from clusters without cross-sample counterparts
+                    # carry low balance weight -> anchor pull fades for them
+                    w = balance_weight_single[i][m_row].detach().flatten()
+                    total = (d2 * w).sum() if total is None else total + (d2 * w).sum()
+                    count += float(w.sum())
+                else:
+                    total = d2.sum() if total is None else total + d2.sum()
+                    count += d2.numel()
+            # ---- spatial latent (z_spatial); tissue level is worst-separated ----
+            p_col = partner[col_idx]
+            m_col = p_col >= 0
+            if bool(m_col.any()):
+                cur_s = z_spatial_list[i][m_col]
+                tgt_s = anchor_state.spatial_cache[j][p_col[m_col]].detach()
+                d2s = ((cur_s - tgt_s) ** 2).sum(dim=1)
+                if anchor_pair_spatial is not None and (i, j) in anchor_pair_spatial:
+                    w_s = anchor_pair_spatial[(i, j)][col_idx[m_col]].detach().flatten()
+                    total = (d2s * w_s).sum() if total is None else total + (d2s * w_s).sum()
+                    count += float(w_s.sum())
+                elif balance_weight_spatial is not None:
+                    w_s = balance_weight_spatial[i][m_col].detach().flatten()
+                    total = (d2s * w_s).sum() if total is None else total + (d2s * w_s).sum()
+                    count += float(w_s.sum())
+                else:
+                    total = d2s.sum() if total is None else total + d2s.sum()
+                    count += d2s.numel()
+
+    if total is None or count == 0:
+        return None
+    return AnchorConfig.anchor_lambda * total / count
+
+
+def compute_struct_loss(z_single_list, row_index_all, anchor_state):
+    """Within-dataset structure-preservation triplet loss (opt-in).
+
+    The cross-dataset alignment forces (adversarial discriminator + MNN anchor
+    pull) only PULL cells together; nothing preserves each dataset's own
+    neighborhood structure, so cell-type separation gets compressed. For each
+    cell in the current minibatch this term samples ONE positive (a uniformly
+    random expression-space kNN neighbor from the SAME dataset, precomputed in
+    ``AnchorConfig.struct_knn``) and ONE negative from the same dataset,
+    fetches both latents from the DETACHED full-dataset cache
+    (``anchor_state.single_cache``, refreshed every few epochs by
+    ``refresh_anchors``), and penalizes
+
+        relu(||z - z_pos||^2 - ||z - z_neg||^2 + struct_margin)
+
+    averaged over batch cells, then averaged over atlases with valid terms and
+    scaled by ``AnchorConfig.struct_lambda``.
+
+    Negative selection (``AnchorConfig.struct_hardneg``):
+
+    - True (default): semi-hard mining. Draw ``struct_neg_candidates`` random
+      candidates per cell, invalidate candidates equal to the cell itself or
+      to one of its expression-kNN members, and keep the remaining candidate
+      CLOSEST to the cell's current latent (selection distances computed on
+      DETACHED tensors so no graph ops are created; only the final triplet
+      uses the attached ``z``). If every candidate is invalid (tiny datasets)
+      the first candidate is used, so the loss never sees inf/nan.
+    - False: legacy path, ONE uniformly random negative per cell; reproduces
+      prior runs bit-for-bit (same number and order of RNG draws).
+
+    Parameters
+    ----------
+    z_single_list : list of torch.Tensor
+        Per-atlas batch single latent (z_mean); rows aligned to row_index_all.
+    row_index_all : dict or None
+        atlas -> global cell indices of the single-latent rows in this batch.
+    anchor_state : AnchorState or None
+        Runtime anchor state; ``single_cache`` supplies pos/neg latents.
+
+    Returns
+    -------
+    torch.Tensor or None
+        Scalar struct loss, or None when there is nothing to add.
+
+    CRITICAL: when ``AnchorConfig.struct_lambda == 0`` this returns None
+    BEFORE any torch.randint call, so RNG state is untouched and existing
+    runs reproduce exactly.
+    """
+    if AnchorConfig.struct_lambda == 0:
+        return None
+    struct_knn = getattr(AnchorConfig, "struct_knn", None)
+    if (
+        struct_knn is None
+        or anchor_state is None
+        or getattr(anchor_state, "single_cache", None) is None
+        or row_index_all is None
+    ):
+        return None
+
+    device = z_single_list[0].device
+    total = None
+    count = 0
+    for i in range(ModelType.n_atlas):
+        knn_i = struct_knn.get(i)
+        cache_i = (
+            anchor_state.single_cache[i]
+            if i < len(anchor_state.single_cache)
+            else None
+        )
+        if knn_i is None or cache_i is None:
+            continue
+        n_obs_i = cache_i.shape[0]
+        if knn_i.shape[0] != n_obs_i:
+            continue
+        row_idx = torch.as_tensor(row_index_all[i], dtype=torch.long).cpu()
+        n_batch = int(row_idx.numel())
+        if n_batch == 0:
+            continue
+        # gather each batch cell's kNN row on CPU (struct_knn stays a small
+        # int64 numpy array; torch.as_tensor shares its memory), then move
+        # only the [n_batch, k] slice to the device
+        knn_rows = torch.as_tensor(knn_i, dtype=torch.long)[row_idx].to(device)
+        k_i = knn_rows.shape[1]
+        # ONE positive per cell: uniformly random column of its kNN row
+        pos_col = torch.randint(0, k_i, (n_batch,), device=device)
+        pos_idx = knn_rows.gather(1, pos_col.unsqueeze(1)).squeeze(1)
+        z = z_single_list[i]
+        z_pos = cache_i[pos_idx].detach()
+        if AnchorConfig.struct_hardneg:
+            # Semi-hard negative mining: uniformly random negatives are
+            # already far apart in the compact latent, so the repulsion term
+            # is inert. Draw M candidates and keep the VALID one closest to
+            # the cell's CURRENT latent (hardest valid negative).
+            m_cand = AnchorConfig.struct_neg_candidates
+            cand_idx = torch.randint(
+                0, n_obs_i, (n_batch, m_cand), device=device
+            )
+            cand_z = cache_i[cand_idx].detach()  # [n_batch, M, d]
+            # selection must not create autograd ops on z: detach for the
+            # distances used ONLY to pick the negative
+            d_cand = ((z.detach().unsqueeze(1) - cand_z) ** 2).sum(dim=2)
+            # invalid candidates: the cell itself, or one of its
+            # expression-space kNN members (those are positives)
+            invalid = cand_idx == row_idx.to(device).unsqueeze(1)
+            invalid |= (
+                cand_idx.unsqueeze(2) == knn_rows.unsqueeze(1)
+            ).any(-1)
+            d_cand = d_cand.masked_fill(invalid, float("inf"))
+            best_col = d_cand.argmin(dim=1)
+            # if ALL M candidates are invalid, fall back to the first
+            # candidate so the loss never sees inf/nan
+            best_col = torch.where(
+                invalid.all(dim=1), torch.zeros_like(best_col), best_col
+            )
+            neg_idx = cand_idx.gather(1, best_col.unsqueeze(1)).squeeze(1)
+        else:
+            # legacy path (bit-for-bit reproducible with prior runs): ONE
+            # negative per cell, uniformly random cell of the same atlas
+            neg_idx = torch.randint(0, n_obs_i, (n_batch,), device=device)
+        z_neg = cache_i[neg_idx].detach()
+        d_pos = ((z - z_pos) ** 2).sum(dim=1)
+        d_neg = ((z - z_neg) ** 2).sum(dim=1)
+        loss_i = F.relu(d_pos - d_neg + AnchorConfig.struct_margin).mean()
+        total = loss_i if total is None else total + loss_i
+        count += 1
+
+    if total is None or count == 0:
+        return None
+    return AnchorConfig.struct_lambda * total / count
+
+
 def compute_dis_loss_pretrain(
     model,
     flag_source_cat_single,
@@ -289,6 +536,9 @@ def compute_ae_loss_pretrain(
     mask_batch_single,
     mask_batch_spatial,
     flagconfig,
+    anchor_state=None,
+    row_index_all=None,
+    col_index_all=None,
 ):
     """
     Compute the autoencoder loss for the pretraining phase.
@@ -437,10 +687,21 @@ def compute_ae_loss_pretrain(
     #     }
     # else:
 
+    anchor_term = compute_anchor_loss(
+        [z_all[i][3] for i in range(ModelType.n_atlas)],
+        z_spatial_all,
+        row_index_all,
+        col_index_all,
+        anchor_state,
+    )
+    loss_total = -loss_dis + sum(loss_AE_all)
+    if anchor_term is not None:
+        loss_total = loss_total + anchor_term
     loss_all = {
         "dis_ae": loss_dis,
         "loss_AE_all": loss_AE_all,
-        "loss_all": -loss_dis + sum(loss_AE_all),
+        "loss_all": loss_total,
+        "anchor": anchor_term if anchor_term is not None else 0.0,
     }
     return loss_all
 
@@ -597,6 +858,11 @@ def compute_ae_loss(
     balance_weight_single_block,
     balance_weight_spatial_block,
     flagconfig,
+    anchor_state=None,
+    row_index_all=None,
+    col_index_all=None,
+    anchor_pair_single=None,
+    anchor_pair_spatial=None,
 ):
     """
     Compute the autoencoder loss for the final training phase.
@@ -721,6 +987,8 @@ def compute_ae_loss(
             )
 
     ### compute dis loss
+    bw_single_per_atlas = list(balance_weight_single_block)
+    bw_spatial_per_atlas = list(balance_weight_spatial_block)
     balance_weight_single_block = torch.hstack(balance_weight_single_block)
     balance_weight_spatial_block = torch.hstack((balance_weight_spatial_block))
 
@@ -761,11 +1029,34 @@ def compute_ae_loss(
     #         "loss_all": -loss_dis + sum(loss_AE_all)+loss_part3,
     #     }
     # else:
-    
+
+    anchor_term = compute_anchor_loss(
+        [z_all[i][3] for i in range(ModelType.n_atlas)],
+        z_spatial_all,
+        row_index_all,
+        col_index_all,
+        anchor_state,
+        balance_weight_single=bw_single_per_atlas,
+        balance_weight_spatial=bw_spatial_per_atlas,
+        anchor_pair_single=anchor_pair_single,
+        anchor_pair_spatial=anchor_pair_spatial,
+    )
+    struct_term = compute_struct_loss(
+        [z_all[i][3] for i in range(ModelType.n_atlas)],
+        row_index_all,
+        anchor_state,
+    )
+    loss_total = -loss_dis + sum(loss_AE_all)
+    if anchor_term is not None:
+        loss_total = loss_total + anchor_term
+    if struct_term is not None:
+        loss_total = loss_total + struct_term
     loss_all = {
         "dis_ae": loss_dis,
         "loss_AE_all": loss_AE_all,
-        "loss_all": -loss_dis + sum(loss_AE_all),
+        "loss_all": loss_total,
+        "anchor": anchor_term if anchor_term is not None else 0.0,
+        "struct": struct_term if struct_term is not None else 0.0,
     }
     return loss_all
 
@@ -921,7 +1212,7 @@ def get_balance_weight_subsample(leiden_adata_single, adatas_, key_leiden_catego
     return balance_weight
 
 
-def get_balance_weight(adatas, leiden_adata_single, adatas_, key_leiden_category):
+def get_balance_weight(adatas, leiden_adata_single, adatas_, key_leiden_category, cutoff=None, power=None):
     ########### function from GLUE: https://github.com/gao-lab/GLUE
     us = [
         preprocessing.normalize(leiden.X, norm="l2")
@@ -929,9 +1220,14 @@ def get_balance_weight(adatas, leiden_adata_single, adatas_, key_leiden_category
     ]
     ns = [leiden.obs["size"] for leiden in leiden_adata_single]
 
+    import os
     cosines = []
-    cutoff = 0.5
-    power = 4
+    # defaults = STRICT matching (2026-09-01 validated): best disease-state
+    # preservation + highest mixing; use 0.5/4 for max transfer accuracy (BWR4)
+    if cutoff is None:
+        cutoff = float(os.environ.get("FUSEMAP_BALANCE_CUTOFF", "0.75"))
+    if power is None:
+        power = float(os.environ.get("FUSEMAP_BALANCE_POWER", "8"))
 
     for i, ui in enumerate(us):
         for j, uj in enumerate(us[i + 1 :], start=i + 1):
