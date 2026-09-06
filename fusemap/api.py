@@ -169,5 +169,5 @@ def deconvolve_beads(output_save_dir, input_data_folder_path,
     if signature_mode is not None:
         os.environ["STAGEB_SIG"] = str(signature_mode)
 
-    script = Path(__file__).resolve().parent / "_stage_b_script.py"
+    script = Path(__file__).resolve().parent / "postprocess" / "stage_b_script.py"
     runpy.run_path(str(script), run_name="__main__")
