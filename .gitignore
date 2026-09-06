@@ -4,3 +4,5 @@ docs/notebooks/tutorial_data/
 docs/notebooks/output_tutorial*/
 docs/notebooks/tutorial*_data/
 docs/notebooks/molCCF
+__pycache__/
+*.pyc
