@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 import dgl
 import random
-from fusemap.model import NNTransfer
+from fusemap.models.network import NNTransfer
 import torch
 from sklearn import preprocessing
 from torch.utils.data import DataLoader, TensorDataset

@@ -18,8 +18,8 @@ High-level entry points (also exposed through ``main.py``).
    :toctree: generated/
    :nosignatures:
 
-   spatial_integrate.spatial_integrate
-   spatial_map.spatial_map
+   training.integrate.spatial_integrate
+   training.map.spatial_map
 
 Preprocessing
 --------------------------------------------------------------------------------
@@ -28,11 +28,11 @@ Preprocessing
    :toctree: generated/
    :nosignatures:
 
-   preprocess.preprocess_raw
-   preprocess.preprocess_adata
-   preprocess.construct_graph
-   preprocess.preprocess_adj_sparse
-   preprocess.get_spatial_input
+   data.graph.preprocess_raw
+   data.graph.preprocess_adata
+   data.graph.construct_graph
+   data.graph.preprocess_adj_sparse
+   data.graph.get_spatial_input
 
 Model
 --------------------------------------------------------------------------------
@@ -41,13 +41,13 @@ Model
    :toctree: generated/
    :nosignatures:
 
-   model.Fuse_network
-   model.FuseMapEncoder
-   model.FuseMapDecoder
-   model.FuseMapAdaptDecoder
-   model.Discriminator
-   model.Adj_model
-   model.NNTransfer
+   models.network.Fuse_network
+   models.network.FuseMapEncoder
+   models.network.FuseMapDecoder
+   models.network.FuseMapAdaptDecoder
+   models.network.Discriminator
+   models.network.Adj_model
+   models.network.NNTransfer
 
 Training
 --------------------------------------------------------------------------------
@@ -56,12 +56,12 @@ Training
    :toctree: generated/
    :nosignatures:
 
-   train_model.pretrain_model
-   train_model.train_model
-   train_model.balance_weight
-   train_model.refresh_anchors
-   train_model.map_model
-   train_model.read_model
+   training.train_model.pretrain_model
+   training.train_model.train_model
+   training.train_model.balance_weight
+   training.train_model.refresh_anchors
+   training.train_model.map_model
+   training.train_model.read_model
 
 Losses
 --------------------------------------------------------------------------------
@@ -70,15 +70,15 @@ Losses
    :toctree: generated/
    :nosignatures:
 
-   loss.compute_ae_loss
-   loss.compute_dis_loss
-   loss.compute_ae_loss_pretrain
-   loss.compute_dis_loss_pretrain
-   loss.compute_anchor_loss
-   loss.compute_struct_loss
-   loss.get_balance_weight
-   loss.get_balance_weight_subsample
-   loss.AE_Gene_loss
+   models.losses.compute_ae_loss
+   models.losses.compute_dis_loss
+   models.losses.compute_ae_loss_pretrain
+   models.losses.compute_dis_loss_pretrain
+   models.losses.compute_anchor_loss
+   models.losses.compute_struct_loss
+   models.losses.get_balance_weight
+   models.losses.get_balance_weight_subsample
+   models.losses.AE_Gene_loss
 
 Data handling
 --------------------------------------------------------------------------------
@@ -87,10 +87,10 @@ Data handling
    :toctree: generated/
    :nosignatures:
 
-   dataset.CustomGraphDataset
-   dataset.CustomGraphDataLoader
-   dataset.construct_data
-   dataset.construct_mask
+   data.loaders.CustomGraphDataset
+   data.loaders.CustomGraphDataLoader
+   data.loaders.construct_data
+   data.loaders.construct_mask
 
 Configuration
 --------------------------------------------------------------------------------

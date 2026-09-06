@@ -21,11 +21,11 @@ from types import SimpleNamespace
 import scanpy as sc
 
 from fusemap.logger import setup_logging
-from fusemap.spatial_integrate import spatial_integrate
-from fusemap.spatial_map import spatial_map
+from fusemap.training.integrate import spatial_integrate
+from fusemap.training.map import spatial_map
 from fusemap.utils import seed_all
 
-__all__ = ["integrate", "map_to_reference", "deconvolve_beads", "read_input_folder"]
+__all__ = ["integrate", "map_to_reference", "deconvolve_beads", "transfer_labels", "read_input_folder"]
 
 
 def read_input_folder(input_data_folder_path):
@@ -171,3 +171,81 @@ def deconvolve_beads(output_save_dir, input_data_folder_path,
 
     script = Path(__file__).resolve().parent / "postprocess" / "stage_b_script.py"
     runpy.run_path(str(script), run_name="__main__")
+
+def transfer_labels(adata, label_key, batch_size=256, epochs=200,
+                    unlabeled_values=("nan", "Unannotated", ""), device=None):
+    """Transfer labels between datasets through the shared embedding — one call.
+
+    Trains a small classifier on all cells that carry a label in
+    ``obs[label_key]`` (the reference) and predicts that label for every cell
+    in ``adata``, adding two columns to ``obs``:
+
+    - ``transfer_<label_key>`` — the transferred label
+    - ``transfer_<label_key>_uncertainty`` — 1 - prediction confidence
+
+    Works on any embedding AnnData produced by :func:`integrate` or
+    :func:`map_to_reference` (latent in ``X``). Cells whose label is missing
+    or in ``unlabeled_values`` are excluded from training.
+
+    Returns
+    -------
+    dict with ``labels`` (np.ndarray), ``uncertainty`` (np.ndarray) and
+    ``test_accuracy`` (balanced per-class accuracy on a held-out 10% of the reference).
+    """
+    import numpy as np
+    import torch
+    from sklearn import preprocessing
+    from torch import nn
+    from torch.utils.data import DataLoader, TensorDataset, random_split
+
+    from fusemap.models.network import NNTransfer
+    from fusemap.utils import NNTransferPredictWithUncertainty, NNTransferTrain
+
+    if device is None:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    X = np.asarray(adata.X, dtype=np.float32)
+    lab = adata.obs[label_key].astype(str).values
+    is_ref = ~np.isin(lab, list(unlabeled_values)) & (lab != "nan")
+    if is_ref.sum() < 100:
+        raise ValueError(f"only {is_ref.sum()} labeled reference cells for '{label_key}'")
+
+    le = preprocessing.LabelEncoder()
+    y_ref = le.fit_transform(lab[is_ref]).astype(int)
+
+    ds = TensorDataset(torch.tensor(X[is_ref]), torch.tensor(y_ref).long())
+    n_train = int(0.8 * len(ds))
+    n_val = int(0.1 * len(ds))
+    train_ds, val_ds, test_ds = random_split(
+        ds, [n_train, n_val, len(ds) - n_train - n_val])
+    loaders = dict(
+        train=DataLoader(train_ds, batch_size=batch_size, shuffle=True),
+        val=DataLoader(val_ds, batch_size=batch_size, shuffle=False),
+        test=DataLoader(test_ds, batch_size=batch_size, shuffle=False),
+    )
+
+    import sklearn.utils
+
+    model = NNTransfer(input_dim=X.shape[1], output_dim=len(le.classes_)).to(device)
+    class_weight = torch.Tensor(sklearn.utils.class_weight.compute_class_weight(
+        class_weight="balanced", classes=np.unique(y_ref), y=y_ref))
+    criterion = nn.CrossEntropyLoss(weight=class_weight.to(device))
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    NNTransferTrain(model, criterion, optimizer, loaders["train"], loaders["val"],
+                    device, epochs=epochs)
+
+    test_pred, _ = NNTransferPredictWithUncertainty(model, loaders["test"], device)
+    test_true = np.array([y for _, y in test_ds])
+    test_pred = np.array(test_pred)
+    # balanced (per-class mean) accuracy: plain accuracy hides rare classes
+    accs = [float((test_pred[test_true == c] == c).mean())
+            for c in np.unique(test_true) if (test_true == c).sum() > 0]
+    test_acc = float(np.mean(accs))
+
+    all_loader = DataLoader(TensorDataset(torch.tensor(X)), batch_size=batch_size, shuffle=False)
+    pred, unc = NNTransferPredictWithUncertainty(model, all_loader, device)
+    labels = le.inverse_transform(np.array(pred))
+
+    adata.obs[f"transfer_{label_key}"] = labels
+    adata.obs[f"transfer_{label_key}_uncertainty"] = np.array(unc)
+    return {"labels": labels, "uncertainty": np.array(unc), "test_accuracy": test_acc}

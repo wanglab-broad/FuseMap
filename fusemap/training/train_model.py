@@ -3,9 +3,9 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 import itertools
 import os
 from fusemap.config import *
-from fusemap.dataset import *
+from fusemap.data.loaders import *
 from fusemap.utils import *
-from fusemap.loss import *
+from fusemap.models.losses import *
 import anndata as ad
 import torch
 from tqdm import tqdm

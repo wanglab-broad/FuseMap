@@ -1,10 +1,10 @@
-from fusemap.model import Fuse_network
-from fusemap.preprocess import *
-from fusemap.dataset import *
-from fusemap.loss import *
+from fusemap.models.network import Fuse_network
+from fusemap.data.graph import *
+from fusemap.data.loaders import *
+from fusemap.models.losses import *
 from fusemap.config import *
 from fusemap.utils import *
-from fusemap.train_model import *
+from fusemap.training.train_model import *
 from pathlib import Path
 import dgl.dataloading as dgl_dataload
 import os

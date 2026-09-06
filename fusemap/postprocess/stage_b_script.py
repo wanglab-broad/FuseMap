@@ -470,7 +470,7 @@ def main():
         if "adj_normalized" not in ad_bead.obsm:
             # rebuild the spatial graph exactly as training does (main.py x/y
             # fallback + delaunay construct_graph + preprocess_adj_sparse)
-            from fusemap.preprocess import construct_graph, preprocess_adj_sparse
+            from fusemap.data.graph import construct_graph, preprocess_adj_sparse
             if "x" not in ad_bead.obs.columns:
                 if "col" in ad_bead.obs.columns and "row" in ad_bead.obs.columns:
                     ad_bead.obs["x"], ad_bead.obs["y"] = ad_bead.obs["col"], ad_bead.obs["row"]

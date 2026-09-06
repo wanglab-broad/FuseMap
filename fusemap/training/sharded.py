@@ -195,12 +195,12 @@ def _worker(rank, world, X_paths, args, kneighbor, input_identity, port):
 
     from fusemap import train_model as tm
     from fusemap.config import AnchorConfig, FlagConfig, ModelType
-    from fusemap.dataset import (CustomGraphDataLoader, CustomGraphDataset,
+    from fusemap.data.loaders import (CustomGraphDataLoader, CustomGraphDataset,
                                  construct_data, construct_mask,
                                  get_feature_sparse)
-    from fusemap.model import Fuse_network
-    from fusemap.preprocess import get_allunique_gene_names, preprocess_raw
-    from fusemap.train_model import (balance_weight, pretrain_model,
+    from fusemap.models.network import Fuse_network
+    from fusemap.data.graph import get_allunique_gene_names, preprocess_raw
+    from fusemap.training.train_model import (balance_weight, pretrain_model,
                                      read_model, train_model)
     from fusemap.logger import setup_logging
     from fusemap.utils import (load_snapshot, read_cell_embedding,
@@ -288,7 +288,7 @@ def _worker(rank, world, X_paths, args, kneighbor, input_identity, port):
         dl = _FixedLengthLoader(dl, global_steps)
         return sub_adatas, adj_all, g_all, feats, dl, dl_test, tr_mask, va_mask
 
-    import fusemap.loss as loss_mod
+    import fusemap.models.losses as loss_mod
 
     flagconfig = FlagConfig()
     hooks.flagconfig = flagconfig
