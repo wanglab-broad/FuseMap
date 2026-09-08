@@ -253,6 +253,7 @@ def compute_anchor_loss(
                     # correspondence in THIS pair only (no all-pairs product,
                     # so one noisy sample cannot veto alignment in other pairs)
                     w = anchor_pair_single[(i, j)][row_idx[m_row]].detach().flatten()
+                    w = torch.nan_to_num(w, nan=0.0, posinf=0.0, neginf=0.0)
                     total = (d2 * w).sum() if total is None else total + (d2 * w).sum()
                     count += float(w.sum())
                 elif balance_weight_single is not None:
@@ -274,6 +275,7 @@ def compute_anchor_loss(
                 d2s = ((cur_s - tgt_s) ** 2).sum(dim=1)
                 if anchor_pair_spatial is not None and (i, j) in anchor_pair_spatial:
                     w_s = anchor_pair_spatial[(i, j)][col_idx[m_col]].detach().flatten()
+                    w_s = torch.nan_to_num(w_s, nan=0.0, posinf=0.0, neginf=0.0)
                     total = (d2s * w_s).sum() if total is None else total + (d2s * w_s).sum()
                     count += float(w_s.sum())
                 elif balance_weight_spatial is not None:

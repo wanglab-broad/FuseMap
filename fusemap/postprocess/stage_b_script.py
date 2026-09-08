@@ -200,15 +200,7 @@ def main():
 
     # -------------------------------------------------- fusemap preprocess module
     # (used to rebuild the training normalization for any raw-count input)
-    import importlib.util as _ilu
-    _pp_dir = os.path.dirname(os.path.abspath(__file__))
-    _pp_path = os.path.join(_pp_dir, "fusemap", "preprocess.py")
-    if not os.path.exists(_pp_path):
-        _pp_path = os.path.join(_pp_dir, "preprocess.py")
-    _spec = _ilu.spec_from_file_location(
-        "fusemap_preprocess_standalone", _pp_path)
-    _ppmod = _ilu.module_from_spec(_spec)
-    _spec.loader.exec_module(_ppmod)
+    from fusemap.data import graph as _ppmod
 
     # -------------------------------------------------- Step 1: archetypes
     C_input = np.concatenate([latents[i] for i in sc_atlas_idx], axis=0).astype(np.float32)

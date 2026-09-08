@@ -109,6 +109,10 @@ def spatial_integrate(
         logging.info(
             f"[FuseMap anchor] QUERY atlases (one-way pull): {sorted(AnchorConfig.anchor_query_atlases)}"
         )
+    # platform-group tags for anchor pair pruning (file-name prefix)
+    AnchorConfig.anchor_atlas_groups = [
+        str(ad_i.obs["file_name"].iloc[0]).split("_")[0] for ad_i in X_input
+    ]
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     if args.use_llm_gene_embedding=='combine':

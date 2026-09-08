@@ -55,6 +55,11 @@ def main(args):
         spatial_integrate(
             X_input, args, kneighbor, input_identity
                           )
+        if getattr(args, "bead_files", ""):
+            from fusemap.api import deconvolve_beads
+            logging.info("Bead datasets declared - running Stage-B deconvolution")
+            deconvolve_beads(args.output_save_dir, args.input_data_folder_path,
+                             args.bead_files, args.sig_ref)
     elif args.mode == "map":
         for i in range(len(X_input)):
             args_i=copy.copy(args)

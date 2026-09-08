@@ -39,6 +39,18 @@ def parse_input_args():
         "--pretrain_model_path",
         default="",
     )
+    parser.add_argument(
+        "--bead_files",
+        type=str,
+        default="",
+        help="comma-separated substrings declaring bead/spot-resolution datasets; Stage-B runs automatically after integration",
+    )
+    parser.add_argument(
+        "--sig_ref",
+        type=str,
+        default="",
+        help="comma-separated substrings selecting single-cell signature reference dataset(s) for Stage-B",
+    )
     args = parser.parse_args()
     return args
 

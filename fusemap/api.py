@@ -78,7 +78,8 @@ def _make_args(output_save_dir, keep_celltype, keep_tissueregion,
 
 def integrate(input_data_folder_path, output_save_dir,
               keep_celltype="", keep_tissueregion="",
-              use_llm_gene_embedding="false"):
+              use_llm_gene_embedding="false",
+              bead_files=None, sig_ref=None):
     """Integrate all spatial sections in a folder into shared embeddings.
 
     Equivalent to ``python main.py --mode integrate``. Training resumes
@@ -95,6 +96,14 @@ def integrate(input_data_folder_path, output_save_dir,
     keep_celltype, keep_tissueregion
         Optional ``obs`` column names with existing labels to carry into the
         output embedding files.
+    bead_files, sig_ref
+        Declare bead/spot-resolution datasets (Slide-seq, Visium ...) and the
+        single-cell signature reference(s), as comma-separated file-name
+        substrings. When declared, Stage-B deconvolution runs AUTOMATICALLY
+        after training (recommended default for any bead platform); the
+        decomposed embeddings are written alongside the native ones as
+        ``ad_*_embedding_stageB.h5ad``. Roles are always user-declared,
+        never auto-detected.
     """
     seed_all(0)
     args = _make_args(output_save_dir, keep_celltype, keep_tissueregion,
@@ -106,6 +115,12 @@ def integrate(input_data_folder_path, output_save_dir,
     kneighbor = ["delaunay"] * len(X_input)
     input_identity = ["ST"] * len(X_input)
     spatial_integrate(X_input, args, kneighbor, input_identity)
+
+    if bead_files:
+        if not sig_ref:
+            raise ValueError("bead_files declared without sig_ref (single-cell signature reference)")
+        logging.info("[FuseMap] bead datasets declared - running Stage-B deconvolution")
+        deconvolve_beads(output_save_dir, input_data_folder_path, bead_files, sig_ref)
 
 
 def map_to_reference(input_data_folder_path, output_save_dir, pretrain_model_path,

@@ -200,8 +200,8 @@ def _mnn_pairs(x, y, k):
         rn = torch.nn.functional.normalize(
             torch.as_tensor(r, dtype=torch.float32, device=dev), dim=1)
         idxs, dists = [], []
-        for st in range(0, qn.shape[0], 8192):
-            sims = qn[st:st + 8192] @ rn.T
+        for st in range(0, qn.shape[0], 2048):
+            sims = qn[st:st + 2048] @ rn.T
             top = sims.topk(kk, dim=1, largest=True)
             idxs.append(top.indices.cpu())
             dists.append((1.0 - top.values).cpu())
@@ -298,8 +298,12 @@ def refresh_anchors(
     dist_weighted_sum = 0.0
     dist_weight = 0
     k = AnchorConfig.anchor_k
+    _groups = getattr(AnchorConfig, "anchor_atlas_groups", None)
+    _skip_same = os.environ.get("FUSEMAP_ANCHOR_SKIP_SAME_GROUP") == "1"
     for a in range(ModelType.n_atlas):
         for b in range(a + 1, ModelType.n_atlas):
+            if _skip_same and _groups is not None and _groups[a] == _groups[b]:
+                continue
             xa = single[a].detach().cpu().numpy()
             xb = single[b].detach().cpu().numpy()
             pairs, n_raw = _mnn_pairs(xa, xb, k)
@@ -321,9 +325,16 @@ def refresh_anchors(
             pb = torch.full(
                 (ModelType.n_obs[b],), -1, dtype=torch.long, device=device
             )
-            for (ia, ib) in pairs:
-                pa[ia] = ib
-                pb[ib] = ia
+            _cap = int(os.environ.get("FUSEMAP_ANCHOR_MAX_PER_PAIR", "0"))
+            if _cap > 0 and len(pairs) > _cap:
+                _rs = np.random.RandomState(epoch * 10007 + a * 101 + b)
+                _sel = _rs.choice(len(pairs), _cap, replace=False)
+                pairs = [pairs[t] for t in _sel]
+            if pairs:
+                _ta = torch.as_tensor([pr[0] for pr in pairs], device=device, dtype=torch.long)
+                _tb = torch.as_tensor([pr[1] for pr in pairs], device=device, dtype=torch.long)
+                pa[_ta] = _tb
+                pb[_tb] = _ta
             partner[(a, b)] = pa
             partner[(b, a)] = pb
             n_pairs_total += len(pairs)
