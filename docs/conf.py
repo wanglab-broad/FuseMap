@@ -71,7 +71,6 @@ nbsphinx_thumbnails = {
     'notebooks/5_map_new_dataset_molCCF': '_static/thumbs/tut5.png',
     'notebooks/6_cell_to_cell_interaction': '_static/thumbs/tut6.png',
     'notebooks/7_cross_condition_integration': '_static/thumbs/tut7.png',
-    'notebooks/8_bead_deconvolution': '_static/thumbs/tut8.png',
     'notebooks/9_embryo_cross_resolution': '_static/thumbs/tut9.png',
 }
 

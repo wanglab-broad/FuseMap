@@ -24,10 +24,12 @@ from langchain.chat_models import ChatOpenAI
 import os
 
 
-def research_agent_tool(llm):
+def research_agent_tool(llm, tavily_api_key=None):
 
+    # session-scoped key: with several concurrent users, a process-global env
+    # var would let the most recent user's key be billed for everyone
     tavily_tool = TavilySearchResults(max_results=5,
-                                    tavily_api_key=os.environ["TAVILY_API_KEY"])
+                                    tavily_api_key=tavily_api_key or os.environ["TAVILY_API_KEY"])
 
 
     def make_system_prompt(suffix: str) -> str:

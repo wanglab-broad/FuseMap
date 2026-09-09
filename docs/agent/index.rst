@@ -28,6 +28,18 @@ shared memory (zero-shot ReAct paradigm), and aggregates their results:
      - Executes FuseMap workflows on your data: integration, mapping,
        annotation transfer.
 
+Try it in Colab (zero install)
+--------------------------------------------------------------------------------
+
+The fastest way to try the agent — no GPU, nothing to install:
+open the `Colab notebook <https://colab.research.google.com/github/wanglab-broad/FuseMap/blob/main/docs/notebooks/agent_colab.ipynb>`__,
+paste your OpenAI API key (Tavily key optional, enables literature search), and chat.
+
+.. toctree::
+   :hidden:
+
+   ../notebooks/agent_colab
+
 Setup
 --------------------------------------------------------------------------------
 

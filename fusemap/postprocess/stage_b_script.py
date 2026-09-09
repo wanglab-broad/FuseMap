@@ -51,11 +51,23 @@ if not OUT_DIR.endswith("/"):
 MODEL_PT = f"{OUT_DIR}/trained_model/FuseMap_final_model_final.pt"
 LATENT_PKL = f"{OUT_DIR}/latent_embeddings_all_single_final.pkl"
 
-# atlas order = os.listdir order of DATA_DIR (replicated from main.py lines 26-30)
-FILE_NAMES = [
-    f for f in os.listdir(DATA_DIR)
-    if os.path.isfile(os.path.join(DATA_DIR, f))
-]
+# Atlas order MUST match the training-time file order. os.listdir order is not
+# stable across processes on all filesystems, so derive the order from the
+# training output itself (obs['file_name'] appears in atlas order); fall back
+# to os.listdir only if no embedding file is present.
+def _training_file_order():
+    emb_path = os.path.join(OUT_DIR, "ad_celltype_embedding_nodeconv.h5ad")
+    if not os.path.exists(emb_path):
+        emb_path = os.path.join(OUT_DIR, "ad_celltype_embedding.h5ad")
+    if os.path.exists(emb_path):
+        import anndata as _ad
+        import pandas as _pd
+        _obs = _ad.read_h5ad(emb_path, backed="r").obs
+        return list(_pd.unique(_obs["file_name"]))
+    return [f for f in os.listdir(DATA_DIR)
+            if os.path.isfile(os.path.join(DATA_DIR, f))]
+
+FILE_NAMES = _training_file_order()
 def _resolve_token(env_key, token, purpose, candidates):
     hits = [f for f in candidates if token in f]
     if len(hits) != 1:
@@ -154,7 +166,7 @@ def var_names_after_preproc(ad):
 
 def main():
     log(f"[env] device={DEV}  CUDA_VISIBLE_DEVICES={os.environ.get('CUDA_VISIBLE_DEVICES')}")
-    log(f"[env] atlas order (os.listdir): {FILE_NAMES}")
+    log(f"[env] atlas order (training order): {FILE_NAMES}")
     log(f"[env] DATA_DIR={DATA_DIR}  OUT_DIR={OUT_DIR}")
     log(f"[env] bead datasets: {BEAD_FILES}")
     bead_idx = [FILE_NAMES.index(f) for f in BEAD_FILES]

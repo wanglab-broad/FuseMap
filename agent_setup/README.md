@@ -50,3 +50,13 @@ Help me analyze the cell types.
 - All results saved to `path/to/output/`
 - Final annotated data: `path/to/output/data/annotated_user_data.h5ad`
 - To view HTML figures on remote SSH: `python3 -m http.server 8000`
+
+---
+
+## Run in Colab
+
+Try the FuseMap Agent in your browser with zero installation (no GPU needed):
+
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/wanglab-broad/FuseMap/blob/main/docs/notebooks/agent_colab.ipynb)
+
+The notebook clones this repository, installs dependencies, prompts for your OpenAI API key (and an optional Tavily key for the literature ResearchAgent), then starts an interactive chat loop with the supervisor agent.

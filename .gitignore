@@ -6,3 +6,5 @@ docs/notebooks/tutorial*_data/
 docs/notebooks/molCCF
 __pycache__/
 *.pyc
+agent_setup/atlas_data/ad_cell.h5ad
+fusemap.egg-info/

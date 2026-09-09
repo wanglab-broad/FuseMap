@@ -62,7 +62,9 @@ def transfer_heatmap(gt, pred, normalize="index", figsize=(9, 8), cmap="Greens")
     ct = pd.crosstab(pd.Series(gt, name="ground truth"),
                      pd.Series(pred, name="transferred"), normalize=normalize) * 100
     shared = [c for c in ct.index if c in ct.columns]
-    ct = ct.loc[shared, shared + [c for c in ct.columns if c not in shared]]
+    if shared:  # same-vocabulary case: put matching classes on the diagonal
+        ct = ct.loc[shared + [r for r in ct.index if r not in shared],
+                    shared + [c for c in ct.columns if c not in shared]]
     fig, ax = plt.subplots(figsize=figsize)
     sns.heatmap(ct, cmap=cmap, ax=ax, cbar_kws={"label": "% of row"})
     plt.tight_layout()

@@ -93,7 +93,6 @@ def main():
     
     # Create LLM using the new function
     if api_key and tavily_api_key:
-        os.environ["TAVILY_API_KEY"] = tavily_api_key
         llm = create_llm(model_choice=model_choice, api_key=api_key, base_url=base_url)
     else:
         st.error("Please provide an OPENAI API key and a TAVILY API key to continue.")
@@ -145,7 +144,7 @@ def main():
         }
 
         ### research_agent_tool
-        research_agent_tool_instance = research_agent_tool(llm)
+        research_agent_tool_instance = research_agent_tool(llm, tavily_api_key=tavily_api_key)
 
         ### atlas_agent_tool
         atlas_agent_tool_instance = atlas_agent_tool(llm)

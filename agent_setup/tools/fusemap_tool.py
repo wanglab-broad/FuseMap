@@ -49,8 +49,52 @@ np.float_ = np.float64
 
 
 
+import threading as _threading
+from contextlib import contextmanager as _contextmanager
+
+# One heavy FuseMap job at a time on this server: concurrent trainings would
+# fight over the GPU (and can OOM). Later requests wait in line with a notice.
+_HEAVY_JOB_LOCK = _threading.Lock()
+_HEAVY_JOB_CURRENT = {"task": None}
+
+
+@_contextmanager
+def _gpu_slot(task_name, log=print):
+    got = _HEAVY_JOB_LOCK.acquire(blocking=False)
+    if not got:
+        running = _HEAVY_JOB_CURRENT["task"] or "another FuseMap job"
+        notice = (f"[queue] The server is currently running '{running}'. "
+                  f"'{task_name}' is queued and will start automatically...")
+        try:
+            import streamlit as st
+            st.info("⏳ " + notice)
+        except Exception:
+            pass
+        log(notice)
+        _HEAVY_JOB_LOCK.acquire()
+    _HEAVY_JOB_CURRENT["task"] = task_name
+    try:
+        yield
+    finally:
+        _HEAVY_JOB_CURRENT["task"] = None
+        _HEAVY_JOB_LOCK.release()
+
+
+
+
+def _with_gpu_slot(task_name):
+    import functools
+    def deco(fn):
+        @functools.wraps(fn)
+        def wrapper(*args, **kwargs):
+            with _gpu_slot(task_name):
+                return fn(*args, **kwargs)
+        return wrapper
+    return deco
+
 ### ---------------- Tool 1: map to molCCF ---------------- ###
 @tool
+@_with_gpu_slot("map_molCCF")
 def map_molCCF(path: str, section_IDs: List[str], 
                transfer_main_level: bool,
                transfer_sub_level: bool,
@@ -210,6 +254,7 @@ def map_molCCF(path: str, section_IDs: List[str],
 
 ### ---------------- Tool 2: spatially integrate new datasets ---------------- ###
 @tool
+@_with_gpu_slot("fusemap_integrate")
 def fusemap_integrate(path: str, description, log=print) -> str:
     """Given a path to a directory that has query spatial transcriptomics, 
     description of the query dataset, the tool will use FuseMap to spatially integrate datasets. 
