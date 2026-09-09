@@ -13,7 +13,7 @@ metrics computed on the Stage-A tissue embedding
 
 Run:
   CUDA_VISIBLE_DEVICES=1 OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=4 \
-    /ewsc/yhe/miniconda3/envs/FuseMap_952261_env/bin/python niche_align.py
+    python -m fusemap.postprocess.niche_align
 """
 import os
 os.environ.setdefault("OPENBLAS_NUM_THREADS", "4")

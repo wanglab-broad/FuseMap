@@ -121,20 +121,27 @@ Utilities
 Post-processing scripts
 --------------------------------------------------------------------------------
 
-Two standalone scripts operate on a finished integration run
+Two post-processing modules operate on a finished integration run
 (see :doc:`../userguide/parameters` for their environment variables):
 
-``stage_b_deconv.py``
+``fusemap.postprocess.stage_b_script``
     Bead deconvolution for spot/bead-resolution datasets (Slide-seq, Visium HD):
     decomposes each bead into a mixture over cell archetypes and rebuilds its
-    cell/tissue embeddings.
+    cell/tissue embeddings. Prefer the high-level entry points — it runs
+    automatically when ``bead_files``/``sig_ref`` are declared to
+    :func:`fusemap.integrate`, or call :func:`fusemap.deconvolve_beads`.
+    Script form:
 
     .. code-block:: bash
 
         FUSEMAP_BEAD_FILES=slideseq FUSEMAP_SIG_REF=starmap \
         STAGEB_DATA_DIR=./data STAGEB_OUT_DIR=./output \
-        python stage_b_deconv.py
+        python -m fusemap.postprocess.stage_b_script
 
-``niche_align.py``
+``fusemap.postprocess.niche_align``
     Computes spatial-niche composition vectors for quantitative region-level
-    comparison across samples.
+    comparison across samples:
+
+    .. code-block:: bash
+
+        python -m fusemap.postprocess.niche_align

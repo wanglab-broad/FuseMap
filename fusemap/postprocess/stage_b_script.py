@@ -12,7 +12,7 @@ model is NOT retrained.
 Standalone script. Run:
   CUDA_VISIBLE_DEVICES=1 OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=4 \
   FUSEMAP_BEAD_FILES=<substr>[,<substr>...] FUSEMAP_SIG_REF=<substr>[,<substr>...] \
-    /ewsc/yhe/miniconda3/envs/FuseMap_952261_env/bin/python stage_b_deconv.py
+    python -m fusemap.postprocess.stage_b_script   # or: fusemap.deconvolve_beads(...)
 
 Env:
   FUSEMAP_BEAD_FILES  comma-separated filename substrings, each resolving to one
