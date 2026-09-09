@@ -148,11 +148,16 @@ Performance
 Bead deconvolution (Stage-B)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Post-processing for bead/spot-resolution data (Slide-seq, Visium HD) after an
-integration run: ``python stage_b_deconv.py``. Each bead is decomposed into a
-mixture over cell archetypes learned from the single-cell sections; its cell
-and tissue embeddings are rebuilt from the mixture. Dataset roles are **defined
-by you**, not auto-detected.
+Post-processing for bead/spot-resolution data (Slide-seq, Visium HD). Runs
+automatically after ``fusemap.integrate(..., bead_files=..., sig_ref=...)``,
+or standalone via :func:`fusemap.deconvolve_beads`. Each bead is decomposed
+into a mixture over cell archetypes learned from the single-cell sections; its
+cell and tissue embeddings are rebuilt from the mixture, and the decomposed
+embeddings **become the canonical** ``ad_celltype_embedding.h5ad`` /
+``ad_tissueregion_embedding.h5ad`` (pre-decomposition versions kept as
+``ad_*_embedding_nodeconv.h5ad``). Dataset roles are **defined by you**, not
+auto-detected. The environment variables below are the low-level interface
+used by the script form; the Python API sets them for you.
 
 .. list-table::
    :header-rows: 1

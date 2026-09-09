@@ -95,6 +95,15 @@ Both embedding files keep ``obs['name']`` (section), ``obs['file_name']``,
 ``obs['x']``/``obs['y']``, and any label columns you passed via
 ``--keep_celltype`` / ``--keep_tissueregion``.
 
+.. note::
+
+    If bead/spot datasets were declared (``bead_files=`` / ``--bead_files``),
+    the two embedding files above already contain the **deconvolved** bead
+    rows (each bead rebuilt from its cell-archetype mixture) — this is the
+    default and what you should use downstream. The pre-deconvolution
+    embeddings are kept as ``ad_*_embedding_nodeconv.h5ad``, and the per-bead
+    mixture matrix is in ``stageB_pi.npz``.
+
 4. First look at the result
 --------------------------------------------------------------------------------
 

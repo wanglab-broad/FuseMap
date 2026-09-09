@@ -100,10 +100,11 @@ def integrate(input_data_folder_path, output_save_dir,
         Declare bead/spot-resolution datasets (Slide-seq, Visium ...) and the
         single-cell signature reference(s), as comma-separated file-name
         substrings. When declared, Stage-B deconvolution runs AUTOMATICALLY
-        after training (recommended default for any bead platform); the
-        decomposed embeddings are written alongside the native ones as
-        ``ad_*_embedding_stageB.h5ad``. Roles are always user-declared,
-        never auto-detected.
+        after training (recommended default for any bead platform), and the
+        DECOMPOSED embeddings become the canonical outputs
+        (``ad_celltype_embedding.h5ad`` / ``ad_tissueregion_embedding.h5ad``);
+        the pre-decomposition versions are kept as ``ad_*_embedding_nodeconv.h5ad``.
+        Roles are always user-declared, never auto-detected.
     """
     seed_all(0)
     args = _make_args(output_save_dir, keep_celltype, keep_tissueregion,
@@ -152,9 +153,12 @@ def deconvolve_beads(output_save_dir, input_data_folder_path,
 
     Each bead is decomposed into a mixture over cell archetypes learned from
     the single-cell sections (Stage-B); its cell and tissue embeddings are
-    rebuilt from the mixture. Writes ``ad_celltype_embedding_stageB.h5ad``,
-    ``ad_tissueregion_embedding_stageB.h5ad``, and ``stageB_pi.npz`` into
-    ``output_save_dir``.
+    rebuilt from the mixture. The decomposed embeddings become the canonical
+    ``ad_celltype_embedding.h5ad`` / ``ad_tissueregion_embedding.h5ad`` (bead
+    rows replaced; single-cell rows unchanged). The pre-decomposition versions
+    are kept as ``ad_*_embedding_nodeconv.h5ad``; ``ad_*_embedding_stageB.h5ad``
+    (identical to canonical) and ``stageB_pi.npz`` (per-bead mixtures) are also
+    written into ``output_save_dir``.
 
     Parameters
     ----------
@@ -186,6 +190,21 @@ def deconvolve_beads(output_save_dir, input_data_folder_path,
 
     script = Path(__file__).resolve().parent / "postprocess" / "stage_b_script.py"
     runpy.run_path(str(script), run_name="__main__")
+
+    # Decomposed embeddings become the CANONICAL outputs (default for any run
+    # with declared bead datasets). The pre-decomposition versions are kept as
+    # *_nodeconv.h5ad; *_stageB.h5ad names are kept for compatibility.
+    import shutil as _sh
+    for lvl in ("celltype", "tissueregion"):
+        canon = os.path.join(str(output_save_dir), f"ad_{lvl}_embedding.h5ad")
+        stage = os.path.join(str(output_save_dir), f"ad_{lvl}_embedding_stageB.h5ad")
+        keep = os.path.join(str(output_save_dir), f"ad_{lvl}_embedding_nodeconv.h5ad")
+        if os.path.exists(stage) and os.path.exists(canon):
+            if not os.path.exists(keep):
+                os.rename(canon, keep)
+            _sh.copyfile(stage, canon)
+    logging.info("[FuseMap] Stage-B embeddings promoted to canonical outputs "
+                 "(pre-decomposition kept as *_nodeconv.h5ad)")
 
 def transfer_labels(adata, label_key, batch_size=256, epochs=200,
                     unlabeled_values=("nan", "Unannotated", ""), device=None):
