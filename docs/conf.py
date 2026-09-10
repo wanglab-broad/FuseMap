@@ -32,19 +32,9 @@ extensions = [
 autodoc_typehints = "description"
 autosummary_generate = True
 autodoc_mock_imports = [
-    "anndata",
-    "dgl",
-    "matplotlib",
-    "numpy",
-    "pandas",
-    "scanpy",
-    "scipy",
-    "seaborn",
-    "sklearn",
-    "sparse",
-    "tangram",
-    "tqdm",
-    "torch",
+    "anndata", "dgl", "harmonypy", "igraph", "leidenalg", "matplotlib",
+    "networkx", "numpy", "pandas", "scanpy", "scipy", "seaborn", "sklearn",
+    "sparse", "torch", "tqdm", "umap",
 ]
 
 # copybutton: strip prompts when copying code blocks
