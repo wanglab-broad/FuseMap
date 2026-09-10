@@ -96,7 +96,11 @@ def _worker(rank, world, X_paths, args, kneighbor, input_identity, port):
     Path(f"{rank_dir}/trained_model").mkdir(parents=True, exist_ok=True)
     Path(f"{save_dir}/trained_model").mkdir(parents=True, exist_ok=True)
     setup_logging(rank_dir if rank else save_dir)
-    seed_all(0)
+    # FUSEMAP_DDP_SEED_BASE shifts all seeds for replicate runs; do NOT use
+    # FUSEMAP_SEED here - it would override the per-rank sampling seeds too
+    # and make every rank draw identical batches.
+    seed_base = int(os.environ.get("FUSEMAP_DDP_SEED_BASE", "0"))
+    seed_all(seed_base)
 
     # ---- full world, identical on every rank ----
     X_input = []
@@ -137,7 +141,7 @@ def _worker(rank, world, X_paths, args, kneighbor, input_identity, port):
 
     # identical init on every rank (same seed), then averaged grads keep the
     # replicas identical for the rest of training
-    seed_all(0)
+    seed_all(seed_base)
     model = Fuse_network(
         ModelType.pca_dim.value, input_dim, ModelType.hidden_dim.value,
         ModelType.latent_dim.value, ModelType.dropout_rate.value, var_name,
@@ -175,7 +179,7 @@ def _worker(rank, world, X_paths, args, kneighbor, input_identity, port):
                                         drop_last=False, feature_all=feats, adj_all=adj_all,
                                         input_identity=input_identity)
         # masks must be IDENTICAL across ranks (rank0's val loss steers all)
-        seed_all(0)
+        seed_all(seed_base)
         tr_mask, va_mask = construct_mask(n_atlas, ds, g_all)
         if per_rank_steps is not None:
             dl = _FixedLengthLoader(dl, per_rank_steps)
@@ -197,7 +201,7 @@ def _worker(rank, world, X_paths, args, kneighbor, input_identity, port):
         adj_a, g_a, feat_a, dl_a, _, trm, vam = make_world(rank_dir, steps)
         # diverge ONLY the sampling / noise RNG streams; parameters are already
         # built identically and stay identical through averaged gradients
-        seed_all(1000 + rank)
+        seed_all(seed_base + 1000 + rank)
         logging.info(f"[ddp] rank {rank}: Phase 1 pretrain ({steps} steps/epoch/rank)")
         pretrain_model(model, dl_a, feat_a, adj_a, device, trm, vam, flagconfig,
                        dist_hooks=hooks)
@@ -232,7 +236,7 @@ def _worker(rank, world, X_paths, args, kneighbor, input_identity, port):
         adj_a, g_a, feat_a, dl_a, _, trm, vam = make_world(rank_dir, steps)
         if os.path.exists(f"{rank_dir}/snapshot.pt"):
             os.remove(f"{rank_dir}/snapshot.pt")
-        seed_all(2000 + rank)
+        seed_all(seed_base + 2000 + rank)
         logging.info(f"[ddp] rank {rank}: Phase 4 final ({steps} steps/epoch/rank)")
         train_model(model, dl_a, feat_a, adj_a, device, trm, vam, flagconfig,
                     dist_hooks=hooks)

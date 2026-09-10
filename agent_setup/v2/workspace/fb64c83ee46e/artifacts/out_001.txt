@@ -1,0 +1,25 @@
+REGION LOOKUP:
+ Unnamed: 0 Region_ID  Color                                                   Description
+          0     CTX_1 2db72d                                  Cerebral cortex, dorsal part
+          1 LSX_HY_MB dd8d96                Lateral septal complex, Hypothalamus, Midbrain
+          2      CB_1 FAF9D5                   Cerebellar granule layer and Purkinje cells
+          3       STR 87CEFA                                                      Striatum
+          4      OB_1 ffc388                 Olfactory bulb inner layers (granule, mitral)
+          5        FT 000080                                                  Fiber tracts
+          6      OB_1 ffc388 Olfactory bulb,Cerebral cortex layer 1, hippocampal formation
+          7     CTX_2  28182                                  Cerebral cortex, dorsal part
+          8      OB_2 bb722e             Cerebral cortex outer layers (glomerular, mitral)
+          9        TH ed9ea9                                                      Thalamus
+         10      CB_2 d0c831                                   Cerebellar molecular layers
+         11    Hbl_VS 696969                   Habenula, Ventricle systems(choroid plexus)
+         12        DG 8B008B                                     Hippocampal dentate gyrus
+         13    HPF_CA FF00FF                                CA1-3 of hippocampal formation
+         14        HY c4b0d4                                Two nuclei in the hypothalamus
+         15      MYdp 696969                                          Medulla, dorsal part
+         16      ENTm 2E8B57                                  Entorhinal area, medial part
+ATLAS SHAPE: (10405193, 64)
+OBS COLUMNS: ['x', 'y', 'name', 'batch', 'filename', 'grouptype', 'ap_order', 'global_x', 'global_y', 'global_z', 'main_STARmap', 'sub_STARmap', 'main_Allen', 'sub_Allen', 'subsub_Allen', 'cluster_Allen', 'tissue_main', 'tissue_sub']
+
+ tissue_main LABELS: ['LSX_HY_MB_HB', 'FbTrt', 'CB_1', 'CB_2', 'MYdp', 'Hbl_VS', 'L1_HPFmo_Mngs', 'TH', 'CTX_1', 'CTX_2', 'ENTm', 'DG', 'HPF_CA', 'HY', 'OB_1', 'STR', 'OB_2']
+
+ tissue_sub LABELS: ['MB_P_MY_17', 'MB_P_MY_7', 'FT_2', 'MB_P_MY_6', 'MB_P_MY_10', 'CB_2', 'MB_P_MY_8_2', 'MB_P_MY_8_3', 'MB_P_MY_5', 'CB_3', 'CBX_4', 'MNG_1', 'Slideseq_special', 'MB_P_MY_3', 'CB_1', 'MB_P_MY_12', 'FT_1', 'MB_P_MY_1', 'VS_1', 'FT_3', 'MB_P_MY_19', 'MB_P_MY_16', 'MB_P_MY_4', 'MB_P_MY_11', 'MB_P_MY_21_1', 'MB_P_MY_18', 'MB_P_MY_9', 'HY_2', 'VS_2', 'MB_P_MY_2', 'HY_11', 'CTX_A_1', 'MB_P_MY_8_1', 'TH_2_1', 'TH_4_1', 'HY_3', 'MB_P_MY_14', 'MB_P_MY_21_2', 'MB_P_MY_13', 'MB_P_MY_20', 'MB_P_MY_15', 'CNU_11_2', 'CTX_A_3_1', 'TH_7', 'CTX_A_2', 'CTX_A_5_5', 'CTX_A_8_3', 'CTX_B_8_3', 'CTX_A_3_3', 'CTX_A_3_2', 'CTX_B_5_3', 'CTX_A_9_2', 'CTX_A_8_1', 'CTX_A_5_4', 'CTX_B_1_2', 'CTX_A_7', 'CTX_A_14', 'CTX_A_9_1', 'CTX_A_6', 'CTX_B_2_1', 'CTX_A_5_3', 'CTX_A_16_4', 'CTX_A_12', 'CTX_A_13_3', 'CTX_A_13_4', 'CTX_B_7', 'CTX_B_5_2', 'CTX_A_11', 'CTX_A_16_1', 'CTX_A_15', 'CTX_B_6', 'CTX_A_13_2', 'CTX_A_16_3', 'CTX_B_9', 'VS_3', 'CTX_B_5_4', 'CTX_B_8_1', 'CTX_A_13_1', 'CTX_HIP_3', 'CTX_HIP_4', 'CTX_B_10', 'CTX_HIP_1', 'CTX_A_10', 'CTX_HIP_2', 'CTX_B_11', 'CTX_A_16_2', 'CTX_A_5_1', 'CTX_B_3_2', 'CTX_A_4', 'CTX_A_5_2', 'TH_5_2', 'CTX_HIP_7', 'TH_3', 'TH_6', 'TH_2_2', 'CTX_B_8_2', 'HY_10', 'CTX_HIP_5', 'HY_9', 'CTX_B_12', 'CTX_A_8_2', 'CTX_HIP_6', 'CNU_13_1', 'HY_4', 'HY_6', 'CNU_10', 'CNU_9_2', 'HY_1', 'HY_8', 'CNU_13_2', 'OB_1', 'CNU_2', 'HY_5', 'CNU_4', 'CNU_9_1', 'TH_1', 'TH_9', 'CNU_5', 'CNU_8_4', 'TH_8', 'TH_4_2', 'CNU_7', 'CTX_B_1_1', 'CNU_8_3', 'CNU_1', 'CNU_3', 'OB_2_2', 'CNU_11_1', 'HY_7', 'HY_12', 'CNU_12', 'TH_5_1', 'CNU_8_1', 'CNU_8_2', 'CNU_6_1', 'CTX_B_3_3', 'OB_2_1', 'CNU_6_2', 'OB_3', 'CTX_B_3_1', 'CTX_B_5_1', 'CTX_B_4', 'OB_4_1', 'OB_5', 'OB_4_2', 'CTX_B_2_2', 'FT_4']

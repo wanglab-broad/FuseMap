@@ -1,0 +1,186 @@
+ Unnamed: 0 Region_ID  Color                                                   Description
+          0     CTX_1 2db72d                                  Cerebral cortex, dorsal part
+          1 LSX_HY_MB dd8d96                Lateral septal complex, Hypothalamus, Midbrain
+          2      CB_1 FAF9D5                   Cerebellar granule layer and Purkinje cells
+          3       STR 87CEFA                                                      Striatum
+          4      OB_1 ffc388                 Olfactory bulb inner layers (granule, mitral)
+          5        FT 000080                                                  Fiber tracts
+          6      OB_1 ffc388 Olfactory bulb,Cerebral cortex layer 1, hippocampal formation
+          7     CTX_2  28182                                  Cerebral cortex, dorsal part
+          8      OB_2 bb722e             Cerebral cortex outer layers (glomerular, mitral)
+          9        TH ed9ea9                                                      Thalamus
+         10      CB_2 d0c831                                   Cerebellar molecular layers
+         11    Hbl_VS 696969                   Habenula, Ventricle systems(choroid plexus)
+         12        DG 8B008B                                     Hippocampal dentate gyrus
+         13    HPF_CA FF00FF                                CA1-3 of hippocampal formation
+         14        HY c4b0d4                                Two nuclei in the hypothalamus
+         15      MYdp 696969                                          Medulla, dorsal part
+         16      ENTm 2E8B57                                  Entorhinal area, medial part
+ATLAS SHAPE (10405193, 64)
+OBS COLUMNS ['x', 'y', 'name', 'batch', 'filename', 'grouptype', 'ap_order', 'global_x', 'global_y', 'global_z', 'main_STARmap', 'sub_STARmap', 'main_Allen', 'sub_Allen', 'subsub_Allen', 'cluster_Allen', 'tissue_main', 'tissue_sub']
+tissue_main tissue_main
+CTX_1            2843997
+LSX_HY_MB_HB     2325850
+STR               827030
+FbTrt             671689
+CTX_2             649565
+CB_1              595774
+L1_HPFmo_Mngs     464554
+OB_1              461569
+TH                364110
+CB_2              343948
+OB_2              321611
+Hbl_VS            193214
+HPF_CA            145766
+DG                118759
+MYdp               49044
+HY                 17988
+ENTm               10725
+tissue_sub tissue_sub
+MNG_1               400430
+MB_P_MY_2           362830
+CTX_A_3_1           357944
+FT_1                346268
+MB_P_MY_1           345420
+FT_2                336965
+CTX_A_12            325831
+OB_1                319982
+MB_P_MY_6           303980
+CNU_1               283991
+CTX_A_8_1           276866
+CBX_4               258878
+CTX_A_7             246373
+CTX_A_9_1           238913
+CB_2                237815
+CB_1                223373
+CTX_A_4             196520
+CNU_2               186906
+CTX_A_6             177391
+MB_P_MY_7           176652
+CTX_A_11            173965
+OB_4_1              158788
+CTX_A_1             136918
+CTX_A_15            135576
+HY_2                131854
+MB_P_MY_10          129121
+TH_2_1              125141
+CNU_3               120284
+MB_P_MY_17          118512
+CTX_A_8_2           113365
+VS_1                103743
+CTX_B_3_2           103020
+CTX_B_2_1            96162
+CNU_4                91898
+CNU_5                82777
+TH_4_1               82680
+OB_5                 81461
+MB_P_MY_5            71171
+CB_3                 67098
+VS_2                 65901
+CTX_HIP_4            64210
+CTX_HIP_1            61571
+MB_P_MY_3            61468
+CTX_A_16_1           61423
+MB_P_MY_9            60143
+CNU_11_1             59322
+CTX_A_10             58496
+CNU_11_2             58133
+OB_2_2               55371
+CTX_A_5_1            54555
+FT_4                 52496
+CTX_B_8_1            52206
+CNU_8_2              51876
+CTX_A_16_2           50876
+CTX_A_14             49240
+CTX_A_5_3            48748
+CTX_HIP_3            48348
+CNU_8_4              46602
+CTX_A_5_2            46483
+TH_1                 45786
+TH_3                 45404
+FT_3                 45262
+MB_P_MY_18           44808
+CTX_A_16_3           43374
+CTX_A_3_2            42480
+CTX_HIP_5            42105
+CTX_B_3_1            40334
+CTX_B_8_3            35685
+CTX_B_11             35653
+CNU_13_1             35616
+CTX_HIP_2            35147
+CNU_9_2              34664
+CTX_B_5_3            32777
+MB_P_MY_13           32349
+CTX_B_5_2            32264
+CNU_13_2             31812
+MB_P_MY_12           31666
+CTX_B_10             29550
+CTX_B_9              29101
+CTX_B_8_2            28118
+CNU_7                28059
+CTX_A_2              25265
+MB_P_MY_8_2          23579
+CNU_8_1              23472
+HY_11                23173
+CNU_9_1              22992
+CTX_B_1_2            22309
+MB_P_MY_8_3          21950
+CTX_A_13_2           21361
+CTX_B_1_1            21208
+CTX_B_3_3            20298
+CTX_A_13_1           20218
+CTX_B_5_1            19387
+CTX_A_13_3           18825
+TH_5_2               18721
+HY_3                 18691
+MB_P_MY_20           17874
+HY_5                 17561
+CTX_A_16_4           17311
+CNU_6_1              16942
+CNU_12               16919
+CTX_A_8_3            16735
+MB_P_MY_8_1          16327
+CNU_6_2              16205
+CTX_B_5_4            15895
+CTX_A_13_4           15110
+MB_P_MY_14           14735
+CTX_A_5_4            14237
+MB_P_MY_4            13861
+OB_3                 13615
+CTX_B_4              12506
+TH_2_2               12046
+CTX_B_12             11434
+TH_4_2               10952
+TH_6                 10886
+MB_P_MY_21_2         10523
+CTX_A_3_3            10415
+HY_10                10167
+CNU_8_3               9260
+CTX_HIP_6             9133
+CTX_A_5_5             8119
+CTX_B_2_2             8081
+HY_6                  7627
+MB_P_MY_11            6429
+TH_7                  6268
+CTX_B_7               6194
+TH_8                  6038
+HY_4                  5889
+OB_2_1                5201
+TH_9                  4855
+MB_P_MY_16            4792
+CTX_B_6               4542
+CTX_HIP_7             4011
+HY_12                 3862
+HY_1                  3770
+HY_8                  3463
+Slideseq_special      3369
+CTX_A_9_2             3267
+OB_4_2                3252
+MB_P_MY_21_1          3005
+HY_9                  2935
+MB_P_MY_19            2709
+CNU_10                2559
+TH_5_1                2200
+MB_P_MY_15            1659
+HY_7                  1582
+VS_3                  1073
