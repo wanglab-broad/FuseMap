@@ -12,13 +12,14 @@ Installation is quick and performed using ``pip`` in the usual manner:
 
 ::
 
-    conda create -n fusemap python=3.10.16
+    conda create -n fusemap python=3.10
     conda activate fusemap
     pip install fusemap
 
 .. note::
 
-    A GPU is necessary for accelerating computations.
+    Supported Python versions: 3.9-3.11 (the pinned torch 2.0.1 / dgl 1.1.1
+    wheels are not available for 3.12+). A GPU is necessary for accelerating computations.
     Estimated time is 10 mins for integrating 200,000 cells with a single GPU.
 
 Downloading the pretrained models

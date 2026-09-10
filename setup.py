@@ -5,7 +5,7 @@ with open('README.md','r') as f:
 
 setup(
     name='fusemap',
-    version='1.1.0',
+    version='1.1.1',
     packages=find_packages(include=['fusemap', 'fusemap.*']),
     install_requires=[
         'scanpy==1.9.3',
@@ -29,8 +29,11 @@ setup(
         "langgraph-sdk==0.1.70",
         "langsmith==0.3.43",
         "easydict==1.13",
-        "numpy==1.26.2"
+        "numpy==1.26.2",
+        "gdown",
+        "arcplot"
     ],
+    python_requires=">=3.9,<3.12",
     long_description=description,
     long_description_content_type='text/markdown',
 
