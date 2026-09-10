@@ -51,7 +51,7 @@ Setup
        cd FuseMap
        conda create -n fusemap python=3.10.16
        conda activate fusemap
-       pip install fusemap
+       pip install git+https://github.com/wanglab-broad/FuseMap.git
 
 2. Download the required data:
 
