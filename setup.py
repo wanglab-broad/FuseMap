@@ -6,7 +6,7 @@ with open('README.md','r') as f:
 setup(
     name='fusemap',
     version='1.1.0',
-    packages=find_packages(),
+    packages=find_packages(include=['fusemap', 'fusemap.*']),
     install_requires=[
         'scanpy==1.9.3',
         'torch==2.0.1',
@@ -31,11 +31,6 @@ setup(
         "easydict==1.13",
         "numpy==1.26.2"
     ],
-    entry_points={
-        "console_scripts":[
-            "fusemap = fusemap:spatial_integrate"
-        ]
-    },
     long_description=description,
     long_description_content_type='text/markdown',
 
