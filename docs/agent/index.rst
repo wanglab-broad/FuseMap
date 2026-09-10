@@ -28,6 +28,42 @@ shared memory (zero-shot ReAct paradigm), and aggregates their results:
      - Executes FuseMap workflows on your data: integration, mapping,
        annotation transfer.
 
+Two interfaces
+--------------------------------------------------------------------------------
+
+The repository ships two chat interfaces to the same foundation-model arsenal:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 18 41 41
+
+   * -
+     - **Classic** (``app.py``) — the paper architecture
+     - **v2** (``app_v2.py``) — modernized, recommended
+   * - Architecture
+     - Supervisor + research / atlas / FuseMap agents (zero-shot ReAct,
+       shared memory)
+     - Single CodeAct agent: writes Python against a **persistent kernel**
+       pre-loaded with the FuseMap API, molCCF atlas, and imputation helpers
+   * - Model
+     - Chosen in the sidebar (GPT-4o-era)
+     - **Auto-selects the newest flagship** for your API key (GPT-6 / latest
+       Claude / Gemini; custom gateways via Base URL)
+   * - Long sessions
+     - Conversation buffer
+     - Checkpointed threads + automatic context compaction; artifacts
+       (figures/tables) saved to files and rendered inline
+   * - Workflows
+     - Fixed tools
+     - Six validated skill playbooks (map+annotate, integrate, impute,
+       subtype shifts, atlas query, bead deconvolution readout) loaded on
+       demand; heavy GPU jobs queue with a wait notice
+   * - Run
+     - ``streamlit run app.py``
+     - ``streamlit run app_v2.py`` (needs ``pip install "langchain>=1.0"
+       langgraph langgraph-checkpoint-sqlite jupyter-client ipykernel``
+       alongside fusemap)
+
 Try it in Colab (zero install)
 --------------------------------------------------------------------------------
 
