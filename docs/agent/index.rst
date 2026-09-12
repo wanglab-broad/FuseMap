@@ -39,7 +39,7 @@ The repository ships two chat interfaces to the same foundation-model arsenal:
 
    * -
      - **Classic** (``app.py``) — the paper architecture
-     - **v2** (``app_v2.py``) — modernized, recommended
+     - **v2** (``app_v2.py``) — later CodeAct interface
    * - Architecture
      - Supervisor + research / atlas / FuseMap agents (zero-shot ReAct,
        shared memory)
@@ -47,29 +47,29 @@ The repository ships two chat interfaces to the same foundation-model arsenal:
        pre-loaded with the FuseMap API, molCCF atlas, and imputation helpers
    * - Model
      - Chosen in the sidebar (GPT-4o-era)
-     - **Auto-selects the newest flagship** for your API key (GPT-6 / latest
-       Claude / Gemini; custom gateways via Base URL)
+     - Selects a model using a provider-specific preference list and, where
+       supported, the account model list; custom gateways via Base URL
    * - Long sessions
      - Conversation buffer
      - Checkpointed threads + automatic context compaction; artifacts
        (figures/tables) saved to files and rendered inline
    * - Workflows
      - Fixed tools
-     - Six validated skill playbooks (map+annotate, integrate, impute,
+     - Six workflow playbooks (map+annotate, integrate, impute,
        subtype shifts, atlas query, bead deconvolution readout) loaded on
        demand; heavy GPU jobs queue with a wait notice
    * - Run
      - ``streamlit run app.py``
-     - ``streamlit run app_v2.py`` (needs ``pip install "langchain>=1.0"
-       langgraph langgraph-checkpoint-sqlite jupyter-client ipykernel``
-       alongside fusemap)
+     - ``streamlit run app_v2.py`` in a separate controller environment;
+       see the Agent v2 setup below
 
-Try it in Colab (zero install)
+Classic Agent notebook
 --------------------------------------------------------------------------------
 
-The fastest way to try the agent — no GPU, nothing to install:
-open the `Colab notebook <https://colab.research.google.com/github/wanglab-broad/FuseMap/blob/main/docs/notebooks/agent_colab.ipynb>`__,
-paste your OpenAI API key (Tavily key optional, enables literature search), and chat.
+Open the `Colab notebook <https://colab.research.google.com/github/wanglab-broad/FuseMap/blob/main/docs/notebooks/agent_colab.ipynb>`__
+with a supported Python 3.9–3.11 runtime, install the classic dependencies, and
+prepare the atlas files before entering your keys. Atlas exploration needs enough
+RAM for the reference; integration and mapping need suitable compute resources.
 
 .. toctree::
    :hidden:
@@ -87,7 +87,7 @@ Setup
        cd FuseMap
        conda create -n fusemap python=3.10.16
        conda activate fusemap
-       pip install fusemap
+       python -m pip install ".[agent]"
 
 2. Download the required data:
 
@@ -114,6 +114,31 @@ Setup
        streamlit run app.py
 
    Then open the ``localhost`` URL shown in the terminal.
+
+Agent v2 setup
+--------------------------------------------------------------------------------
+
+Use a **separate controller environment** for LangChain 1.x. The pinned classic
+LangChain 0.3 dependencies remain in the scientific environment. From the
+repository root:
+
+.. code-block:: bash
+
+    conda create -n fusemap python=3.10
+    conda activate fusemap
+    python -m pip install . ipykernel
+    python -m ipykernel install --user --name fusemap-kernel --display-name "FuseMap"
+
+    conda create -n fusemap-agent-v2 python=3.11
+    conda activate fusemap-agent-v2
+    python -m pip install -r requirements-agent-v2.txt
+    jupyter kernelspec list
+    streamlit run app_v2.py
+
+The controller does not need ``pip install fusemap`` or ``requirements.txt``.
+Both environments must be available on the same machine under the same user.
+Set ``FUSEMAP_KERNEL_NAME`` to use another registered scientific kernel.
+Atlas data and model downloads are the same as for the classic interface.
 
 API keys
 --------------------------------------------------------------------------------

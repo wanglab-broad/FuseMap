@@ -46,8 +46,9 @@ Command-line arguments
 Model hyperparameters
 --------------------------------------------------------------------------------
 
-Set in :class:`fusemap.config.ModelType`. These are the values used for all
-results in the paper; we recommend leaving them unchanged.
+Set in :class:`fusemap.config.ModelType`. These are the current software defaults.
+For exact paper reproduction, use the frozen archive and the corresponding
+analysis configuration described in :doc:`../release_notes`.
 
 .. list-table::
    :header-rows: 1
@@ -88,8 +89,8 @@ Cross-sample anchor alignment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Improves mixing across technologies and conditions via mutual-nearest-neighbor
-anchors, gated per sample pair so that dissimilar populations are never forced
-together.
+anchors, gated per sample pair to reduce alignment of dissimilar populations.
+This gate does not guarantee preservation of every rare population.
 
 .. list-table::
    :header-rows: 1
@@ -101,7 +102,8 @@ together.
    * - ``FUSEMAP_ANCHOR_LAMBDA``
      - ``0.3``
      - Weight of the anchor alignment loss.
-       **Set to** ``0`` **to reproduce the original FuseMap behavior exactly.**
+       Set to ``0`` to disable the added anchor loss. Exact reproduction also
+       depends on the code snapshot, preprocessing, seed, and runtime.
    * - ``FUSEMAP_ANCHOR_START``
      - ``2``
      - First epoch (of the final phase) at which anchors are used.

@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.abspath('../../fusemap'))
 project = 'FuseMap'
 copyright = '2026, Yichun He'
 author = 'Yichun He'
-release = '1.1'
+release = '1.1.3'
 
 # -- General configuration ---------------------------------------------------
 
@@ -46,6 +46,8 @@ intersphinx_mapping = {
     "scanpy": ("https://scanpy.readthedocs.io/en/stable/", None),
     "anndata": ("https://anndata.readthedocs.io/en/stable/", None),
 }
+if os.environ.get("FUSEMAP_DOCS_OFFLINE") == "1":
+    intersphinx_mapping = {}
 
 # todo configuration
 todo_include_todos = True
@@ -64,7 +66,7 @@ nbsphinx_thumbnails = {
     'notebooks/9_embryo_cross_resolution': '_static/thumbs/tut9.png',
 }
 
-templates_path = ['_templates']
+templates_path = []
 source_suffix = ".rst"
 master_doc = "index"
 pygments_style = "sphinx"

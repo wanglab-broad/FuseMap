@@ -1,7 +1,7 @@
 """Persistent Jupyter kernel session for the FuseMap Agent (CodeAct executor).
 
-The agent harness (modern LangChain env) drives a kernel running in the PINNED
-scientific environment (FuseMap_952261_env), so the agent writes code against
+The agent harness (modern LangChain env) drives a registered kernel running in the
+FuseMap scientific environment, so the agent writes code against
 the exact scanpy/torch/dgl stack the pipelines were validated on. Variables
 persist across turns; the kernel boots with the FuseMap arsenal pre-imported
 (one-call API, molCCF paths, atlas lazy-loaders).
@@ -19,7 +19,6 @@ import re
 import time
 from pathlib import Path
 
-FUSEMAP_PY = "/ewsc/yhe/miniconda3/envs/FuseMap_952261_env/bin/python"
 REPO = str(Path(__file__).resolve().parents[2])
 MOLCCF_DIR = os.path.join(REPO, "molCCF")
 ATLAS_DIR = os.path.join(REPO, "agent_setup", "atlas_data")
@@ -84,14 +83,17 @@ class KernelSession:
         self.artifacts.mkdir(parents=True, exist_ok=True)
         self._counter = 0
 
-        self.km = KernelManager(kernel_name="fusemap-kernel")
+        self.km = KernelManager(kernel_name=os.environ.get("FUSEMAP_KERNEL_NAME", "fusemap-kernel"))
         self.km.start_kernel(cwd=str(self.workdir))
         self.kc = self.km.client()
         self.kc.start_channels()
         self.kc.wait_for_ready(timeout=120)
         boot = _BOOTSTRAP.format(repo=REPO, workdir=str(self.workdir),
                                  molccf=MOLCCF_DIR, atlas=ATLAS_DIR)
-        self.execute(boot, timeout=300)
+        result = self.execute(boot, timeout=300)
+        if result["error"]:
+            self.shutdown()
+            raise RuntimeError("FuseMap kernel initialization failed:\n" + result["error"])
 
     def execute(self, code, timeout=1800):
         """Run a code block; return dict(text, images, error, artifact)."""

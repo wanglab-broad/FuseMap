@@ -160,6 +160,7 @@ def build_agent(llm, checkpoint_db=None):
         import sqlite3
         from langgraph.checkpoint.sqlite import SqliteSaver
         db = checkpoint_db or str(V2_DIR / "workspace" / "checkpoints.sqlite")
+        Path(db).parent.mkdir(parents=True, exist_ok=True)
         conn = sqlite3.connect(db, check_same_thread=False)
         checkpointer = SqliteSaver(conn)
     except Exception:

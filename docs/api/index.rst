@@ -18,6 +18,11 @@ High-level entry points (also exposed through ``main.py``).
    :toctree: generated/
    :nosignatures:
 
+   integrate
+   map_to_reference
+   deconvolve_beads
+   transfer_labels
+   read_input_folder
    training.integrate.spatial_integrate
    training.map.spatial_map
 

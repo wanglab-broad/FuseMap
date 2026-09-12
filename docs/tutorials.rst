@@ -3,11 +3,12 @@
 Tutorials
 ================================================================================
 
-Explanatory notebooks organized by FuseMap's core capabilities. Every tutorial follows the
-same three steps: **download the data** (one cell) → **run FuseMap** (one function call) →
-**analyze the results**. Tutorials that need long training ship precomputed outputs so you
-can skip straight to the analysis. Every notebook opens directly in **Google Colab**
-(badge at the top of each page) — free GPU, nothing to install.
+Explanatory notebooks organized by FuseMap's core capabilities. Integration and mapping
+examples cover data preparation, running FuseMap, and analysis. Tutorials 3, 10, and 11
+reuse Tutorial 2's outputs; precomputed outputs are available for Tutorials 2, 7, and 9.
+Tutorial 12 requires data available upon request. Colab links are provided, but the
+runtime must support Python 3.9–3.11 and have enough memory for the selected dataset.
+See :doc:`install` for local setup and :doc:`data` for download requirements.
 
 .. seealso::
 
@@ -56,6 +57,7 @@ such as molCCF; for small custom references, consider integrating jointly instea
 
     Map to a customized pretrained model <notebooks/4_map_new_dataset_customized>
     Map to the molCCF mouse brain atlas <notebooks/5_map_new_dataset_molCCF>
+    Cross-species: map marmoset onto the mouse molCCF <notebooks/12_cross_species_marmoset>
 
 Downstream analysis
 --------------------------------------------------------------------------------
@@ -63,3 +65,5 @@ Downstream analysis
 .. nbgallery::
 
     Infer cell-cell communication <notebooks/6_cell_to_cell_interaction>
+    Discover finer subregions and microenvironment cell states <notebooks/11_subregion_discovery>
+    Design a targeted gene panel from the gene embedding <notebooks/10_gene_panel_selection>

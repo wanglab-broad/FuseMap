@@ -5,10 +5,11 @@ with open('README.md','r') as f:
 
 setup(
     name='fusemap',
-    version='1.1.2',
+    version='1.1.3',
     packages=find_packages(include=['fusemap', 'fusemap.*']),
     install_requires=[
         'scanpy==1.9.3',
+        'anndata>=0.9,<0.12',
         'torch==2.0.1',
         'dgl==1.1.1',
         'sparse==0.14.0',
@@ -32,6 +33,10 @@ setup(
         "numpy>=1.26,<2",
         "gdown"
     ],
+    extras_require={
+        'tutorials': ['ipykernel', 'scikit-misc>=0.3,<0.6'],
+        'agent': ['tavily-python>=0.7,<1', 'duckduckgo-search>=6,<9'],
+    },
     python_requires=">=3.9,<3.12",
     long_description=description,
     long_description_content_type='text/markdown',

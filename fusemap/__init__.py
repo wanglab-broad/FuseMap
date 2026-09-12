@@ -1,3 +1,5 @@
+__version__ = "1.1.3"
+
 from fusemap.training.integrate import *
 from fusemap.training.map import *
 from fusemap.logger import *

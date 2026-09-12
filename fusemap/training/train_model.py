@@ -1356,6 +1356,7 @@ def map_model(
     dataloader_pretrain_spatial,
     TRAINED_X_NUM,
     flagconfig,
+    dist_hooks=None,
 ):
     loss_atlas_val_best = float("inf")
     patience_counter = 0

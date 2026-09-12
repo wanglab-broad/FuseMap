@@ -8,3 +8,7 @@ __pycache__/
 *.pyc
 agent_setup/atlas_data/ad_cell.h5ad
 fusemap.egg-info/
+build/
+dist/
+.pytest_cache/
+agent_setup/v2/workspace/

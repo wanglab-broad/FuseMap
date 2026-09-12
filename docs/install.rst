@@ -22,6 +22,26 @@ Installation is quick and performed using ``pip`` in the usual manner:
     wheels are not available for 3.12+). A GPU is necessary for accelerating computations.
     Estimated time is 10 mins for integrating 200,000 cells with a single GPU.
 
+Installing from a checkout
+--------------------------------------------------------------------------------
+
+For the version in this repository (including unreleased fixes):
+
+.. code-block:: bash
+
+    git clone https://github.com/wanglab-broad/FuseMap.git
+    cd FuseMap
+    python -m pip install .
+
+Install notebook dependencies with ``python -m pip install ".[tutorials]"``.
+``requirements.txt`` installs the same checkout using the dependencies in
+``setup.py``. ``fusemap_environment.yaml`` is a historical Python 3.7 environment
+and is not the installation specification for this release.
+
+The wheel provides the Python API. ``main.py``, the Agent interfaces, and the
+notebooks are used from the repository checkout. See :doc:`agent/index` for
+classic Agent dependencies and the separate Agent v2 environment.
+
 Downloading the pretrained models
 --------------------------------------------------------------------------------
 

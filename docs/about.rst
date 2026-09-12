@@ -19,6 +19,7 @@ Authors
 How to Cite
 --------------------------------------------------------------------------------
 
-To cite FuseMap in publications please use:
+Current manuscript: *An agentic AI spatial molecular foundation model of the brain*.
+The earlier public preprint is:
 
 Towards a universal spatial molecular atlas of the mouse brain. bioRxiv. `https://doi.org/10.1101/2024.05.27.594872 <https://doi.org/10.1101/2024.05.27.594872>`__

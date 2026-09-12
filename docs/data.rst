@@ -3,10 +3,11 @@
 Example data
 ================================================================================
 
-All tutorial datasets are hosted in one public
+Public tutorial datasets are indexed in the
 `Google Drive folder <https://drive.google.com/drive/folders/1nMWUzIcmzd4BQztUenwPJdL9zh2gj2Dd>`__.
-**You normally never download anything manually** — the first cell of every tutorial fetches
-exactly the files it needs. This page is the reference index of what is available.
+Download instructions are provided in each tutorial; Tutorials 3, 10, and 11 reuse
+Tutorial 2's data and outputs. **Tutorial 12 requires marmoset data obtained from
+the corresponding authors upon reasonable request**, as stated in the manuscript.
 
 Tutorial datasets
 --------------------------------------------------------------------------------
@@ -75,10 +76,19 @@ Tutorial datasets
      - 9
      - `10x Genomics <https://www.10xgenomics.com/datasets>`__
      - `Mouse_embryo_square_016um.h5ad <https://drive.google.com/uc?id=1gNJqse6LA4fwfDp_qwd4_be-rsrlvzI1>`__
+   * - ``marmoset_striatum.h5ad``
+     - STARmap
+     - marmoset (*Callithrix jacchus*) forebrain/striatum
+     - 12
+     - this study, Extended Data Fig. 9
+     - Available from the corresponding authors upon reasonable request; place at
+       ``tutorial12_data/marmoset_striatum.h5ad``.
 
 
-Tutorial 3 uses Tutorial 2's output (run Tutorial 2 first, or fetch its precomputed
-outputs). Tutorial 6 uses precomputed cell-contact source data (``tutorial6/`` in the Drive folder).
+Tutorials 3, 10, and 11 use Tutorial 2's output — its universal **gene embedding**
+(Tutorial 10) and joint **cell/tissue embeddings** (Tutorial 11) — so run Tutorial 2
+first, or fetch its precomputed outputs. Tutorial 6 uses precomputed cell-contact source
+data (``tutorial6/`` in the Drive folder).
 
 Precomputed outputs (skip training)
 --------------------------------------------------------------------------------
@@ -115,8 +125,9 @@ Pretrained models
      - Description
      - Download
    * - **molCCF**
-     - Universal mouse brain atlas model (13.8M cells; reference for Tutorial 5
-       and the FuseMap Agent)
+     - Pretrained reference for Tutorials 5 and 12 and the FuseMap Agent. The paper
+       reports 18.6M cells/spots across the full seven-atlas corpus; individual
+       downloadable reference assets may cover a subset.
      - `Google Drive folder <https://drive.google.com/drive/folders/1auybpmekWuW_G-7YPloJr-B96qiT1nFS>`__
    * - molCCF atlas data (Agent)
      - Region/cell-type lookups and atlas assets used by the FuseMap Agent

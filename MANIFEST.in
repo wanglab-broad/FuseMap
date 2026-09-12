@@ -1,0 +1,3 @@
+include README.md LICENSE CHANGELOG.md RELEASE_VALIDATION.md pyproject.toml
+include requirements.txt requirements-agent-v2.txt
+recursive-include tests *.py

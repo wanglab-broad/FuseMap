@@ -46,14 +46,16 @@ Each file must satisfy:
 2. Run the integration
 --------------------------------------------------------------------------------
 
-.. code-block:: bash
+.. code-block:: python
 
-    python main.py \
-        --input_data_folder_path ./data/ \
-        --output_save_dir ./output/ \
-        --mode integrate \
-        --keep_celltype celltype_anno \
-        --keep_tissueregion tissueregion_anno
+    import fusemap
+
+    fusemap.integrate("./data", "./output",
+                      keep_celltype="celltype_anno",
+                      keep_tissueregion="tissueregion_anno")
+
+Omit the two ``keep_*`` arguments if the input has no annotations.
+The CLI, ``python main.py --mode integrate ...``, is available from a repository checkout.
 
 .. note::
 
@@ -131,5 +133,5 @@ Next steps
 
 - :doc:`tutorials` — cross-technology integration, imputation, mapping to molCCF.
 - :doc:`userguide/parameters` — what you can tune (and what you should not).
-- :doc:`api/index` — call :func:`fusemap.spatial_integrate.spatial_integrate`
+- :doc:`api/index` — call :func:`fusemap.integrate`
   directly from Python.

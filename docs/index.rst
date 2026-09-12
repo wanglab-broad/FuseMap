@@ -72,11 +72,12 @@ Organize your sections as ``.h5ad`` files (spatial coordinates in
     conda create -n fusemap python=3.10.16 && conda activate fusemap
     pip install fusemap
 
-    # integrate all sections in ./data/ into shared embeddings
-    python main.py \
-        --input_data_folder_path ./data/ \
-        --output_save_dir ./output/ \
-        --mode integrate
+Then run in Python:
+
+.. code-block:: python
+
+    import fusemap
+    fusemap.integrate("./data", "./output")
 
 You get three AnnData files —
 ``ad_celltype_embedding.h5ad`` (cell embedding :math:`Z_c`),
@@ -90,7 +91,8 @@ See :doc:`getting_started` for a full walk-through.
 Citation
 ------------------------------------------
 
-If FuseMap is useful for your research, please cite:
+Current manuscript: *An agentic AI spatial molecular foundation model of the brain*.
+For the earlier public preprint, cite:
 
     He Y. et al. *Towards a universal spatial molecular atlas of the mouse brain.*
     bioRxiv (2024). `doi:10.1101/2024.05.27.594872 <https://doi.org/10.1101/2024.05.27.594872>`__
@@ -107,4 +109,5 @@ If FuseMap is useful for your research, please cite:
     Parameters <userguide/parameters>
     API reference <api/index>
     FuseMap Agent <agent/index>
+    Software and manuscript versions <release_notes>
     About <about>
