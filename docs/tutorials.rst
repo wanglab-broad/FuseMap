@@ -6,8 +6,9 @@ Tutorials
 Explanatory notebooks organized by FuseMap's core capabilities. Integration and mapping
 examples cover data preparation, running FuseMap, and analysis. Tutorials 3.1, 3.3, and 3.4
 reuse Tutorial 1.2's outputs; precomputed outputs are available for Tutorials 1.2, 1.3,
-and 1.4. Tutorial 2.3 requires data available upon request. Colab links are provided, but the
-runtime must support Python 3.9–3.11 and have enough memory for the selected dataset.
+and 1.4. Tutorial 2.3 requires data available upon request. The Colab setup cells prepare
+Python 3.11 when needed and restart the session; reconnect and rerun the setup cell
+before continuing. The runtime must have enough memory for the selected dataset.
 See :doc:`install` for local setup and :doc:`data` for download requirements.
 
 .. seealso::

@@ -67,7 +67,8 @@ Classic Agent notebook
 --------------------------------------------------------------------------------
 
 Open the `Colab notebook <https://colab.research.google.com/github/wanglab-broad/FuseMap/blob/main/docs/notebooks/agent_colab.ipynb>`__
-with a supported Python 3.9–3.11 runtime, install the classic dependencies, and
+and run its Python setup cells first (newer Colab runtimes switch to Python 3.11
+and reconnect), install the classic dependencies, and
 prepare the atlas files before entering your keys. Atlas exploration needs enough
 RAM for the reference; integration and mapping need suitable compute resources.
 
