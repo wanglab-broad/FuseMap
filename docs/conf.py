@@ -55,15 +55,19 @@ todo_include_todos = True
 # nbsphinx configuration: never execute notebooks at build time
 nbsphinx_execute = "never"
 
+# Editorial artwork for every tutorial; notebook result figures stay in the notebooks.
 nbsphinx_thumbnails = {
-    'notebooks/1_spatial_integration_imaging': '_static/thumbs/tut1.png',
-    'notebooks/2_spatial_integration_cross_tech': '_static/thumbs/tut2.png',
-    'notebooks/3_gene_spatial_imputation': '_static/thumbs/tut3.png',
-    'notebooks/4_map_new_dataset_customized': '_static/thumbs/tut4.png',
-    'notebooks/5_map_new_dataset_molCCF': '_static/thumbs/tut5.png',
-    'notebooks/6_cell_to_cell_interaction': '_static/thumbs/tut6.png',
-    'notebooks/7_cross_condition_integration': '_static/thumbs/tut7.png',
-    'notebooks/9_embryo_cross_resolution': '_static/thumbs/tut9.png',
+    'notebooks/1_spatial_integration_imaging': '_static/thumbs/art/1_spatial_integration_imaging.webp',
+    'notebooks/2_spatial_integration_cross_tech': '_static/thumbs/art/2_spatial_integration_cross_tech.webp',
+    'notebooks/7_cross_condition_integration': '_static/thumbs/art/7_cross_condition_integration.webp',
+    'notebooks/9_embryo_cross_resolution': '_static/thumbs/art/9_embryo_cross_resolution.webp',
+    'notebooks/4_map_new_dataset_customized': '_static/thumbs/art/4_map_new_dataset_customized.webp',
+    'notebooks/5_map_new_dataset_molCCF': '_static/thumbs/art/5_map_new_dataset_molCCF.webp',
+    'notebooks/12_cross_species_marmoset': '_static/thumbs/art/12_cross_species_marmoset.webp',
+    'notebooks/3_gene_spatial_imputation': '_static/thumbs/art/3_gene_spatial_imputation.webp',
+    'notebooks/6_cell_to_cell_interaction': '_static/thumbs/art/6_cell_to_cell_interaction.webp',
+    'notebooks/11_subregion_discovery': '_static/thumbs/art/11_subregion_discovery.webp',
+    'notebooks/10_gene_panel_selection': '_static/thumbs/art/10_gene_panel_selection.webp',
 }
 
 templates_path = []

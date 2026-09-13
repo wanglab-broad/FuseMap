@@ -30,3 +30,36 @@
 table.docutils td, table.docutils th {
     padding: 6px 10px;
 }
+
+/* Tutorial artwork: preserve the full 3:2 illustration at every card width. */
+.nbsphinx-gallery {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: 16px;
+}
+.nbsphinx-gallery > a {
+    overflow: hidden;
+    padding: 0 0 14px;
+    border: 1px solid rgba(23, 118, 124, .22);
+    border-radius: 10px;
+    text-decoration: none;
+}
+.nbsphinx-gallery > a:hover,
+.nbsphinx-gallery > a:focus-visible {
+    border-color: #17767c;
+    box-shadow: 0 4px 14px rgba(23, 118, 124, .16);
+}
+.nbsphinx-gallery > a > div:first-child {
+    height: auto;
+    aspect-ratio: 3 / 2;
+    margin-bottom: 12px;
+    background: #f6f3eb;
+}
+.nbsphinx-gallery img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.nbsphinx-gallery > a > div:last-child {
+    padding: 0 12px;
+}
