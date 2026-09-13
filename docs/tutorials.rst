@@ -32,18 +32,6 @@ shared embedding, and cell types / tissue regions can be **redefined de novo** f
     Integrate across conditions (healthy × disease) <notebooks/7_cross_condition_integration>
     Beyond the brain: whole-embryo cross-resolution integration <notebooks/9_embryo_cross_resolution>
 
-Impute transcriptome-wide expression
---------------------------------------------------------------------------------
-
-The universal **gene embedding** ties every panel to a shared gene space,
-letting FuseMap impute genes that were never measured in a section — here, imputing
-genes unmeasured in the STARmap panel from the sequencing-based datasets integrated
-in the tutorial above.
-
-.. nbgallery::
-
-    Spatially impute transcriptome-wide genes <notebooks/3_gene_spatial_imputation>
-
 Map new data to a reference
 --------------------------------------------------------------------------------
 
@@ -62,8 +50,17 @@ such as molCCF; for small custom references, consider integrating jointly instea
 Downstream analysis
 --------------------------------------------------------------------------------
 
+Everything here runs on embeddings a FuseMap run has already produced. The universal
+**gene embedding** ties every panel to a shared gene space — so FuseMap can impute genes
+that were never measured in a section (below, genes absent from the STARmap panel are
+imputed from the sequencing-based datasets integrated in **Tutorial 2**), and, because
+the embedding groups genes by function, it can also guide the design of a compact
+targeted panel. The **cell** and **tissue** embeddings drive spatial interaction analysis
+and reveal structure finer than any single annotation.
+
 .. nbgallery::
 
+    Spatially impute transcriptome-wide genes <notebooks/3_gene_spatial_imputation>
     Infer cell-cell communication <notebooks/6_cell_to_cell_interaction>
     Discover finer subregions and microenvironment cell states <notebooks/11_subregion_discovery>
     Design a targeted gene panel from the gene embedding <notebooks/10_gene_panel_selection>
