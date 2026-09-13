@@ -7,3 +7,5 @@ Generated on 2026-09-13 through the Harvard HUIT Responses API with `gpt-6-astra
 Each master was generated at 1536 × 1024 pixels, visually reviewed, then resized with Pillow Lanczos to a 900 × 600 WebP (quality 90, method 6). `manifest.json` records the tutorial mapping, concepts, submitted and tool-revised prompts, and web asset SHA-256 hashes.
 
 `docs/conf.py` explicitly assigns each cover to its notebook. Card titles provide accessible link names; the accompanying images are decorative. Scientific result figures remain in the notebooks. The `-cellular` filenames distinguish this revision from the previous covers in browser caches.
+
+The previous unversioned filenames are retained as byte-identical copies of the current illustrations. Cached gallery HTML can continue to request these paths after deployment. Keep previously published image paths available when replacing gallery artwork.
