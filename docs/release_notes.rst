@@ -2,7 +2,7 @@ Software and manuscript versions
 ================================================================================
 
 This checkout is FuseMap **1.1.3**. It fixes reference-mapping validation after
-the DDP refactor, completes Tutorials 10–12, and documents a separate environment
+the DDP refactor, completes three new tutorials (2.3, 3.3 and 3.4), and documents a separate environment
 for Agent v2. See the repository's ``CHANGELOG.md`` for release and validation details.
 
 Manuscript workflows
@@ -21,11 +21,11 @@ Disabling anchors removes that loss; it alone does not establish equivalence
 with every historical analysis. Stage-B proportions are approximate, as discussed
 in the manuscript; they are not calibrated cell counts.
 
-Tutorial 10 illustrates module-balanced panel selection using **Leiden** gene
-modules; the paper uses **WGCNA**. Tutorial 11 illustrates within-region and
+Tutorial 3.4 illustrates module-balanced panel selection using **Leiden** gene
+modules; the paper uses **WGCNA**. Tutorial 3.3 illustrates within-region and
 within-cell-type clustering on a small example, with imputed markers as supporting
 model evidence. Reproducing the 146-region atlas also requires the paper's
-cross-section, cross-platform and anatomical validation. Tutorial 12 demonstrates
+cross-section, cross-platform and anatomical validation. Tutorial 2.3 demonstrates
 symbol-matched transfer to marmoset with data available upon request; its exploratory
 clustering and label granularity differ from Extended Data Fig. 9.
 

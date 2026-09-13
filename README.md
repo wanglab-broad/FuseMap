@@ -67,7 +67,7 @@ Agent v2 uses a separate environment and a registered scientific kernel; follow
 - Read the FuseMap tutorial [here](https://fusemap.readthedocs.io/en/latest/).
 - FuseMap-Agent set up tutorial [here](https://github.com/wanglab-broad/FuseMap/tree/main/agent_setup).
 
-### Tutorials 10–12
+### Recently added tutorials
 
 These notebooks are included in the repository and linked from the
 [tutorial index](https://fusemap.readthedocs.io/en/latest/tutorials.html).
@@ -75,9 +75,9 @@ You can also open them directly on GitHub:
 
 | Tutorial | Notebook | Prerequisite |
 |---|---|---|
-| 10 | [Targeted gene panel selection](docs/notebooks/10_gene_panel_selection.ipynb) | Tutorial 2 data and gene embedding; uses Leiden modules as a teaching adaptation of the paper's WGCNA workflow |
-| 11 | [Subregion discovery and spatially associated cell states](docs/notebooks/11_subregion_discovery.ipynb) | Tutorial 2 cell, tissue, and gene embeddings |
-| 12 | [Cross-species mapping: marmoset to mouse molCCF](docs/notebooks/12_cross_species_marmoset.ipynb) | molCCF reference; marmoset data available from the corresponding authors upon reasonable request |
+| 2.3 | [Cross-species mapping: marmoset to mouse molCCF](docs/notebooks/12_cross_species_marmoset.ipynb) | molCCF reference; marmoset data available from the corresponding authors upon reasonable request |
+| 3.3 | [Subregion discovery and spatially associated cell states](docs/notebooks/11_subregion_discovery.ipynb) | Tutorial 1.2 cell, tissue, and gene embeddings |
+| 3.4 | [Targeted gene panel selection](docs/notebooks/10_gene_panel_selection.ipynb) | Tutorial 1.2 data and gene embedding; uses Leiden modules as a teaching adaptation of the paper's WGCNA workflow |
 
 
 ## Citation
