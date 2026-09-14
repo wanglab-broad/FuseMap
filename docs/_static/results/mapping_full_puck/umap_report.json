@@ -1,0 +1,75 @@
+{
+  "settings": {
+    "input_sha256": {
+      "reference/ad_celltype_embedding.h5ad": "cfc79d5119423c91354ec151e8a305fee803d75326114b449b9a07b3ecebd809",
+      "reference/ad_tissueregion_embedding.h5ad": "e1e0ef71fe508faae66c4bef75dbf7e2ed0c537ef68de245d2954bc092dbf9f2",
+      "query/ad_celltype_embedding.h5ad": "e951846afa86a1fca8f8f25eef0be6956ad307734c234971879ce488d47f1c7e",
+      "query/ad_tissueregion_embedding.h5ad": "89c44ce346f642a0aec288f30fc273dde19e3f1cd0dda4527aed8fcebd0e235a"
+    },
+    "cell_label": "gt_cell_type_main",
+    "region_label": "gt_tissue_region_main",
+    "seed": 0,
+    "label_epochs": 200,
+    "n_neighbors": 50,
+    "min_dist": 0.5,
+    "metric": "euclidean",
+    "use_rep": "X",
+    "observations": "all"
+  },
+  "counts": {
+    "reference": 88295,
+    "query": 54787
+  },
+  "cell_identity_classifier": {
+    "reference_labeled": 38693,
+    "held_out_reference_balanced_accuracy": 0.7123542945883278,
+    "query_counts": {
+      "Telencephalon projecting excitatory neurons": 11752,
+      "Glutamatergic neuroblasts": 8501,
+      "Astrocytes": 6145,
+      "Oligodendrocytes": 3803,
+      "Di- and mesencephalon excitatory neurons": 3725,
+      "Vascular and leptomeningeal cells": 3159,
+      "Dentate gyrus granule neurons": 2477,
+      "Microglia": 2434,
+      "Hindbrain neurons": 2342,
+      "Di- and mesencephalon inhibitory neurons": 2060,
+      "Choroid epithelial cells": 1997,
+      "Telencephalon inhibitory interneurons": 1831,
+      "Telencephalon projecting inhibitory neurons": 1470,
+      "Peptidergic neurons": 825,
+      "Oligodendrocyte precursor cells": 741,
+      "Vascular smooth muscle cells": 670,
+      "Ependymal cells": 534,
+      "Olfactory inhibitory neurons": 321
+    }
+  },
+  "region_identity_classifier": {
+    "reference_labeled": 43341,
+    "held_out_reference_balanced_accuracy": 0.907789764607298,
+    "query_counts": {
+      "CTX_1": 15572,
+      "DG": 6877,
+      "Hbl_VS": 5687,
+      "CTX_2": 4858,
+      "TH": 4809,
+      "HPF_CA": 4426,
+      "LSX_HY_MB_HB": 4117,
+      "OB_1": 3084,
+      "L1_HPFmo_Mngs": 1855,
+      "FbTrt": 1798,
+      "STR": 1704
+    }
+  },
+  "reference_labels": "observed when present; otherwise predicted",
+  "query_labels": "predicted",
+  "note": "Separate joint UMAP per embedding; same coordinates for every coloring of that embedding",
+  "mapping": {
+    "fusemap_version": "1.2.0",
+    "reference_frozen": true,
+    "query_neural_mapping": "Reused existing complete mapping matched to the pretrained reference",
+    "stage_b": "Applied to all 54787 query beads with fixed reference signatures",
+    "archetypes": 40,
+    "shared_genes": 1471
+  }
+}
