@@ -60,6 +60,29 @@ import fusemap
 fusemap.integrate("./data", "./output")
 ```
 
+For bead mapping with deconvolution, install the 1.2.0 source release:
+
+```bash
+python -m pip install "fusemap[tutorials] @ git+https://github.com/wanglab-broad/FuseMap.git@v1.2.0"
+```
+
+```python
+fusemap.map_to_reference(
+    "./new_beads", "./mapped", "./reference_model",
+    bead_files="slideseq", sig_ref="merfish,starmap",
+    reference_data_folder_path="./reference_data",
+)
+```
+
+This trains query adaptation and fits bead mixtures against frozen reference
+archetypes without retraining the reference model. The original reference
+expression files are read once to build signatures. Subsequent queries can use
+`reference_signatures_path="./mapped/reference_signatures.npz"` instead of
+`reference_data_folder_path` and `sig_ref`. Mixtures are written to `stageB_pi.npz`;
+the original mapped embeddings are preserved as `_nodeconv`. See
+[Tutorial 2.1](docs/notebooks/4_map_new_dataset_customized.ipynb) for the readouts
+and their interpretation. Archetype weights are not calibrated cell counts.
+
 The classic Agent uses `python -m pip install ".[agent]"` from this repository.
 Agent v2 uses a separate environment and a registered scientific kernel; follow
 [the Agent setup instructions](agent_setup/README.md#agent-v2).

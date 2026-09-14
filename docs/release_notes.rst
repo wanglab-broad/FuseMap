@@ -1,9 +1,15 @@
 Software and manuscript versions
 ================================================================================
 
-This checkout is FuseMap **1.1.3**. It fixes reference-mapping validation after
-the DDP refactor, completes three new tutorials (2.3, 3.3 and 3.4), and documents a separate environment
-for Agent v2. See the repository's ``CHANGELOG.md`` for release and validation details.
+This checkout is FuseMap **1.2.0**. It adds bead deconvolution to reference mapping:
+query adaptation and mixture fitting reuse an unchanged pretrained reference.
+The mixture solver is shared with integration Stage-B. Reference expression
+signatures can be prepared once and reused without reloading reference expression
+data. See Tutorial 2.1 and the API reference for the new arguments and readouts.
+
+Tutorials 2.1 and 2.2 install the ``v1.2.0`` Git source tag to access this feature.
+Other tutorials retain their existing PyPI installation. See ``CHANGELOG.md``
+and ``RELEASE_VALIDATION.md`` for scope and validation.
 
 Manuscript workflows
 --------------------------------------------------------------------------------

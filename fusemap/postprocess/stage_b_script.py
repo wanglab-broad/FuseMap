@@ -393,80 +393,14 @@ def main():
             del num, den, S_np
 
         # ---------------------------------------------- Step 3: bead deconvolution
-        # x_b ~= beta (*) (pi_b @ S) + alpha ; pi_b = softmax(logits_b)
-        # loss = MSE(x, pred) + ENT_W * mean_entropy(pi)
-        # full-batch Adam(lr=0.05); gradient accumulated over bead chunks (exact
-        # full-batch gradient, memory-bounded). logits/beta/alpha are fit PER
-        # bead dataset (platform terms are per-dataset).
-        logits = torch.zeros(n_bead, K, device=DEV, requires_grad=True)
-        beta_init = float(torch.log(torch.expm1(torch.tensor(1.0))))     # softplus->1.0
-        alpha_init = float(torch.log(torch.expm1(torch.tensor(0.01))))   # softplus->0.01
-        beta_raw = torch.full((n_gene,), beta_init, device=DEV, requires_grad=True)
-        alpha_raw = torch.full((n_gene,), alpha_init, device=DEV, requires_grad=True)
-
-        opt = torch.optim.Adam([logits, beta_raw, alpha_raw], lr=0.05)
-
-        gene_mask = torch.from_numpy(gene_mask_np).to(DEV)  # [n_gene]
-        n_gene_used = int(gene_mask_np.sum())
-        log(f"[opt] {bf}: reconstruction loss over {n_gene_used}/{n_gene} genes "
-            f"({n_gene - n_gene_used} masked)")
-        N_ELEM = float(n_bead * n_gene_used)
-
-        prev_loss = None
-        mse = float("nan")
-        # pre-convert sparse chunks to dense GPU tensors ONCE (the per-step
-        # .toarray() conversion dominated runtime: ~40x slowdown)
-        dense_chunks = []
-        for st in range(0, n_bead, CHUNK):
-            en = min(st + CHUNK, n_bead)
-            dense_chunks.append(
-                torch.from_numpy(Xbead[st:en].toarray()).to(DEV)
-            )
-        for step in range(N_STEPS):
-            opt.zero_grad(set_to_none=True)
-            total_se = 0.0
-            total_ent = 0.0
-            for ci, st in enumerate(range(0, n_bead, CHUNK)):
-                en = min(st + CHUNK, n_bead)
-                # recompute per chunk so each chunk builds its own autograd graph;
-                # gradients into beta_raw/alpha_raw accumulate across chunks -> exact
-                # full-batch gradient
-                beta = torch.nn.functional.softplus(beta_raw)   # [n_gene]
-                alpha = torch.nn.functional.softplus(alpha_raw)  # [n_gene]
-                xb = dense_chunks[ci]  # [c, n_gene], preloaded on device
-                pi = torch.softmax(logits[st:en], dim=1)  # [c,K]
-                pred = beta * (pi @ S) + alpha            # [c,n_gene]
-                se = (((xb - pred) ** 2) * gene_mask).sum()
-                ent = (-(pi * torch.log(pi + eps)).sum(dim=1)).sum()
-                loss_chunk = se / N_ELEM + ENT_W * ent / n_bead
-                loss_chunk.backward()
-                total_se += se.item()
-                total_ent += ent.item()
-                del pred, pi
-            opt.step()
-            mse = total_se / N_ELEM
-            mean_ent = total_ent / n_bead
-            total_loss = mse + ENT_W * mean_ent
-            if step % 100 == 0 or step == N_STEPS - 1:
-                log(f"[opt] {bf}: step {step:4d}  loss={total_loss:.6f}  "
-                    f"mse={mse:.6f}  mean_entropy={mean_ent:.4f}")
-            if prev_loss is not None and abs(prev_loss - total_loss) < 1e-7 and step > 200:
-                log(f"[opt] {bf}: plateaued at step {step}")
-                break
-            prev_loss = total_loss
-
-        with torch.no_grad():
-            beta = torch.nn.functional.softplus(beta_raw)
-            alpha = torch.nn.functional.softplus(alpha_raw)
-            pi = torch.softmax(logits, dim=1)  # [n_bead,K]
-            pi_entropy = (-(pi * torch.log(pi + eps)).sum(dim=1)).mean().item()
-        log(f"[opt] {bf}: FINAL recon MSE={mse:.6f}  pi_mean_entropy={pi_entropy:.4f}")
-        log(f"[opt] {bf}: beta (per-gene mult): mean={beta.mean().item():.4f} "
-            f"min={beta.min().item():.4f} max={beta.max().item():.4f}")
-        log(f"[opt] {bf}: alpha (per-gene add):  mean={alpha.mean().item():.4f} "
-            f"min={alpha.min().item():.4f} max={alpha.max().item():.4f}")
-
-        pi_np = pi.detach().cpu().numpy().astype(np.float32)
+        # Shared with frozen-reference mapping: fixed signatures, query-only
+        # simplex weights and per-gene multiplicative/additive platform terms.
+        from fusemap.postprocess.mixtures import fit_mixtures
+        fit = fit_mixtures(Xbead, S.detach().cpu().numpy(), gene_mask_np,
+                           entropy_weight=ENT_W, n_steps=N_STEPS,
+                           chunk_size=CHUNK, device=DEV)
+        pi_np = fit["pi"]
+        log(f"[opt] {bf}: FINAL recon MSE={fit['reconstruction_mse'].mean():.6f}")
 
         # ---------------------------------------------- Step 4: rebuild embeddings
         Z_bead = pi_np @ C_used  # [n_bead, 64]
@@ -498,8 +432,8 @@ def main():
             gene_mask=gene_mask_np, var_index=np.asarray(var_index_b, dtype=np.int64),
             n_bead=n_bead, top_struct=top_struct)
 
-        del dense_chunks, logits, beta_raw, alpha_raw, beta, alpha, opt, S, gene_mask
-        del Xbead, ad_bead, ad_bead_raw, pi, G_bead, adjn
+        del fit, S
+        del Xbead, ad_bead, ad_bead_raw, G_bead, adjn
         torch.cuda.empty_cache()
 
     # -------------------------------------------------- Step 5: write outputs

@@ -1,5 +1,33 @@
 # Changelog
 
+## 1.2.0 — frozen-reference bead mapping, 2026-09-13
+
+`map_to_reference` now accepts declared bead datasets and performs Stage-B after
+query adaptation. The pretrained reference checkpoint and embeddings remain
+unchanged. Cell and tissue embeddings are rebuilt from bead mixtures over fixed
+reference archetypes; original mapped embeddings are preserved as `_nodeconv`.
+
+- Add `bead_files`, `sig_ref`, `reference_data_folder_path`,
+  `reference_signatures_path`, and `entropy_weight` to the mapping API. CLI mapping
+  uses the same API and accepts the reference-data/signature options.
+- Add `prepare_reference_signatures`: construct pooled expression signatures from
+  explicitly selected single-cell reference sections, aligning observations by ID
+  and genes by name. A saved artifact can be reused without reference raw files;
+  its checkpoint fingerprint prevents using it with a different trained model.
+- Share the Stage-B mixture solver between integration and mapping. Fit bead
+  weights plus per-gene platform terms with frozen signatures. Mask genes outside
+  the reference panel and bound GPU expression memory by chunking.
+- Save mixtures in `stageB_pi.npz` and mapping embeddings' `obsm['stageB_pi']`,
+  together with observation IDs, reconstruction errors and reference provenance.
+- Update Tutorial 2.1 to run bead deconvolution and explain mixture readouts.
+  Clear its earlier outputs, which predate this model path. Document the required
+  signature artifact for molCCF bead deconvolution in Tutorial 2.2.
+- Match the integration Stage-B objective, without claiming results identical to
+  joint retraining or interpreting archetype weights as calibrated cell counts.
+
+Validation is recorded in `RELEASE_VALIDATION.md`. The source tag is `v1.2.0`;
+creating source/build artifacts does not itself imply a PyPI upload.
+
 ## 1.1.3 — local release preparation, 2026-09-11
 
 Reference mapping could raise `NameError: dist_hooks is not defined` during

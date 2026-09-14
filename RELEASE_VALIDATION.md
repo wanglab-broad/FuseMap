@@ -1,4 +1,38 @@
-# FuseMap 1.1.3 release validation
+# FuseMap 1.2.0 validation
+
+Date: 2026-09-13. CPU validation in Python 3.10 with the existing FuseMap scientific
+environment. Tests verify implementation behavior; they do not establish biological
+composition accuracy or equivalence to joint retraining.
+
+| Check | Result |
+|---|---|
+| Source regression suite | 23 passed: existing mapping/Colab checks, numerical Stage-B equivalence, synthetic mixture recovery, reference/gene/observation alignment, multiple bead queries, cached signatures, immutable references, CLI, and integration Stage-B readouts |
+| Installed wheel | Same 23 tests passed with imports confirmed under `/tmp/fusemap-wheel-120`, outside the source checkout |
+| Package artifacts | Source distribution and wheel built successfully; `twine check` passed; all 26 packaged Python files match source byte for byte |
+| Notebooks | All 12 notebook schemas validated; 128 code cells compile after IPython syntax transformation |
+| Real-data mapping | 512 randomly sampled Slide-seq Puck60 beads, actual default query training, followed by Stage-B against the full saved MERFISH + STARmap reference (88,295 cells) |
+| Real-data outputs | 40 archetypes; 1,471 reference-covered query genes; finite nonnegative weights summing to one; canonical cell embedding equals `pi @ archetype_centers`; original mapping embedding preserved |
+| Reference preservation | All 20 files in the pretrained reference directory had identical SHA-256 hashes before and after the real-data run |
+| Real-data reconstruction | Mean MSE 0.410203 on the covered, preprocessed expression genes; a reconstruction diagnostic, not a composition accuracy metric |
+| Real-data runtime | Approximately 54 seconds with 4 CPU threads and `FUSEMAP_LOADER_WORKERS=0`; the latter avoids worker socket restrictions in the validation sandbox |
+| Documentation | Strict offline Sphinx HTML build (`-W --keep-going`) passed without warnings |
+
+The real-data report, hashes and reproduction script are saved locally under
+`/ewsc/yhe/FuseMap-revision3/mapping_deconvolution_validation_20260913/`.
+This is a real query subset validation, not a fresh execution of the full tutorial
+or a GPU validation. The source tag is `v1.2.0`; Tutorials 2.1 and 2.2 install this
+tag so the new API does not depend on a PyPI upload. PyPI publication is separate.
+
+Reproduce source checks with:
+
+```bash
+python -m pytest tests -q
+FUSEMAP_DOCS_OFFLINE=1 python -m sphinx -b html -W --keep-going docs docs/_build/html
+python -m build --no-isolation
+python -m twine check dist/fusemap-1.2.0*
+```
+
+# FuseMap 1.1.3 release validation (historical)
 
 Date: 2026-09-11. These checks apply to the local 1.1.3 working tree and builds.
 They do not certify a GitHub, PyPI, Read the Docs, or Zenodo deployment.

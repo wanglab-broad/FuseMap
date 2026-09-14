@@ -20,6 +20,7 @@ High-level entry points (also exposed through ``main.py``).
 
    integrate
    map_to_reference
+   prepare_reference_signatures
    deconvolve_beads
    transfer_labels
    read_input_folder
@@ -126,7 +127,37 @@ Utilities
 Post-processing scripts
 --------------------------------------------------------------------------------
 
-Two post-processing modules operate on a finished integration run
+Bead mapping can reuse frozen reference signatures without retraining the reference:
+
+.. code-block:: python
+
+    fusemap.map_to_reference(
+        "./new_beads", "./mapped", "./reference_model",
+        bead_files="slideseq",
+        sig_ref="merfish,starmap",
+        reference_data_folder_path="./reference_data",
+    )
+
+The first call prepares ``./mapped/reference_signatures.npz`` from the declared
+single-cell sections' saved embeddings and original expression data. Subsequent
+calls can use ``reference_signatures_path="./mapped/reference_signatures.npz"``
+instead of ``sig_ref`` and ``reference_data_folder_path``. The saved reference
+checkpoint and embeddings remain unchanged. Query adaptation still runs.
+Use :func:`fusemap.prepare_reference_signatures` to prepare this artifact separately.
+
+The mixture objective and spatial readout match integration Stage-B. Reference
+archetypes are fixed, so results need not equal a joint integration that retrains
+the reference and changes its embedding space. Select only single-cell sections
+as ``sig_ref``; in mapping these sections define both prototypes and signatures.
+Without ``bead_files``, mapping retains its ordinary embedding-only behavior.
+
+For each declared bead dataset, canonical embeddings contain ``obsm['stageB_pi']``
+and per-bead reconstruction errors. ``stageB_pi.npz`` also records observation IDs,
+gene coverage and the reference checkpoint fingerprint. Mixture weights describe
+reference archetypes; they are not calibrated cell counts. The expression panel's
+coverage and ability to distinguish archetypes limit composition inference.
+
+Two post-processing modules also operate on a finished integration run
 (see :doc:`../userguide/parameters` for their environment variables):
 
 ``fusemap.postprocess.stage_b_script``

@@ -5,7 +5,7 @@ with open('README.md','r') as f:
 
 setup(
     name='fusemap',
-    version='1.1.3',
+    version='1.2.0',
     packages=find_packages(include=['fusemap', 'fusemap.*']),
     install_requires=[
         'scanpy==1.9.3',

@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.abspath('../../fusemap'))
 project = 'FuseMap'
 copyright = '2026, Yichun He'
 author = 'Yichun He'
-release = '1.1.3'
+release = '1.2.0'
 
 # -- General configuration ---------------------------------------------------
 

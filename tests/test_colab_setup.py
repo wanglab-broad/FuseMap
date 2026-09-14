@@ -135,3 +135,12 @@ def test_all_colab_notebooks_provide_the_same_kernel_setup():
         assert not any(kind == "pip" for kind, _ in events)
         checked += 1
     assert checked == 12
+
+
+@pytest.mark.parametrize("name", ["4_map_new_dataset_customized", "5_map_new_dataset_molCCF"])
+def test_bead_mapping_tutorials_install_the_feature_source_release(name):
+    _, install = setup_cells(name)
+    namespace, events = environment((3, 11, 0))
+    exec(install, namespace)
+    commands = [value for kind, value in events if kind == "pip"]
+    assert "fusemap[tutorials] @ git+https://github.com/wanglab-broad/FuseMap.git@v1.2.0" in commands[0]

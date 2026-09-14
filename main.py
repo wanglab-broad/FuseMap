@@ -6,6 +6,18 @@ from pathlib import Path
 import copy
 
 def main(args):
+    if args.mode == "map":
+        # Use the same validation and optional frozen-reference Stage-B as Python.
+        from fusemap.api import map_to_reference
+        return map_to_reference(
+            args.input_data_folder_path, args.output_save_dir, args.pretrain_model_path,
+            keep_celltype=args.keep_celltype, keep_tissueregion=args.keep_tissueregion,
+            use_llm_gene_embedding=args.use_llm_gene_embedding,
+            bead_files=getattr(args, "bead_files", "") or None,
+            sig_ref=getattr(args, "sig_ref", "") or None,
+            reference_data_folder_path=getattr(args, "reference_data_folder_path", "") or None,
+            reference_signatures_path=getattr(args, "reference_signatures_path", "") or None,
+        )
     seed_all(0)
     ### set up logging
     Path(args.output_save_dir).mkdir(parents=True, exist_ok=True)
@@ -60,14 +72,6 @@ def main(args):
             logging.info("Bead datasets declared - running Stage-B deconvolution")
             deconvolve_beads(args.output_save_dir, args.input_data_folder_path,
                              args.bead_files, args.sig_ref)
-    elif args.mode == "map":
-        for i in range(len(X_input)):
-            args_i=copy.copy(args)
-            args_i.output_save_dir = args.output_save_dir + f"/{X_input[i].obs['file_name'].unique()[0]}/"
-            spatial_map(
-            [X_input[i]], args_i, [kneighbor[i]], [input_identity[i]]
-                        )   
-            
     else:
         raise ValueError(f"mode {args.mode} not recognized")
 

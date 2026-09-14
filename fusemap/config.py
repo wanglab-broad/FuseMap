@@ -43,13 +43,21 @@ def parse_input_args():
         "--bead_files",
         type=str,
         default="",
-        help="comma-separated substrings declaring bead/spot-resolution datasets; Stage-B runs automatically after integration",
+        help="comma-separated substrings declaring bead/spot-resolution datasets; Stage-B runs after integration or mapping",
     )
     parser.add_argument(
         "--sig_ref",
         type=str,
         default="",
         help="comma-separated substrings selecting single-cell signature reference dataset(s) for Stage-B",
+    )
+    parser.add_argument(
+        "--reference_data_folder_path", default="",
+        help="mapping Stage-B: original reference expression folder (with --sig_ref); does not retrain the reference",
+    )
+    parser.add_argument(
+        "--reference_signatures_path", default="",
+        help="mapping Stage-B: saved reference signatures, instead of original reference expression files",
     )
     args = parser.parse_args()
     return args

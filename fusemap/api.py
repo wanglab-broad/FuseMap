@@ -25,7 +25,8 @@ from fusemap.training.integrate import spatial_integrate
 from fusemap.training.map import spatial_map
 from fusemap.utils import seed_all
 
-__all__ = ["integrate", "map_to_reference", "deconvolve_beads", "transfer_labels", "read_input_folder"]
+__all__ = ["integrate", "map_to_reference", "deconvolve_beads", "prepare_reference_signatures",
+           "transfer_labels", "read_input_folder"]
 
 
 def read_input_folder(input_data_folder_path):
@@ -126,24 +127,120 @@ def integrate(input_data_folder_path, output_save_dir,
 
 def map_to_reference(input_data_folder_path, output_save_dir, pretrain_model_path,
                      keep_celltype="", keep_tissueregion="",
-                     use_llm_gene_embedding="false"):
+                     use_llm_gene_embedding="false", bead_files=None, sig_ref=None,
+                     reference_data_folder_path=None, reference_signatures_path=None,
+                     entropy_weight=5e-4):
     """Map each section in a folder onto a pretrained FuseMap model.
 
-    Equivalent to ``python main.py --mode map``. Results are written to one
-    subdirectory of ``output_save_dir`` per input file.
-    """
-    import copy as _copy
+    Results are written to one subdirectory of ``output_save_dir`` per input
+    file. The existing reference model and reference embeddings are never
+    retrained or overwritten; query adaptation is still trained.
 
+    Parameters
+    ----------
+    bead_files
+        Comma-separated filename substrings declaring query bead/spot datasets.
+        Each declared dataset receives Stage-B deconvolution after mapping,
+        using the same mixture objective as :func:`integrate`.
+        Other query datasets retain their ordinary mapped embeddings.
+    sig_ref
+        Comma-separated filename substrings declaring single-cell sections in
+        the PRETRAINED reference used for both archetypes and signatures.
+        Required with ``reference_data_folder_path``. Do not select bead sections.
+    reference_data_folder_path
+        Original reference expression files used during training. Read once to
+        build frozen signatures, without training the reference. The resulting
+        ``reference_signatures.npz`` is saved in ``output_save_dir`` for reuse.
+    reference_signatures_path
+        Previously prepared signatures, from :func:`prepare_reference_signatures`
+        or an earlier bead mapping run. Replaces the need for original reference
+        expression files. Must belong to ``pretrain_model_path``.
+    entropy_weight
+        Stage-B entropy penalty, as in integration (default ``5e-4``).
+
+    Notes
+    -----
+    Declared beads have canonical cell/tissue embeddings rebuilt from frozen
+    reference archetypes. Original mapped embeddings are retained as
+    ``ad_*_embedding_nodeconv.h5ad``. Mixtures are in ``stageB_pi.npz`` and
+    ``obsm['stageB_pi']`` of the canonical embeddings. These are archetype
+    weights, not calibrated cell counts or newly resolved individual cells.
+    """
+    from fusemap.postprocess.mapping import (
+        check_output_path, resolve_files, build_reference_signatures,
+        load_reference_signatures, save_npz, normalized_expression,
+        query_signatures, deconvolve_mapped_query,
+    )
+    import math
+
+    check_output_path(output_save_dir, pretrain_model_path)
+    if not math.isfinite(entropy_weight) or entropy_weight < 0:
+        raise ValueError("entropy_weight must be finite and nonnegative")
+    if not bead_files and (sig_ref or reference_data_folder_path or reference_signatures_path):
+        raise ValueError("Declare query bead_files to enable reference-based deconvolution")
+    if bead_files:
+        if reference_signatures_path and reference_data_folder_path:
+            raise ValueError("Provide reference_signatures_path OR reference_data_folder_path")
+        if not reference_signatures_path and not (reference_data_folder_path and sig_ref):
+            raise ValueError("bead_files requires reference_data_folder_path + sig_ref, or reference_signatures_path")
     seed_all(0)
     X_input = read_input_folder(input_data_folder_path)
+    files = [str(X.obs["file_name"].iloc[0]) for X in X_input]
+    for name in files:
+        check_output_path(Path(output_save_dir) / name, pretrain_model_path)
+    beads = resolve_files(bead_files, files, "bead_files") if bead_files else []
+    bundle, prepared = None, {}
+    if beads:
+        if reference_signatures_path:
+            bundle = load_reference_signatures(reference_signatures_path, pretrain_model_path, sig_ref)
+        else:
+            bundle = build_reference_signatures(pretrain_model_path, reference_data_folder_path, sig_ref)
+        # Validate all query panels before starting expensive mapping training.
+        for name, X in zip(files, X_input):
+            if name in beads:
+                prepared[name] = normalized_expression(X)
+                query_signatures(prepared[name], bundle)
+        save_npz(Path(output_save_dir) / "reference_signatures.npz", **bundle)
     for X in X_input:
+        name = str(X.obs["file_name"].iloc[0])
         args_i = _make_args(
-            os.path.join(str(output_save_dir), X.obs["file_name"].unique()[0]),
+            os.path.join(str(output_save_dir), name),
             keep_celltype, keep_tissueregion,
             use_llm_gene_embedding, pretrain_model_path,
         )
         setup_logging(args_i.output_save_dir)
         spatial_map([X], args_i, ["delaunay"], ["ST"])
+        if name in beads:
+            deconvolve_mapped_query(prepared.pop(name), args_i.output_save_dir,
+                                    bundle, entropy_weight=entropy_weight)
+
+
+def prepare_reference_signatures(pretrain_model_path, input_data_folder_path,
+                                 sig_ref, output_path, n_archetypes=40, min_cells=20):
+    """Save reusable Stage-B signatures without retraining the reference.
+
+    ``input_data_folder_path`` contains the original reference expression files.
+    ``sig_ref`` explicitly selects the single-cell sections whose saved cell
+    embeddings define the archetypes; bead sections must not be selected.
+    Gene signatures are pooled mean preprocessed expression per archetype.
+    Defaults match integration Stage-B: 40 clusters, retaining clusters with
+    at least 20 reference members. Save ``output_path`` outside the pretrained
+    directory, then pass it as ``reference_signatures_path`` to
+    :func:`map_to_reference`. A checkpoint fingerprint guards against using
+    signatures with a different reference model.
+
+    Returns
+    -------
+    str
+        Path to the saved NumPy archive (loadable with ``allow_pickle=False``).
+    """
+    from fusemap.postprocess.mapping import check_output_path, build_reference_signatures, save_npz
+
+    check_output_path(output_path, pretrain_model_path)
+    bundle = build_reference_signatures(pretrain_model_path, input_data_folder_path,
+                                        sig_ref, n_archetypes, min_cells)
+    save_npz(output_path, **bundle)
+    return str(output_path)
 
 
 def deconvolve_beads(output_save_dir, input_data_folder_path,
